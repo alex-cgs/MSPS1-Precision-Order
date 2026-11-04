@@ -130,9 +130,9 @@ def ks_escape(a, b) -> dict:
 def escape_state(S, zf, r_factor: float = 10.0):
     """Index of an escaping body or None.
 
-    Criterion: body i is escaping when it is unbound from the barycentre of the other two (positive two-body energy,
-    moving away) and its distance exceeds r_factor times the separation of the other two. Energy-based as spec §6.1
-    asks; Stone & Leigh 2019 define ejections by the same energy test on the single-binary split. Planar triples only.
+    Project definition, since Stone & Leigh 2019 give no operational test (PROGRESS.md): body i is escaping when it is
+    unbound from the barycentre of the other two (positive two-body energy, moving away) and its distance exceeds
+    r_factor times the separation of the other two. Planar triples only.
     """
     masses = [float(m) for m in S.meta["masses"]]
     N = S.meta["N"]

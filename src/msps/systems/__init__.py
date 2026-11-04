@@ -108,7 +108,10 @@ class Case:
         for attempt in range(100000):
             self._attempt = attempt
             base = gen(self, ic_id)
-            z = self.system.lift(base)
+            try:
+                z = self.system.lift(base)
+            except ValueError:  # coincident bodies from the generator: draw again
+                continue
             if not flt:
                 return z, info
             ok, why = _passes_filter(self, z, flt)

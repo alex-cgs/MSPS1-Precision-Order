@@ -48,7 +48,7 @@ def provenance(seed=None) -> dict:
         flags = open("/proc/cpuinfo").read() if os.path.exists("/proc/cpuinfo") else ""
         gpu = _sh("nvidia-smi", "--query-gpu=name,driver_version,memory.total", "--format=csv,noheader")
         _cache = {
-            "git_commit": _sh("git", "rev-parse", "HEAD", cwd=ROOT),
+            "git_commit": _sh("git", "rev-parse", "HEAD", cwd=ROOT) or os.environ.get("MSPS_GIT_COMMIT", ""),
             "git_dirty": bool(_sh("git", "status", "--porcelain", "--", "src", "cases", "experiments", cwd=ROOT)),
             "python": sys.version.split()[0],
             "packages": {"numpy": numpy.__version__, "scipy": scipy.__version__, "sympy": sympy.__version__,

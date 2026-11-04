@@ -169,6 +169,7 @@ def _sparse(state_bin, idx):
 def get_reference(case, ic_id: int) -> Reference:
     key = (case.id, ic_id)
     if key not in _loaded:
-        _loaded.clear()
+        while len(_loaded) >= 8:
+            _loaded.pop(next(iter(_loaded)))
         _loaded[key] = Reference(case, ic_id)
     return _loaded[key]

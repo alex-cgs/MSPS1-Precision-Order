@@ -45,6 +45,8 @@ class PolySystem:
 
 
 def _to_fraction(val) -> Fraction:
+    if val.is_finite is False or val == sp.zoo:
+        raise ValueError(f"auxiliary initial value is singular: {val}")
     if val.is_Rational:
         return Fraction(int(val.p), int(val.q))
     r = sp.Rational(str(sp.N(val, IC_DIGITS)))

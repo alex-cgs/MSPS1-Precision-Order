@@ -25,7 +25,8 @@ case "$PLAN" in
 esac
 LEFT=$(secs_to_deadline)
 echo "plan=$PLAN seconds_left=$LEFT"
-$SSH "cd ~/msps1 && MSPS_ROOT=\$PWD XLA_PYTHON_CLIENT_PREALLOCATE=false timeout --kill-after=30 $LEFT .venv-gpu/bin/python bench/e10_bench.py --label ops_h100 $ARGS --deadline-guard"
+COMMIT=$(git -C $ROOT rev-parse HEAD)
+$SSH "cd ~/msps1 && MSPS_GIT_COMMIT=$COMMIT MSPS_ROOT=\$PWD XLA_PYTHON_CLIENT_PREALLOCATE=false timeout --kill-after=30 $LEFT .venv-gpu/bin/python bench/e10_bench.py --label ops_h100 $ARGS --deadline-guard"
 echo "bench exit=$?"
 rsync -az -e "ssh -o BatchMode=yes" ops:msps1/results/raw/E10/ $ROOT/results/raw/E10/ || echo "rsync down failed"
 $SSH 'pgrep -u $USER -f "msps1|e10_bench" -a || true'

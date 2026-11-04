@@ -1,0 +1,71 @@
+| check | target | value | pass | note |
+|---|---|---|---|---|
+| pilot reference steps | 2605 | 2605 | True |  |
+| pilot h min | 4.8e-07 | 4.768e-07 | True |  |
+| pilot reference check | 1.7e-41 | 1.683e-41 | True |  |
+| closest approach | 0.00041 | 0.0004101 | True |  |
+| reference check nb3_figure_eight | <1e-30 | 1.565e-50 | True |  |
+| amplification A(T) | 7.8e+08 | 7.753e+08 | True |  |
+| lambda fit | 0.16 | 0.1639 | True |  |
+| local slope | -1.07 +- 0.03 | -1.067 | True |  |
+| local intercept | -2.29 | -2.29 | True |  |
+| rho/h effective | 11.7 | 11.66 | True |  |
+| f64 Tpred n=4 | 0.5 | 0.5 | True |  |
+| f64 Tpred n=6 | 2.4 | 2.406 | True |  |
+| f64 Tpred n=8 | 2.7 | 2.688 | True |  |
+| f64 Tpred n=10 | 11.3 | 11.28 | True |  |
+| f64 Tpred n=12 | 31.3 | 31.33 | True |  |
+| f64 Tpred n=14 | 57.5 | 57.51 | True |  |
+| f64 Tpred n=16 | 70.4 | 70.43 | True |  |
+| f64 Tpred n=18 | 70.4 | 70.42 | True |  |
+| f64 Tpred n=20 | 70.4 | 70.42 | True |  |
+| f64 Tpred n=24 | 70.4 | 70.42 | True |  |
+| f64 Tpred n=28 | 70.4 | 70.42 | True |  |
+| mpfr-80 Tpred n=12 | 31.3 | 31.33 | True |  |
+| mpfr-113 Tpred n=12 | 31.3 | 31.33 | True |  |
+| mpfr-160 Tpred n=12 | 31.3 | 31.33 | True |  |
+| mpfr-80 Tpred n=14 | 57.6 | 57.59 | True |  |
+| mpfr-113 Tpred n=14 | 57.6 | 57.59 | True |  |
+| mpfr-160 Tpred n=14 | 57.6 | 57.59 | True |  |
+| mpfr-80 Tpred n=16 | 79.1 | 79.13 | True |  |
+| mpfr-113 Tpred n=16 | 79.1 | 79.13 | True |  |
+| mpfr-160 Tpred n=16 | 79.1 | 79.13 | True |  |
+| mpfr-80 Tpred n=18 | 118.8 | 118.8 | True |  |
+| mpfr-113 Tpred n=18 | 118.8 | 118.8 | True |  |
+| mpfr-160 Tpred n=18 | 118.8 | 118.8 | True |  |
+| mpfr-80 censored n=20 | >120 | 120 | True |  |
+| mpfr-80 censored n=24 | >120 | 120 | True |  |
+| mpfr-80 censored n=28 | >120 | 120 | True |  |
+| c_t | 7.43 | 7.43 | True |  |
+| c_r | 4.21 | 4.089 | False |  |
+| fit rms | 0.6 | 0.6278 | True |  |
+| fit obs | 6207 | 6235 | True | coarse sampling differs by rounding of thin-out |
+| n* 53 bits | 14.8 | 14.94 | True |  |
+| n* 80 bits | 22.5 | 22.56 | True |  |
+| n* 113 bits | 31.8 | 31.88 | True |  |
+| n* 160 bits | 45 | 45.14 | True |  |
+| model Tpred n=10 | 4.3 | 4.296 | True |  |
+| model Tpred n=12 | 27.2 | 27.2 | True |  |
+| model Tpred n=14 | 40.4 | 40.36 | True |  |
+| model Tpred n=16 | 79 | 79.03 | True |  |
+| model Tpred n=18 | 118.8 | 118.8 | True |  |
+| exact bits step 4 | 7541120 | 7541120 | True |  |
+| exact growth factors | 33.6, 31.7, 31.6 | [33.6, 31.7, 31.6] | True |  |
+| Kepler oracle nb2_kepler:e_9_10 n=24 | <1e-15 | 8.212e-20 | True |  |
+| Kepler oracle nb2_kepler:e_1_2 n=24 | <1e-15 | 4.67e-21 | True |  |
+| Kepler oracle nb2_kepler:e_0 n=24 | <1e-15 | 7.382e-32 | True |  |
+| figure-eight closure at P=6.32591398 | <1e-6 (8-digit ICs) | 3.006e-08 | True | verifies period and IC digits |
+| lambda rossler | 0.0714 | 0.07074 | True | Sprott 2003 value, high-precision run here |
+| lambda lorenz63:rho_28 | 0.9056 | 0.9058 | True | Sprott 2003 value, high-precision run here |
+| duffing:gamma_0_20 ic=1 | period 1 | distinct=1 lambda=-0.1501 | True |  |
+| duffing:gamma_0_37 ic=1 | period 5 | distinct=5 lambda=-0.0530 | True |  |
+| duffing:gamma_0_37 ic=0 | period 5 | distinct=5 lambda=-0.0530 | True |  |
+| duffing:gamma_0_20 ic=0 | period 1 | distinct=1 lambda=-0.1496 | True |  |
+| duffing:gamma_0_65 ic=0 | period 2 | distinct=2 lambda=-0.1496 | True |  |
+| duffing:gamma_0_65 ic=1 | period 2 | distinct=2 lambda=-0.1497 | True |  |
+| duffing:gamma_0_28 ic=0 | period 2 | distinct=2 lambda=-0.1498 | True |  |
+| duffing:gamma_0_50 ic=1 | chaotic | distinct=300 lambda=0.1234 | True |  |
+| duffing:gamma_0_29 ic=1 | period 4 | distinct=4 lambda=-0.0358 | True |  |
+| duffing:gamma_0_29 ic=0 | period 4 | distinct=4 lambda=-0.0358 | True |  |
+| duffing:gamma_0_50 ic=0 | chaotic | distinct=300 lambda=0.1198 | True |  |
+| duffing:gamma_0_28 ic=1 | period 2 | distinct=2 lambda=-0.1499 | True |  |

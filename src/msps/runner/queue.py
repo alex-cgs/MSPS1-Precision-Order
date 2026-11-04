@@ -48,6 +48,9 @@ def expand(exp: dict, mode: str) -> list:
                 base = {**fixed, **cfg, **(sub or {})}
                 for ic in (_ic_ids(base["case"], mode) if ics == "auto" else ics):
                     out.append((group["name"], {"kind": group["kind"], **base, "ic": ic}))
+    # keep one IC's jobs together: workers cache a few references (stable sort, group order preserved)
+    rank = {g["name"]: i for i, g in enumerate(exp["groups"])}
+    out.sort(key=lambda j: (rank[j[0]], str(j[1].get("case", "")), j[1].get("ic", 0)))
     return out
 
 
