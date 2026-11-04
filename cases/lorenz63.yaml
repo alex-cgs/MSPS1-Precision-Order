@@ -1,0 +1,21 @@
+name: lorenz63
+builder: lorenz63
+equations: "x' = sigma(y-x), y' = x(rho-z)-y, z' = xy-beta z"
+regime: chaotic at rho = 28; rho sweep crosses the onset (about 24.06 to 24.74)
+default_variant: rho_28
+params: {sigma: "10", beta: "8/3", rho: "28"}
+variants:
+  rho_28: {rho: "28"}
+  rho_20: {rho: "20"}
+  rho_24: {rho: "24"}
+  rho_24_5: {rho: "49/2"}
+  rho_25: {rho: "25"}
+  rho_35: {rho: "35"}
+ic: {generator: attractor, seed: 5001, transient: "50", bits: 40, box: {x: [-15, 15], y: [-20, 20], z: [10, 40]}, count: {dev: 20, paper: 100}}
+reference: {order: 80, bits: 500, check_order: 90, check_bits: 600, safety: 8, cap: "1/2", tol_check: 1.0e-30}
+T: 80
+tolerances: [1.0e-6, 1.0e-3]
+observables: [state, attractor_histogram]
+oracle: {lambda: "0.9056", lambda_source: "Sprott 2003; checked by E0 high-precision run"}
+role: clean dissipative baseline
+perturbation: "1/1000000000000000000000000000000000000000000000000000000000000"

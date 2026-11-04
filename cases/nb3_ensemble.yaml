@@ -1,0 +1,18 @@
+name: nb3_ensemble
+builder: nbody
+equations: planar equal-mass three-body problem, rational points on a circle, zero momentum
+regime: chaotic, bound, filtered (spec 6.1)
+params: {masses: ["1", "1", "1"], dim: 2}
+ic:
+  generator: ensemble3
+  seed: 3001
+  R_min: "3/2"
+  R_max: "3"
+  vmax: "1/2"
+  count: {dev: 20, paper: 100}
+  filter: {energy_max: "0", dmin0: "1/2", dmax: "40", T: "120", order: 16, max_steps: 100000}
+reference: {order: 56, bits: 400, check_order: 64, check_bits: 500, safety: 8, cap: "1/2", tol_check: 1.0e-30}
+T: 120
+tolerances: [1.0e-6, 1.0e-3]
+observables: [positions, pair_distances, invariants, constraints, escape]
+role: statistics over initial conditions (RQ2, RQ3)

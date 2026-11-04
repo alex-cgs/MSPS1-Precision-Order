@@ -1,0 +1,9 @@
+name: sine_map
+kind: map
+builder: sine
+equations: "x -> mu sin(pi x), with T_w the degree 2w+1 Taylor polynomial of sin (Kafetzis et al. 2023)"
+regime: chaotic near mu = 1; T_w changes the bifurcation diagram at low w
+params: {mu: "1", pi: "pi"}
+ic: {seed: 6201, count: {dev: 20, paper: 100}, bits: 30}
+horizon: 2000
+role: connects to the original idea; map-level RQ4 and RQ6

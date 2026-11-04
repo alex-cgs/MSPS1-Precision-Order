@@ -1,0 +1,17 @@
+name: henon_heiles
+builder: henon_heiles
+equations: "H = (px^2+py^2)/2 + (x^2+y^2)/2 + x^2 y - y^3/3; initial conditions on x = 0 with px > 0"
+regime: mixed phase space; regular at 1/12, mixed at 1/8, mostly chaotic at 1/6
+default_variant: E_1_8
+params: {}
+variants:
+  E_1_12: {E: "1/12"}
+  E_1_8: {E: "1/8"}
+  E_1_6: {E: "1/6"}
+  rational_ic: {E: "1/8", ic: {generator: fixed, values: {x: "0", y: "1/10", px: "2/5", py: "1/10"}}}
+ic: {generator: hh_shell, seed: 5201, count: {dev: 20, paper: 100}}
+reference: {order: 56, bits: 400, check_order: 64, check_bits: 500, safety: 8, cap: "1/2", tol_check: 1.0e-30}
+T: 800
+tolerances: [1.0e-6, 1.0e-3]
+observables: [positions, invariants, poincare_section]
+role: mixed phase space, KAM islands (RQ4, RQ5)

@@ -1,0 +1,35 @@
+study: E8
+description: method families on a common footing (RQ7). All on the case's shared schedule refined by substeps, so accuracy and cost are compared at matched grids; run to T unless blown up so invariants are measured
+budget_hours: 6
+groups:
+  - name: refs
+    kind: reference
+    grid: {case: [nb3_pilot, "henon_heiles:E_1_8", "fput_beta:N_16", "lorenz63:rho_28"], ic: [0]}
+  - name: taylor
+    kind: traj
+    fixed: {method: taylor, schedule: shared, stop_err: 1.0e+8, ic: 0, max_wall: 1800}
+    grid: {case: [nb3_pilot, "henon_heiles:E_1_8", "fput_beta:N_16", "lorenz63:rho_28"], arith: [f64, dd], n: [4, 6, 8, 12, 16, 20, 24, 28, 32]}
+  - name: rk4
+    kind: traj
+    fixed: {method: rk4, schedule: shared, stop_err: 1.0e+8, ic: 0, max_wall: 1800}
+    grid: {case: [nb3_pilot, "henon_heiles:E_1_8", "fput_beta:N_16", "lorenz63:rho_28"], arith: [f64, dd], substeps: [4, 16, 64, 256, 1024]}
+  - name: dop853
+    kind: traj
+    fixed: {method: dop853, schedule: shared, stop_err: 1.0e+8, ic: 0, max_wall: 1800}
+    grid: {case: [nb3_pilot, "henon_heiles:E_1_8", "fput_beta:N_16", "lorenz63:rho_28"], arith: [f64, dd], substeps: [1, 2, 4, 8, 16, 32]}
+  - name: dop853_embedded
+    kind: traj
+    fixed: {method: dop853, schedule: embedded, stop_err: 1.0e+8, ic: 0, arith: f64, max_wall: 1800}
+    grid: {case: [nb3_pilot, "henon_heiles:E_1_8", "fput_beta:N_16", "lorenz63:rho_28"], rtol: [1.0e-6, 1.0e-9, 1.0e-12]}
+  - name: gl
+    kind: traj
+    fixed: {method: gl, schedule: shared, stop_err: 1.0e+8, ic: 0, max_wall: 1800}
+    grid: {case: [nb3_pilot, "henon_heiles:E_1_8", "fput_beta:N_16", "lorenz63:rho_28"], arith: [f64], s: [2, 4, 6], substeps: [1, 2, 4, 8, 16], solver_tol: [1.0e-15]}
+  - name: gl_solver_knob
+    kind: traj
+    fixed: {method: gl, schedule: shared, stop_err: 1.0e+8, ic: 0, s: 4, substeps: 4, arith: f64, max_wall: 1800}
+    grid: {case: ["henon_heiles:E_1_8", "fput_beta:N_16"], solver_tol: [1.0e-8, 1.0e-10, 1.0e-12, 1.0e-14]}
+  - name: yoshida
+    kind: traj
+    fixed: {method: yoshida, schedule: shared, stop_err: 1.0e+8, ic: 0, max_wall: 1800}
+    grid: {case: [nb3_pilot, "henon_heiles:E_1_8", "fput_beta:N_16"], arith: [f64, dd], k: [2, 4, 6, 8], substeps: [1, 4, 16, 64, 256]}

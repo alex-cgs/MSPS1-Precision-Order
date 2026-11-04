@@ -1,0 +1,19 @@
+name: nbN_alternating
+builder: nbody
+equations: "two concentric rings with alternating masses; or a tight binary plus a perturber ring (u_ij(0) at IC_DIGITS when irrational)"
+regime: chaotic
+default_variant: rings_N_4
+params: {dim: 2, mass_pattern: ["1", "1/2"]}
+variants:
+  rings_N_4: {N: 4}
+  rings_N_6: {N: 6}
+  rings_N_8: {N: 8}
+  rings_N_10: {N: 10}
+  hier_N_4: {N: 4, mass_pattern: ["1", "1", "1/10"], ic: {generator: hierarchical, a: "1/2", R: "3", v0: "4/5"}}
+  hier_N_6: {N: 6, mass_pattern: ["1", "1", "1/10"], ic: {generator: hierarchical, a: "1/2", R: "3", v0: "4/5"}}
+ic: {generator: two_rings, seed: 4101, R1: "3/2", R2: "5/2", v0: "1/2", jitter: "1/8", count: {dev: 3, paper: 10}}
+reference: {order: 56, bits: 400, check_order: 64, check_bits: 500, safety: 8, cap: "1/2", tol_check: 1.0e-30}
+T: 30
+tolerances: [1.0e-6, 1.0e-3]
+observables: [positions, pair_distances, invariants, constraints]
+role: dimension scaling (E11)

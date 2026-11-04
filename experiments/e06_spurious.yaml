@@ -1,0 +1,34 @@
+study: E6
+description: spurious dynamics (RQ4). Fake periodicity at low precision, bifurcation shifts, Hénon–Heiles section survival
+budget_hours: 3
+groups:
+  - name: periodicity
+    kind: map
+    fixed: {reference: false, horizon: 3000000, keep_rows: 2000}
+    grid: {case: [logistic_map, sine_map, "tent_map:mu_199_100"], ic: auto, arith: [f16, f32, mpfr-16, mpfr-24, mpfr-32]}
+    dev: {grid: {ic: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}}
+  - name: sine_diagrams
+    kind: map_diagram
+    fixed: {builder: sine, mu_min: 0.1, mu_max: 1.3, mu_points: 800, transient: 2000, iterations: 4000, keep: 120}
+    grid: {arith: [f16, f32, f64]}
+    explode:
+      - {w: null}
+      - {w: 1}
+      - {w: 2}
+      - {w: 3}
+      - {w: 4}
+      - {w: 5}
+      - {w: 6}
+  - name: logistic_diagrams
+    kind: map_diagram
+    fixed: {builder: logistic, mu_min: 2.8, mu_max: 4.0, mu_points: 800, transient: 2000, iterations: 4000, keep: 120}
+    grid: {arith: [f16, f32, f64]}
+  - name: duffing
+    kind: strobe
+    fixed: {steps_per_period: 64, transient_periods: 300, periods: 300}
+    grid: {case: ["duffing:gamma_0_20", "duffing:gamma_0_28", "duffing:gamma_0_29", "duffing:gamma_0_37", "duffing:gamma_0_50", "duffing:gamma_0_65"], ic: [0, 1, 2], n: [2, 3, 4, 6, 8, 16], arith: [f32, f64]}
+  - name: henon_section
+    kind: poincare
+    fixed: {T: 8000, h: "1/4"}
+    grid: {case: ["henon_heiles:E_1_12", "henon_heiles:E_1_8"], ic: auto, n: [2, 3, 4, 6, 8, 16, 24], arith: [f32, f64, dd]}
+    dev: {grid: {ic: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}}

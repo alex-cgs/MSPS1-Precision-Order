@@ -1,0 +1,15 @@
+name: nb3_pilot
+builder: nbody
+equations: "q_i' = v_i, v_i' = sum_j m_j (q_j-q_i)/r_ij^3, lifted with u_ij = 1/r_ij (spec 4.1)"
+regime: chaotic with close encounters (spec 5)
+params: {masses: ["1", "1", "1"], dim: 2}
+ic:
+  generator: fixed
+  values: {qx0: "1", qx1: "-2", qx2: "1", qy0: "3", qy1: "-1", qy2: "-1", vx0: "0", vx1: "1/4", vx2: "-1/4", vy0: "-1/4", vy1: "1/4", vy2: "0"}
+reference: {order: 56, bits: 400, check_order: 64, check_bits: 500, safety: 8, cap: "1/2", tol_check: 1.0e-30}
+T: 120
+tolerances: [1.0e-6, 1.0e-3]
+observables: [positions, pair_distances, invariants, constraints]
+oracle: {pilot_baseline: "spec section 5", energy: "-79/120"}
+role: regression against the pilot
+perturbation: "1/100000000000000000000"

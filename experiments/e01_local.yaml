@@ -1,0 +1,13 @@
+study: E1
+description: local truncation law for all ODE cases, n = 2..40 at reference precision (spec 8)
+budget_hours: 2
+groups:
+  - name: refs
+    kind: reference
+    grid: {case: ["lorenz63:rho_28", rossler, "henon_heiles:E_1_8", "henon_heiles:E_1_6", double_pendulum, "duffing:gamma_0_50", "lorenz96:N_8", "lorenz96:N_16", "lorenz96:N_40", "fput_beta:N_16", "fput_beta:N_32"], ic: [0, 1, 2]}
+    paper: {grid: {case: ["nb2_kepler:e_0", "nb2_kepler:e_1_2", "nb2_kepler:e_9_10", nb3_pilot, nb3_pythagorean, nb3_figure_eight, nb3_lagrange, nb3_ensemble, "nbN_circle:N_4", "nbN_circle:N_6", "nbN_circle:N_10", "nbN_alternating:rings_N_6", "nbN_alternating:hier_N_4", "nbN_cluster:N_6"]}}
+  - name: local
+    kind: local
+    fixed: {orders: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40], states: 60}
+    grid: {case: ["lorenz63:rho_28", rossler, "henon_heiles:E_1_8", "henon_heiles:E_1_6", double_pendulum, "duffing:gamma_0_50", "lorenz96:N_8", "lorenz96:N_16", "lorenz96:N_40", "fput_beta:N_16", "fput_beta:N_32"], ic: [0, 1, 2]}
+    paper: {grid: {case: ["nb2_kepler:e_0", "nb2_kepler:e_1_2", "nb2_kepler:e_9_10", nb3_pilot, nb3_pythagorean, nb3_figure_eight, nb3_lagrange, nb3_ensemble, "nbN_circle:N_4", "nbN_circle:N_6", "nbN_circle:N_10", "nbN_alternating:rings_N_6", "nbN_alternating:hier_N_4", "nbN_cluster:N_6"]}}

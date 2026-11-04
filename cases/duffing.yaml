@@ -1,0 +1,19 @@
+name: duffing
+builder: duffing
+equations: "x'' + delta x' - x + x^3 = gamma cos(omega t), forcing lifted to (C, S)"
+regime: gamma sweep; periods and chaos checked by E0
+default_variant: gamma_0_50
+params: {delta: "3/10", omega: "6/5", gamma: "1/2"}
+variants:
+  gamma_0_20: {gamma: "1/5"}
+  gamma_0_28: {gamma: "7/25"}
+  gamma_0_29: {gamma: "29/100"}
+  gamma_0_37: {gamma: "37/100"}
+  gamma_0_50: {gamma: "1/2"}
+  gamma_0_65: {gamma: "13/20"}
+ic: {generator: box, seed: 5401, bits: 20, box: {x: [-1, 1], v: [-1, 1]}, values: {tau: "0"}, count: {dev: 10, paper: 20}}
+reference: {order: 56, bits: 400, check_order: 64, check_bits: 500, safety: 8, cap: "1/2", tol_check: 1.0e-30}
+T: 300
+tolerances: [1.0e-6, 1.0e-3]
+observables: [positions, stroboscopic_section, constraints]
+role: bifurcation shifts under truncation (RQ4)

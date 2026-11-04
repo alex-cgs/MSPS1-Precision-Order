@@ -1,0 +1,14 @@
+name: nb2_kepler
+builder: nbody
+equations: two-body problem, a = 1, m1 = m2 = (1-e^2)/2, starting at periapsis with exact speed 1+e
+regime: regular; exact oracle from Kepler's equation
+default_variant: e_0
+params: {dim: 2}
+variants: {e_0: {e: "0"}, e_1_2: {e: "1/2"}, e_9_10: {e: "9/10"}}
+ic: {generator: kepler}
+reference: {order: 56, bits: 400, check_order: 64, check_bits: 500, safety: 8, cap: "1/2", tol_check: 1.0e-30}
+T: 20
+tolerances: [1.0e-6, 1.0e-3]
+observables: [positions, invariants, constraints]
+oracle: {kepler: true}
+role: exact oracle without a reference run

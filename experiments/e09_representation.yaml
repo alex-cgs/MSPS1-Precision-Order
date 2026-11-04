@@ -1,0 +1,20 @@
+study: E9
+description: representation vs bit count (RQ6). f64 vs mpfr-53 vs qr-53, f32 vs mpfr-24 vs qr-24
+budget_hours: 3
+groups:
+  - name: maps
+    kind: map
+    fixed: {horizon: 400, tol: 1.0e-6}
+    grid: {case: [logistic_map, "tent_map:mu_2", "tent_map:mu_199_100", sine_map], ic: auto, arith: [f32, mpfr-24, qr-24, f64, mpfr-53, qr-53, mpfr-113, qr-113]}
+    dev: {grid: {ic: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}}
+  - name: refs
+    kind: reference
+    grid: {case: ["lorenz63:rho_28", nb3_pilot], ic: [0, 1, 2, 3, 4]}
+  - name: odes
+    kind: traj
+    fixed: {method: taylor, schedule: shared, stop_err: 1.0, max_wall: 7200}
+    grid: {case: ["lorenz63:rho_28"], ic: [0, 1, 2, 3, 4], n: [8, 16, 24, 32], arith: [f64, mpfr-53, qr-53, f32, mpfr-24, qr-24]}
+  - name: pilot
+    kind: traj
+    fixed: {method: taylor, schedule: shared, stop_err: 1.0, case: nb3_pilot, max_wall: 7200, ic: 0}
+    grid: {n: [8, 12, 16, 20], arith: [f64, mpfr-53, qr-53, f32, mpfr-24, qr-24]}

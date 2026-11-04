@@ -1,0 +1,25 @@
+study: E4
+description: exact-arithmetic bit growth against (d-1)n+1 (RQ9), N-body from the reference schedule, others at fixed dyadic h
+budget_hours: 1
+groups:
+  - name: nbody
+    kind: exact
+    fixed: {max_steps: 6, max_wall: 200, max_bits: 8000000}
+    grid: {case: [nb3_pilot, "nb2_kepler:e_1_2", "nbN_circle:N_4"], n: [2, 4, 6, 8, 10, 12]}
+  - name: odes
+    kind: exact
+    fixed: {h: "1/64", max_steps: 8, max_wall: 200, max_bits: 8000000}
+    grid: {case: ["lorenz63:rho_28", "henon_heiles:rational_ic"], n: [2, 4, 6, 8, 10, 12]}
+  - name: maps
+    kind: exact_map
+    fixed: {max_steps: 40, max_wall: 60, max_bits: 8000000}
+    grid: {case: [logistic_map, "tent_map:mu_2"], ic: [0, 1, 2]}
+  - name: sine_tw
+    kind: exact_map
+    fixed: {case: sine_map, max_steps: 20, max_wall: 60, max_bits: 8000000}
+    grid: {ic: [0, 1]}
+    explode:
+      - {params: {pi: "355/113", w: 1}}
+      - {params: {pi: "355/113", w: 2}}
+      - {params: {pi: "355/113", w: 3}}
+      - {params: {pi: "355/113", w: 4}}

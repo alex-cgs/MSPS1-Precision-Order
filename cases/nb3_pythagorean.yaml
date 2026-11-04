@@ -1,0 +1,13 @@
+name: nb3_pythagorean
+builder: nbody
+equations: Burrau problem, masses 3, 4, 5 at rest on a 3-4-5 triangle
+regime: chaotic scattering with very close encounters and a late escape
+params: {masses: ["3", "4", "5"], dim: 2}
+ic:
+  generator: fixed
+  values: {qx0: "1", qx1: "-2", qx2: "1", qy0: "3", qy1: "-1", qy2: "-1", vx0: "0", vx1: "0", vx2: "0", vy0: "0", vy1: "0", vy2: "0"}
+reference: {order: 56, bits: 400, check_order: 64, check_bits: 500, safety: 8, cap: "1/2", tol_check: 1.0e-30}
+T: 70
+tolerances: [1.0e-6, 1.0e-3]
+observables: [positions, pair_distances, invariants, constraints, escape]
+role: classic chaotic scattering

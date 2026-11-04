@@ -1,0 +1,11 @@
+name: tent_map
+kind: map
+builder: tent
+equations: "x -> mu min(x, 1-x)"
+regime: "mu = 2: lambda = ln 2 but binary floats collapse to 0 in about p iterations"
+params: {mu: "2"}
+variants: {mu_2: {mu: "2"}, mu_199_100: {mu: "199/100"}}
+default_variant: mu_2
+ic: {seed: 6101, count: {dev: 20, paper: 100}, bits: 30}
+horizon: 2000
+role: representation artefact (RQ6)

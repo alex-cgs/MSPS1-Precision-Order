@@ -1,0 +1,20 @@
+study: E2
+description: (n, p) sweep on the shared schedule, plus a per-run adaptive check; T_pred at tol 1e-6 and 1e-3 from every step
+budget_hours: 12
+groups:
+  - {name: refs, kind: reference, grid: {case: [nb3_pilot, nb3_ensemble, "lorenz63:rho_28", "henon_heiles:E_1_8", "henon_heiles:E_1_6", rossler], ic: auto}}
+  - {name: amp, kind: amplification, grid: {case: [nb3_pilot, nb3_ensemble, "lorenz63:rho_28", "henon_heiles:E_1_8", "henon_heiles:E_1_6", rossler], ic: auto}}
+  - name: local
+    kind: local
+    fixed: {orders: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40], states: 60}
+    grid: {case: [nb3_pilot, nb3_ensemble, "lorenz63:rho_28", "henon_heiles:E_1_8", "henon_heiles:E_1_6", rossler], ic: auto}
+  - name: sweep
+    kind: traj
+    fixed: {method: taylor, schedule: shared, stop_err: 1.0}
+    grid: {case: [nb3_pilot, nb3_ensemble, "lorenz63:rho_28", "henon_heiles:E_1_8", "henon_heiles:E_1_6", rossler], ic: auto, arith: [f32, f64, dd, mpfr-80, mpfr-113, mpfr-160, mpfr-256], n: [4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32]}
+    dev: {grid: {n: [4, 8, 12, 16, 20, 24, 28, 32]}}
+  - name: sweep_adaptive
+    kind: traj
+    fixed: {method: taylor, schedule: adaptive, safety: 8, cap: "1/2", stop_err: 1.0}
+    grid: {case: [nb3_pilot, nb3_ensemble, "lorenz63:rho_28"], ic: auto, arith: [f64, dd, mpfr-113], n: [8, 12, 16, 20, 24, 28, 32]}
+    dev: {grid: {n: [8, 16, 24]}}

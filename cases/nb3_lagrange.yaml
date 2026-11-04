@@ -1,0 +1,13 @@
+name: nb3_lagrange
+builder: nbody
+equations: equilateral relative equilibrium, equal masses, R = 1, omega = 3^(-1/4); symbolic values held at IC_DIGITS digits
+regime: unstable equilibrium; instability grows from rounding alone
+params: {masses: ["1", "1", "1"], dim: 2}
+ic:
+  generator: fixed
+  values: {qx0: "1", qy0: "0", qx1: "-1/2", qy1: "sqrt(3)/2", qx2: "-1/2", qy2: "-sqrt(3)/2", vx0: "0", vy0: "3**(-1/4)", vx1: "-sqrt(3)/2*3**(-1/4)", vy1: "-3**(-1/4)/2", vx2: "sqrt(3)/2*3**(-1/4)", vy2: "-3**(-1/4)/2"}
+reference: {order: 56, bits: 400, check_order: 64, check_bits: 500, safety: 8, cap: "1/2", tol_check: 1.0e-30}
+T: 60
+tolerances: [1.0e-6, 1.0e-3]
+observables: [positions, invariants, constraints]
+role: instability from rounding alone

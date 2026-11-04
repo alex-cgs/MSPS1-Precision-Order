@@ -1,0 +1,13 @@
+name: lorenz96
+builder: lorenz96
+equations: "x_i' = (x_{i+1}-x_{i-2}) x_{i-1} - x_i + F"
+regime: chaotic for F = 8; lambda grows with N
+default_variant: N_8
+params: {F: "8"}
+variants: {N_8: {N: 8}, N_16: {N: 16}, N_40: {N: 40}}
+ic: {generator: attractor, seed: 5501, transient: "20", bits: 40, default_box: [7, 9], count: {dev: 5, paper: 20}}
+reference: {order: 56, bits: 400, check_order: 64, check_bits: 500, safety: 8, cap: "1/2", tol_check: 1.0e-20}
+T: 25
+tolerances: [1.0e-6, 1.0e-3]
+observables: [state, attractor_histogram]
+role: dimension scaling

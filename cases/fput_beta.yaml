@@ -1,0 +1,13 @@
+name: fput_beta
+builder: fput_beta
+equations: "q_i'' = (q_{i+1}-2q_i+q_{i-1}) + beta[(q_{i+1}-q_i)^3-(q_i-q_{i-1})^3], fixed ends"
+regime: weakly chaotic Hamiltonian at energy density e
+default_variant: N_16
+params: {beta: "1", e: "1"}
+variants: {N_16: {N: 16}, N_32: {N: 32}}
+ic: {generator: fput_thermal, seed: 5601, count: {dev: 5, paper: 20}}
+reference: {order: 56, bits: 400, check_order: 64, check_bits: 500, safety: 8, cap: "1/2", tol_check: 1.0e-30}
+T: 100
+tolerances: [1.0e-6, 1.0e-3]
+observables: [positions, invariants]
+role: long-time Hamiltonian, structure (RQ7)

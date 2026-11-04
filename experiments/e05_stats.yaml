@@ -1,0 +1,29 @@
+study: E5
+description: statistics vs trajectories (RQ3). Per-run adaptive step; lambda from a twin in the same arithmetic, histograms, escapes; T_pred from the reference
+budget_hours: 20
+groups:
+  - name: lorenz
+    kind: stats
+    fixed: {case: "lorenz63:rho_28", T: 2000, sample_dt: "1/4", transient: 20, renorm_dt: 1, observables: {x: [-25, 25, 100], z: [0, 55, 110]}, method: taylor, cap: "1/16", max_wall: 3600}
+    grid: {ic: auto, n: [2, 4, 6, 8, 12, 16, 24, 32], arith: [f32, f64, dd, mpfr-113]}
+    dev: {grid: {n: [4, 8, 16, 32], arith: [f32, f64, mpfr-113]}}
+  - name: rossler
+    kind: stats
+    fixed: {case: rossler, T: 5000, sample_dt: "1/2", transient: 100, renorm_dt: 5, observables: {x: [-15, 15, 60], z: [0, 30, 60]}, method: taylor, cap: "1/4", max_wall: 3600}
+    grid: {ic: auto, n: [2, 4, 6, 8, 12, 16, 24], arith: [f32, f64, mpfr-113]}
+    dev: {grid: {n: [4, 8, 16], arith: [f32, f64]}}
+  - name: henon
+    kind: stats
+    fixed: {T: 5000, sample_dt: "1/2", renorm_dt: 5, observables: {y: [-1, 1.5, 100], py: [-1, 1, 80]}, method: taylor, cap: "1/2", max_wall: 3600}
+    grid: {case: ["henon_heiles:E_1_6", "henon_heiles:E_1_8"], ic: auto, n: [2, 4, 6, 8, 12, 16, 24, 32], arith: [f32, f64, dd, mpfr-113]}
+    dev: {grid: {case: ["henon_heiles:E_1_8"], n: [4, 8, 16, 32], arith: [f32, f64, mpfr-113]}}
+  - name: l96
+    kind: stats
+    fixed: {case: "lorenz96:N_8", T: 500, sample_dt: "1/4", transient: 5, renorm_dt: "1/2", observables: {x0: [-10, 15, 100]}, method: taylor, cap: "1/32", max_wall: 3600}
+    grid: {ic: auto, n: [2, 4, 8, 16, 24, 32], arith: [f32, f64, mpfr-113]}
+    dev: {grid: {n: [4, 16, 32], arith: [f32, f64]}}
+  - name: nb3
+    kind: stats
+    fixed: {case: nb3_ensemble, T: 1000, sample_dt: "1/2", renorm_dt: 2, observables: {log10_rmin: [-5, 2, 70], rmax: [0, 60, 120]}, method: taylor, max_wall: 3600, escape_r_factor: 10}
+    grid: {ic: auto, n: [4, 6, 8, 12, 16, 24, 32], arith: [f32, f64, dd, mpfr-113]}
+    dev: {grid: {n: [8, 16, 32], arith: [f64, mpfr-113]}}

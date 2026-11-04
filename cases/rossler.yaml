@@ -1,0 +1,12 @@
+name: rossler
+builder: rossler
+equations: "x' = -y-z, y' = x+ay, z' = b+z(x-c)"
+regime: weak chaos
+params: {a: "1/5", b: "1/5", c: "57/10"}
+ic: {generator: attractor, seed: 5101, transient: "100", bits: 40, box: {x: [-5, 5], y: [-5, 5], z: [0, 1]}, count: {dev: 20, paper: 100}}
+reference: {order: 64, bits: 500, check_order: 72, check_bits: 600, safety: 8, cap: "1/2", tol_check: 1.0e-30}
+T: 800
+tolerances: [1.0e-6, 1.0e-3]
+observables: [state, attractor_histogram]
+oracle: {lambda: "0.0714", lambda_source: "Sprott 2003; checked by E0 high-precision run"}
+role: weak chaos

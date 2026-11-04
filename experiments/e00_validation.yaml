@@ -1,0 +1,37 @@
+study: E0
+description: validation suite, pilot regression (spec 10.4), oracles, checks of values marked verify in the spec
+budget_hours: 0.5
+groups:
+  - {name: refs, kind: reference, grid: {case: [nb3_pilot, nb3_figure_eight]}}
+  - name: pilot_sweep
+    kind: traj
+    fixed: {method: taylor, schedule: shared, stop_err: 1.0e+8, case: nb3_pilot}
+    grid: {n: [4, 6, 8, 10, 12, 14, 16, 18, 20, 24, 28], arith: [f64, mpfr-80, mpfr-113, mpfr-160]}
+  - {name: pilot_amp, kind: amplification, grid: {case: [nb3_pilot]}}
+  - name: pilot_local
+    kind: local
+    fixed: {orders: [4, 6, 8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36], states: 60}
+    grid: {case: [nb3_pilot]}
+  - name: pilot_exact
+    kind: exact
+    fixed: {case: nb3_pilot, n: 8, max_steps: 4, max_wall: 300, max_bits: 100000000}
+    grid: {}
+  - name: kepler
+    kind: kepler
+    grid: {case: ["nb2_kepler:e_0", "nb2_kepler:e_1_2", "nb2_kepler:e_9_10"], n: [8, 16, 24], arith: [f64, dd, mpfr-113]}
+  - name: figure_eight
+    kind: closure
+    fixed: {case: nb3_figure_eight, n: 32, arith: mpfr-200, period: "6.32591398"}
+    grid: {}
+  - name: lambda_lorenz
+    kind: stats
+    fixed: {case: "lorenz63:rho_28", n: 24, arith: mpfr-113, T: 4000, sample_dt: "1/4", transient: 20, renorm_dt: 1, track_tpred: false, observables: {x: [-25, 25, 100], z: [0, 55, 110]}, cap: "1/16"}
+    grid: {}
+  - name: lambda_rossler
+    kind: stats
+    fixed: {case: rossler, n: 24, arith: mpfr-113, T: 20000, sample_dt: 1, transient: 100, renorm_dt: 5, track_tpred: false, observables: {x: [-15, 15, 60]}}
+    grid: {}
+  - name: duffing_regimes
+    kind: strobe
+    fixed: {n: 24, arith: dd, steps_per_period: 32, transient_periods: 300, periods: 300}
+    grid: {case: ["duffing:gamma_0_20", "duffing:gamma_0_28", "duffing:gamma_0_29", "duffing:gamma_0_37", "duffing:gamma_0_50", "duffing:gamma_0_65"], ic: [0, 1]}

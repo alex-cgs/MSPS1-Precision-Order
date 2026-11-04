@@ -1,0 +1,10 @@
+name: logistic_map
+kind: map
+builder: logistic
+equations: "x -> r x (1-x)"
+regime: chaotic at r = 4, lambda = ln 2
+params: {r: "4"}
+ic: {seed: 6001, count: {dev: 20, paper: 100}, bits: 30}
+horizon: 2000
+oracle: {lambda: "ln 2", horizon_law: "Angelidis et al. 2025 linear horizon in precision"}
+role: cheapest test of precision and representation

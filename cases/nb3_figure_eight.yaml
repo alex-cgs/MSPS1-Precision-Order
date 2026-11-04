@@ -1,0 +1,14 @@
+name: nb3_figure_eight
+builder: nbody
+equations: Chenciner-Montgomery orbit, equal masses; u_ij(0) irrational, stored at IC_DIGITS digits
+regime: regular, lambda ~ 0
+params: {masses: ["1", "1", "1"], dim: 2}
+ic:
+  generator: fixed
+  values: {qx0: "0.97000436", qy0: "-0.24308753", qx1: "-0.97000436", qy1: "0.24308753", qx2: "0", qy2: "0", vx2: "-0.93240737", vy2: "-0.86473146", vx0: "0.466203685", vy0: "0.43236573", vx1: "0.466203685", vy1: "0.43236573"}
+reference: {order: 56, bits: 400, check_order: 64, check_bits: 500, safety: 8, cap: "1/2", tol_check: 1.0e-30}
+T: 40
+tolerances: [1.0e-6, 1.0e-3]
+observables: [positions, invariants, constraints]
+oracle: {period: "6.32591398"}
+role: behaviour when lambda is near zero

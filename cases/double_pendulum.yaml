@@ -1,0 +1,11 @@
+name: double_pendulum
+builder: double_pendulum
+equations: standard Lagrangian with sin, cos of theta1, theta2, theta1-theta2, theta1-2theta2, 2theta1-2theta2 lifted; denominator lifted
+regime: mixed at large angles
+params: {m1: "1", m2: "1", l1: "1", l2: "1", g: "981/100"}
+ic: {generator: box, seed: 5301, bits: 20, box: {theta1: [1.5, 3.0], theta2: [1.5, 3.0]}, values: {omega1: "0", omega2: "0"}, count: {dev: 10, paper: 20}}
+reference: {order: 56, bits: 400, check_order: 64, check_bits: 500, safety: 8, cap: "1/2", tol_check: 1.0e-30}
+T: 60
+tolerances: [1.0e-6, 1.0e-3]
+observables: [positions, invariants, constraints]
+role: mixed phase space with lifted trigonometry
