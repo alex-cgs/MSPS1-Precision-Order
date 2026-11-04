@@ -1,0 +1,10 @@
+# For pde/ only (out of scope for the current run; see pde/README.md).
+name: msps-fenics
+channels: [conda-forge]
+dependencies:
+  - python=3.12
+  - fenics-dolfinx
+  - mpich
+  - numpy
+  - scipy
+  - pyyaml

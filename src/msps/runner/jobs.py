@@ -123,6 +123,7 @@ def run_traj(cfg):
     grid_ref = ref.grid()
     if mode == "shared":
         m = int(cfg.get("substeps", 1))
+        sample_all = bool(cfg.get("sample_all", False))  # full per-step E(t), only when asked (AGENT_PROMPT section 4 item 10)
         pos = ref.pos()
         hs = [arith.convert(h / m) for h in ref.steps]
         times = ref.step_times()
@@ -136,7 +137,7 @@ def run_traj(cfg):
             t = times[k + 1]
             E = dg.error_positions(arith, z, pos[k + 1], idx)
             tracker.update(t, E)
-            if t >= next_out - 1e-12 or k == len(hs) - 1:
+            if sample_all or t >= next_out - 1e-12 or k == len(hs) - 1:
                 rec.sample(t, E, z, pos[k + 1])
                 while gi < n_grid and float(ref.grid_times[gi]) <= t + 1e-12:
                     if gi in outs:
