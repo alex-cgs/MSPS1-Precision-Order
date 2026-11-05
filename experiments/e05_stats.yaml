@@ -15,7 +15,7 @@ groups:
   - name: henon
     kind: stats
     fixed: {T: 5000, sample_dt: "1/2", renorm_dt: 5, observables: {y: [-1, 1.5, 100], py: [-1, 1, 80]}, method: taylor, cap: "1/2", max_wall: 3600}
-    grid: {case: ["henon_heiles:E_1_6", "henon_heiles:E_1_8"], ic: auto, n: [2, 4, 6, 8, 12, 16, 24, 32], arith: [f32, f64, dd, mpfr-113]}
+    grid: {case: ["henon_heiles:E_1_6_r2", "henon_heiles:E_1_8"], ic: auto, n: [2, 4, 6, 8, 12, 16, 24, 32], arith: [f32, f64, dd, mpfr-113]}
     dev: {grid: {case: ["henon_heiles:E_1_8"], n: [4, 8, 16, 32], arith: [f32, f64, mpfr-113]}}
   - name: l96
     kind: stats
@@ -24,6 +24,6 @@ groups:
     dev: {grid: {n: [4, 16, 32], arith: [f32, f64]}}
   - name: nb3
     kind: stats
-    fixed: {case: nb3_ensemble, T: 1000, sample_dt: "1/2", renorm_dt: 2, observables: {log10_rmin: [-5, 2, 70], rmax: [0, 60, 120]}, method: taylor, max_wall: 3600, escape_r_factor: 10}
+    fixed: {case: "nb3_ensemble:r2", T: 1000, sample_dt: "1/2", renorm_dt: 2, observables: {log10_rmin: [-5, 2, 70], rmax: [0, 60, 120]}, method: taylor, max_wall: 3600, escape_r_factor: 10}
     grid: {ic: auto, n: [4, 6, 8, 12, 16, 24, 32], arith: [f32, f64, dd, mpfr-113]}
     dev: {grid: {n: [8, 16, 32], arith: [f64, mpfr-113]}}

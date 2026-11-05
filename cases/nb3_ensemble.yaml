@@ -13,6 +13,12 @@ ic:
   filter: {energy_max: "0", dmin0: "1/2", dmax: "40", T: "120", order: 16, max_steps: 100000}
 reference: {order: 56, bits: 400, check_order: 64, check_bits: 500, safety: 8, cap: "1/2", tol_check: 1.0e-30}
 T: 120
+variants:
+  # r2: the filter also checks an orbit accurate to T (the f64 orbit leaves the true one early), and the reference is
+  # raised because #1 of the original protocol missed tol_check (4.5e-30). Same draws, so ICs that pass both stages are unchanged.
+  r2:
+    ic: {filter: {energy_max: "0", dmin0: "1/2", dmax: "40", T: "120", order: 16, max_steps: 100000, truth: {arith: mpfr-256, order: 48}}}
+    reference: {order: 64, bits: 500, check_order: 72, check_bits: 600, max_steps: 150000}
 tolerances: [1.0e-6, 1.0e-3]
 observables: [positions, pair_distances, invariants, constraints, escape]
 role: statistics over initial conditions (RQ2, RQ3)

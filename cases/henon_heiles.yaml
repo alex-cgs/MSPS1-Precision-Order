@@ -8,6 +8,8 @@ variants:
   E_1_12: {E: "1/12"}
   E_1_8: {E: "1/8"}
   E_1_6: {E: "1/6"}
+  # E_1_6 at order 56/400 missed tol_check on 18 of 20 ICs (worst 6.8e-6): amplification over T = 800 is about 1e45
+  E_1_6_r2: {E: "1/6", reference: {order: 96, bits: 600, check_order: 108, check_bits: 700}}
   rational_ic: {E: "1/8", ic: {generator: fixed, values: {x: "0", y: "1/10", px: "2/5", py: "1/10"}}}
 ic: {generator: hh_shell, seed: 5201, count: {dev: 20, paper: 100}}
 reference: {order: 56, bits: 400, check_order: 64, check_bits: 500, safety: 8, cap: "1/2", tol_check: 1.0e-30}

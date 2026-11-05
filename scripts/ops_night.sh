@@ -12,12 +12,17 @@ PLAN=$(head -n1 $ROOT/scripts/ops_plan.txt)
 SSH="ssh -o BatchMode=yes -o ConnectTimeout=30 ops"
 secs_to_deadline() { echo $(( $(date -d "today 04:25" +%s) - $(date +%s) )); }
 
+# Light check first: nothing is copied or installed on a machine without a GPU.
+if ! $SSH 'hostname; test -e /dev/nvidiactl && nvidia-smi'; then
+  echo "no NVIDIA GPU visible on ops: E10 skipped tonight"; echo "== end $(date)"; exit 6
+fi
 $SSH 'mkdir -p ~/msps1' || { echo "ssh failed"; exit 4; }
 rsync -az --exclude .venv --exclude .venv-gpu --exclude results/raw --exclude results/queue --exclude logs --exclude .git \
+   --include 'results/references/ics/***' --exclude 'results/references/***' \
    -e "ssh -o BatchMode=yes" $ROOT/ ops:msps1/ || { echo "rsync up failed"; exit 5; }
 $SSH 'cd ~/msps1 && mkdir -p logs results/raw && (nvidia-smi; python3 --version; uname -a; free -g | head -2; df -h . | tail -1; which conda mamba uv)' 
 LEFT=$(secs_to_deadline)
-$SSH "cd ~/msps1 && if [ ! -x .venv-gpu/bin/python ]; then timeout 900 python3 -m venv .venv-gpu && timeout 900 .venv-gpu/bin/pip install -q --upgrade pip && timeout 1200 .venv-gpu/bin/pip install -q 'jax[cuda12]' numpy scipy sympy mpmath gmpy2 python-flint pandas pyarrow pyyaml psutil pytest; fi; .venv-gpu/bin/python -c 'import jax;print(jax.__version__, jax.devices())'"
+$SSH "cd ~/msps1 && if ! .venv-gpu/bin/python -c 'import jax' 2>/dev/null; then timeout 900 python3 -m venv .venv-gpu && timeout 900 .venv-gpu/bin/pip install -q --upgrade pip && timeout 1200 .venv-gpu/bin/pip install -q 'jax[cuda12]' numpy scipy sympy mpmath gmpy2 python-flint pandas pyarrow pyyaml psutil pytest; fi; .venv-gpu/bin/python -c 'import jax;print(jax.__version__, jax.devices())'" || { echo "JAX not usable on ops"; echo "== end $(date)"; exit 7; }
 case "$PLAN" in
   env_small) ARGS="--size small --steps 16" ;;
   full) ARGS="--size full" ;;

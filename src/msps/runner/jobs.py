@@ -92,6 +92,8 @@ def _blown(arith, z, idx) -> bool:
 
 def run_reference(cfg):
     meta = compute_reference(cfg["case"], cfg["ic"])
+    if not meta["check_passed"]:
+        raise RuntimeError(f"reference check failed: max diff {meta['max_pos_diff']:.3g} against tol {meta['tol_check']}")
     return ({"reference": {k: meta[k] for k in ("steps", "hmin", "hmax", "dmin", "max_pos_diff", "diff_at_T", "check_passed",
                                                 "wall_reference", "wall_check")}}, None, None)
 

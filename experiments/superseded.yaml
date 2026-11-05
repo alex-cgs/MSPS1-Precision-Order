@@ -1,0 +1,5 @@
+# Cases whose stored runs msps.io.iter_runs leaves out. The data stays on disk; nothing is deleted.
+cases:
+  nb3_ensemble: replaced by nb3_ensemble:r2. The f64-only filter admitted ICs whose true orbit forms a hard binary (references over 1.6M steps, never finished).
+  henon_heiles:E_1_6: replaced by henon_heiles:E_1_6_r2. Reference check failed on 18 of 20 ICs, worst 6.8e-6, above the T_pred tolerance 1e-6.
+  double_pendulum: replaced by double_pendulum:r2. Reference check failed on 2 of 3 ICs, worst 1.7e-10.

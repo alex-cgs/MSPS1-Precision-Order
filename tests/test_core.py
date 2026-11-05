@@ -337,3 +337,61 @@ def test_window_clock_advances_through_a_campaign():
     t[0] = datetime(2026, 11, 5, 4, 24, 40)
     assert w.must_stop(margin_s=30)
     assert w.next_start() == datetime(2026, 11, 6, 2, 30)
+
+
+def test_filter_truth_stage_rejects_and_restores_precision():
+    import gmpy2
+
+    from msps.systems import _passes_filter
+    case = load_case("nb3_pilot")
+    z = case.ic(0)
+    flt = {"dmin0": "0", "dmax": "100", "T": "1", "order": 8, "max_steps": 10000, "truth": {"arith": "mpfr-64", "order": 8}}
+    gmpy2.get_context().precision = 777
+    ok, why = _passes_filter(case, z, flt)
+    assert ok and why["truth_steps"] > 0
+    gmpy2.get_context().precision = 777
+    ok, why = _passes_filter(case, z, {**flt, "truth": {"arith": "mpfr-64", "order": 8, "max_steps": 1}})
+    assert not ok and why["reject"] == "truth_max_steps" and gmpy2.get_context().precision == 777
+
+
+def test_reference_step_budget_and_failed_check(monkeypatch, tmp_path):
+    import pytest
+
+    from msps.runner import references as R
+    case = load_case("nb3_pilot")
+    monkeypatch.setattr(R, "RESULTS", tmp_path)
+    monkeypatch.setitem(case.card, "T", 1)
+    monkeypatch.setitem(case.card["reference"], "max_steps", 2)
+    with pytest.raises(RuntimeError, match="exceeded max_steps"):
+        R.compute_reference(case.id, 0)
+    monkeypatch.delitem(case.card["reference"], "max_steps")
+    monkeypatch.setitem(case.card["reference"], "tol_check", 0.0)
+    assert not R.compute_reference(case.id, 0)["check_passed"]
+    with pytest.raises(RuntimeError, match="failed its check"):
+        R.Reference(case, 0)
+
+
+def test_queue_counts_and_pending_follow_the_current_grid(monkeypatch, tmp_path):
+    from msps import io as rio
+    from msps.runner.queue import Queue, run_id
+    monkeypatch.setattr(rio, "RESULTS", tmp_path)
+    old, new = {"kind": "traj", "case": "old", "ic": 0}, {"kind": "traj", "case": "new", "ic": 0}
+    q = Queue("T")
+    q.add([("g", old), ("g", new)])
+    assert q.counts({run_id("T", new)}) == {"pending": 1} and q.counts() == {"pending": 2}
+
+
+def test_superseded_cases_are_hidden_but_kept(monkeypatch, tmp_path):
+    import json
+
+    from msps import io as rio
+    root = tmp_path / "results"
+    monkeypatch.setattr(rio, "RESULTS", root)
+    (tmp_path / "experiments").mkdir()
+    (tmp_path / "experiments" / "superseded.yaml").write_text("cases: {old: why}\n")
+    for name, case in (("a", "old"), ("b", "new")):
+        d = root / "raw" / "T" / name
+        d.mkdir(parents=True)
+        (d / "meta.json").write_text(json.dumps({"config": {"case": case}}))
+    assert [m["config"]["case"] for _, m in rio.iter_runs("T")] == ["new"]
+    assert len(list(rio.iter_runs("T", include_superseded=True))) == 2

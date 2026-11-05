@@ -69,7 +69,10 @@ def compute_reference(case_spec: str, ic_id: int, force: bool = False) -> dict:
     gi, t = 0, Fraction(0)
     dmin = float("inf")
     pairs = case.system.meta.get("pairs")
+    max_steps = p.get("max_steps")
     while t < T:
+        if max_steps is not None and len(steps) >= int(max_steps):
+            raise RuntimeError(f"reference {case.id} #{ic_id} exceeded max_steps={max_steps} at t={float(t):.6g}")
         c = st.coeffs(z)
         rho = st.radius(c)
         h = min(sched.next_h(t, z, c, st), T - t)
@@ -124,6 +127,9 @@ class Reference:
         with open(d / "ref.pkl", "rb") as f:
             self.raw = pickle.load(f)
         self.meta = json.loads((d / "meta.json").read_text())
+        if not self.meta.get("check_passed", True):
+            raise RuntimeError(f"reference {case.id} #{ic_id} failed its check: max diff {self.meta['max_pos_diff']:.3g} "
+                               f"against tol {self.meta['tol_check']}")
         self.steps = self.raw["steps"]
         self.grid_times = self.raw["grid_times"]
         idx = case.system.positions
@@ -169,7 +175,7 @@ def _sparse(state_bin, idx):
 def get_reference(case, ic_id: int) -> Reference:
     key = (case.id, ic_id)
     if key not in _loaded:
-        while len(_loaded) >= 8:
+        while len(_loaded) >= 2:  # queue order keeps one IC's jobs together; each reference can be hundreds of MB
             _loaded.pop(next(iter(_loaded)))
         _loaded[key] = Reference(case, ic_id)
     return _loaded[key]

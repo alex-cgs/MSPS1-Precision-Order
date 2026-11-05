@@ -33,6 +33,7 @@ def main(argv=None):
     r.add_argument("--raw-budget-gb", type=float, default=20.0)
     r.add_argument("--retry-failed", action="store_true")
     r.add_argument("--groups", nargs="*")
+    r.add_argument("--mem-gb", type=float, help="per-worker memory cap; default 80%% of available memory / workers")
     r.add_argument("--log")
     d = sub.add_parser("dryrun")
     d.add_argument("experiment")
@@ -42,6 +43,7 @@ def main(argv=None):
     d.add_argument("--groups", nargs="*")
     s = sub.add_parser("status")
     s.add_argument("experiment")
+    s.add_argument("--mode", default="dev", choices=["dev", "paper"])
     a = ap.parse_args(argv)
     if a.cmd == "run":
         from .window import Window
@@ -53,7 +55,7 @@ def main(argv=None):
                 return 3
         if a.retry_failed:
             Queue(load_experiment(a.experiment)["study"]).reset_failed()
-        run_experiment(a.experiment, a.mode, a.workers, a.stop_after, a.limit, win, a.raw_budget_gb, _log_factory(a.log), a.groups)
+        run_experiment(a.experiment, a.mode, a.workers, a.stop_after, a.limit, win, a.raw_budget_gb, _log_factory(a.log), a.groups, a.mem_gb)
     elif a.cmd == "dryrun":
         exp = load_experiment(a.experiment)
         jobs = expand(exp, a.mode)
@@ -87,7 +89,8 @@ def main(argv=None):
                           "total_core_h": round(total_t / 3600, 2), "total_MB": round(total_mb, 1)}, indent=1))
     elif a.cmd == "status":
         exp = load_experiment(a.experiment)
-        print(exp["study"], Queue(exp["study"]).counts())
+        ids = {run_id(exp["study"], c) for _, c in expand(exp, a.mode)}
+        print(exp["study"], a.mode, Queue(exp["study"]).counts(ids))
     return 0
 
 

@@ -105,6 +105,7 @@ class Case:
         gen = _ic.GENERATORS[self.card["ic"]["generator"]]
         flt = self.card["ic"].get("filter")
         info = {"attempts": 1}
+        rejects = {}
         for attempt in range(100000):
             self._attempt = attempt
             base = gen(self, ic_id)
@@ -115,27 +116,49 @@ class Case:
             if not flt:
                 return z, info
             ok, why = _passes_filter(self, z, flt)
-            info = {"attempts": attempt + 1, **why}
             if ok:
-                return z, info
+                return z, {"attempts": attempt + 1, "rejects": rejects, **why}
+            rejects[why["reject"]] = rejects.get(why["reject"], 0) + 1
         raise RuntimeError(f"no IC passed the filter for {self.id} #{ic_id}")
 
 
 def _passes_filter(case, z, flt):
+    """f64 orbit first (cheap), then, if the card asks, an orbit accurate to T: a chaotic f64 run leaves the true
+    orbit well before T, so on its own it says nothing about close encounters of the true orbit."""
+    import gmpy2
+
     from ..arith import get_arith
+    prec = gmpy2.get_context().precision
+    try:
+        arith = get_arith("f64")
+        arith.activate()
+        K = [arith.convert(c) for c in case.value_fn("invariants")[1]]
+        energy = case.value_fn("invariants")[0](z, K)[0]
+        if "energy_max" in flt and energy >= _ic.parse(flt["energy_max"]):
+            return False, {"reject": "energy"}
+        if _pair_extent(case.system, z, min) < float(_ic.parse(flt["dmin0"])):
+            return False, {"reject": "dmin0"}
+        ok, why = _filter_orbit(case, z, arith, int(flt["order"]), int(flt["max_steps"]), flt)
+        if not ok:
+            return False, why
+        out = {"energy": float(energy), "filter_steps": why["steps"]}
+        truth = flt.get("truth")
+        if truth:
+            a = get_arith(truth["arith"])
+            a.activate()
+            ok, why = _filter_orbit(case, z, a, int(truth["order"]), int(truth.get("max_steps", flt["max_steps"])), flt)
+            if not ok:
+                return False, {**why, "reject": f"truth_{why['reject']}"}
+            out["truth_steps"] = why["steps"]
+        return True, out
+    finally:
+        gmpy2.get_context().precision = prec
+
+
+def _filter_orbit(case, z, arith, order, max_steps, flt):
     from ..integrators.taylor import TaylorStepper
     from ..schedules import AdaptiveDyadic
-    S = case.system
-    arith = get_arith("f64")
-    arith.activate()
-    K = [arith.convert(c) for c in case.value_fn("invariants")[1]]
-    energy = case.value_fn("invariants")[0](z, K)[0]
-    if "energy_max" in flt and energy >= _ic.parse(flt["energy_max"]):
-        return False, {"reject": "energy"}
-    dmin0 = _pair_extent(S, z, min)
-    if dmin0 < float(_ic.parse(flt["dmin0"])):
-        return False, {"reject": "dmin0"}
-    st = TaylorStepper(case, int(flt["order"]), arith)
+    st = TaylorStepper(case, order, arith)
     sched = AdaptiveDyadic(safety=8, cap=Fraction(1, 2))
     Z = [arith.convert(v) for v in z]
     t, T, steps = Fraction(0), _ic.parse(flt["T"]), 0
@@ -146,11 +169,11 @@ def _passes_filter(case, z, flt):
         Z = st.horner(c, arith.convert(h))
         t += h
         steps += 1
-        if steps > int(flt["max_steps"]):
+        if steps > max_steps:
             return False, {"reject": "max_steps"}
-        if steps % 8 == 0 and _pair_extent(S, Z, max) > dmax:
+        if steps % 8 == 0 and _pair_extent(case.system, Z, max) > dmax:
             return False, {"reject": "escape", "t": float(t)}
-    return True, {"energy": float(energy), "filter_steps": steps}
+    return True, {"steps": steps}
 
 
 def _pair_extent(S, z, fn):

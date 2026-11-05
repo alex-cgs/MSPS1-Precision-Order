@@ -6,6 +6,7 @@ import itertools
 import json
 import multiprocessing as mp
 import os
+import resource
 import sqlite3
 import time
 import traceback
@@ -90,8 +91,13 @@ class Queue:
                         (status, wall, error, time.time(), os.uname().nodename, rid))
         self.db.commit()
 
-    def counts(self) -> dict:
-        return dict(self.db.execute("select status, count(*) from jobs group by status").fetchall())
+    def counts(self, ids=None) -> dict:
+        """Status counts, restricted to `ids` (the current grid) when given; older rows stay in the table."""
+        out = {}
+        for rid, status in self.db.execute("select run_id, status from jobs").fetchall():
+            if ids is None or rid in ids:
+                out[status] = out.get(status, 0) + 1
+        return out
 
     def reset_failed(self):
         self.db.execute("update jobs set status='pending' where status='failed'")
@@ -116,13 +122,24 @@ def execute_job(args):
         return rid, "failed", time.time() - t0, traceback.format_exc()[-1500:]
 
 
-def _init_worker():
+def worker_mem_bytes(workers: int, mem_gb: float | None = None) -> int:
+    """Per-worker address-space cap: a runaway job fails on its own instead of taking the machine down."""
+    if mem_gb:
+        return int(mem_gb * 2**30)
+    with open("/proc/meminfo") as f:
+        avail = next(int(line.split()[1]) * 1024 for line in f if line.startswith("MemAvailable"))
+    return int(0.8 * avail / workers)
+
+
+def _init_worker(mem_bytes=None):
     os.environ.setdefault("OMP_NUM_THREADS", "1")
     os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
+    if mem_bytes:
+        resource.setrlimit(resource.RLIMIT_AS, (mem_bytes, mem_bytes))
 
 
 def run_experiment(path, mode="dev", workers=4, stop_after_s=None, limit=None, window=None, raw_budget_gb=20.0, log=print,
-                   groups=None) -> dict:
+                   groups=None, mem_gb=None) -> dict:
     exp = load_experiment(path)
     study = exp["study"]
     q = Queue(study)
@@ -130,15 +147,17 @@ def run_experiment(path, mode="dev", workers=4, stop_after_s=None, limit=None, w
     if groups:
         jobs = [j for j in jobs if j[0] in groups]
     q.add(jobs)
+    ids = {run_id(study, c) for _, c in jobs}
+    mem_bytes = worker_mem_bytes(workers, mem_gb)
     t_start = time.time()
     order = []
     for g, _ in jobs:
         if g not in order:
             order.append(g)
-    log(f"{study} {mode}: {len(jobs)} jobs in {len(order)} groups {q.counts()}")
+    log(f"{study} {mode}: {len(jobs)} jobs in {len(order)} groups {q.counts(ids)} worker_mem={mem_bytes / 2**30:.2f}GB")
     stopped = False
     for grp in order:
-        pending = q.pending(grp)
+        pending = [(r, c) for r, c in q.pending(grp) if r in ids]
         if limit:
             pending = pending[:limit]
         if not pending:
@@ -147,7 +166,7 @@ def run_experiment(path, mode="dev", workers=4, stop_after_s=None, limit=None, w
         args = [(study, r, c) for r, c in pending]
         done = 0
         ctx = mp.get_context("spawn")
-        with ctx.Pool(workers, initializer=_init_worker, maxtasksperchild=200) as pool:
+        with ctx.Pool(workers, initializer=_init_worker, initargs=(mem_bytes,), maxtasksperchild=200) as pool:
             for rid, status, wall, err in pool.imap_unordered(execute_job, args, chunksize=1):
                 q.mark(rid, status, wall, err)
                 done += 1
@@ -166,7 +185,7 @@ def run_experiment(path, mode="dev", workers=4, stop_after_s=None, limit=None, w
         if stopped:
             break
     wall = time.time() - t_start
-    counts = q.counts()
+    counts = q.counts(ids)
     log(f"{study} {mode}: finished in {wall:.0f}s {counts}")
     rec = rio.RESULTS / "raw" / study
     rec.mkdir(parents=True, exist_ok=True)
