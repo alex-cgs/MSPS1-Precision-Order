@@ -1,4 +1,4 @@
-"""Metrics of spec §4.7. Definitions fixed by the author; do not change without him."""
+"""Metrics of spec §4.7. Definitions fixed by the author; do not change without approval."""
 from __future__ import annotations
 
 import math
