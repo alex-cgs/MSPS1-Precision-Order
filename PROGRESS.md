@@ -23,14 +23,15 @@ Code built. E0 done. All dev grids finished except E11. Paper grids running in o
 - [x] H100 scripts written. **The author dismissed the `ops`/H100 tests on 2026-11-05: E10 runs locally.** Cron lines removed; `~/msps1` (306 MB) left on ops, nothing running
 - [x] Bibliography saved (`MSPS1 bibliography.csv`, 43 entries)
 - [x] Code snapshot in Drive: `MSPS1/code` (folder id 1w6p--Df2pI5MirUF7CcJ4XovKlRZJMvM), commit ee91ef0, asked for by the author on 2026-11-05. Later code changes are not in it; `results/` is not in it
-- [ ] E1 dev done (66 runs), paper running: 7 long N-body references left at last check
-- [ ] E2 dev done (6,348 of 6,348), paper pending
+- [x] E1 paper finished 23:00 on 2026-11-05: 78 done, 6 failed, all `nbN_circle:N_10` (3 references, 3 local); see flags. `analysis/e01_local.py` run
+- [ ] E2 paper finished 19:46: 57,544 of 58,429 done, 885 failed from 8 reference checks; see flags. Tables not yet in `results/derived` (interim analysis ran to the scratchpad)
 - [ ] E4 dev done (44 of 44; grid equal in paper mode)
-- [ ] E3 dev analysed, paper pending E2
-- [ ] E5 dev done (750 of 750), paper pending
+- [ ] E3 interim analysis on E2 paper done to the scratchpad; final run pending the 8 ICs
+- [ ] E5 paper running since 19:46 (3,251 of 14,860 at 23:21, Lorenz group nearly done)
 - [ ] E9 dev done (444 done, 30 failed by design, see below), paper pending
 - [ ] E8 dev done (364 of 364), E6 dev done (810 of 810), E7 dev done (100 of 100); paper running in the chain
-- [ ] E11 dev pending E1's references (its dry run hit the 25 min limit); paper only after looking at dev; E10 local pending
+- [ ] E11 dev running since 23:00 on 4 workers (references 27 of 60); paper (4,220 jobs) only after looking at dev; E10 local pending. E8 and E4 paper grids equal dev
+- [x] Interim findings emailed to the author on 2026-11-05 at their request, subject "MSPS1: interim findings (not the final digest)"
 - [ ] Figures, DIGEST, Drive upload, email, tag results-v1
 
 ## Running background jobs
@@ -68,8 +69,8 @@ Pilot rerun on this machine: c_r = 4.197 (spec 4.21), 6235 fit points (spec 6207
 | Study | Budget | Actual |
 |---|---|---|
 | E0 | 0.5 | 0.08 (dev) |
-| E1 | 2 | dev 167 s rerun; paper still running after 1.5 h |
-| E2 | 12 | dev about 9 core-h (3,915 s elapsed over three passes) |
+| E1 | 2 | paper 44,661 s (12.4 h): over budget, mostly N = 10 references |
+| E2 | 12 | dev about 9 core-h; paper 12:30 to 19:46 (7.3 h), 65 core-h of job wall |
 | E3 | analysis | |
 | E4 | 1 | dev 2,092 s of job wall before the hang, then 170 s |
 | E5 | 20 | dev 1,278 s elapsed, 7 workers |
@@ -91,6 +92,12 @@ E4 sat idle from 04:21 to 09:25: `GNU MP: Cannot allocate memory` aborted a work
 - **Duplicate fixed ICs in E1.** Cases with a fixed IC (for instance `nb3_pythagorean`) run ic 0, 1, 2 with identical results, so their `ics` count in `e1_local_law` overstates independent samples. Medians are unaffected.
 
 ## Flags against hypotheses and the plan (not adjusted)
+- **Correction, E2 crossover law:** the earlier "bits per order 3.54-3.76 against predicted 3.54-3.75" compared `n_star_model` with a prediction from the same local fit, so it was close to circular. The table now also has `empirical_bits_per_order` from the empirical n*, on cells where at least half the ICs reach a plateau. On paper data: Lorenz 3.5 (predicted 3.59), Rossler 3.1 (3.59), Henon-Heiles E = 1/6 4.0 (3.71), 3 points each on an even-order grid. Empirical and model n* agree within about 2 orders at 24, 53, 80 bits.
+- **E2 paper, failed references:** rossler #26, 35, 47, 58, 63, 91, 99 (max diff 1.5e-30 to 4.4e-29 against tol 1e-30) and nb3_ensemble:r4 #65 (3.45e-21). 885 dependent jobs failed with them. The check was not relaxed. Plan told to the author: recompute these ICs with higher-precision references in a new variant, same check, once cores are free; until then they are excluded, which may bias the sample.
+- **E1 paper, N = 10:** `nbN_circle:N_10` has no data. Reference #0 fails its check (max diff 4.99e-10 against 1e-30); others hit MemoryError or a worker abort after hours. Asked the author whether to try more precision, a shorter T, or stop at N = 8. E11 includes N = 8, 10 references and may fail the same way.
+- **E2 paper, unexplained:** `nb3_ensemble:r4` in f32 at tol 1e-3: median T_pred falls from 4.39 at n = 8 to 1.91 at n = 32, and is lower on 95 of 99 ICs pairwise. No such trend on Lorenz, Rossler or Henon-Heiles E = 1/8. Cause not checked.
+- **E1 paper, schedule:** rho/h of about 12-14 follows largely from the schedule, which puts h between rho/16 and rho/8; do not read it as a property of the systems. Kepler e = 0 and Lagrange are outliers (slopes -1.61, -1.73, rms 1.35); cause not checked.
+- **E2 queue:** the 2,518 pending rows are the superseded base `nb3_ensemble` grid, not part of the paper grid.
 - **E4, RQ9:** Hénon–Heiles grows at 0.56–0.73 of (d−1)n+1. The exact degree of its order-n Taylor map is n/2+1 (`analysis/e04_hh_degree.py`), and measured growth follows that: 7.24 against 7 at n = 12, where the law gives 13. So the law is an upper bound, reached only when no such structure lowers the degree. N-body 0.86–1.00, Lorenz 0.81–0.93.
 - **E3, H2:** on `nb3_ensemble:r4` the model does not transfer across ICs: out-of-sample rms 2.84 decades, 32% of points within one decade; the FTLE variant is no better (2.70). Per-IC fits reach about 1.2 decades on most ICs, with c_t from 8.1 to 19.7 and c_r from 3.9 to 11.7. The other systems test at 0.75–1.35 decades, and the FTLE variant improves Lorenz (0.53) and Rössler (0.76). Dev grid, 20 ICs.
 - **E9, RQ6:** `sine_map` has no `qr-p` runs: 30 jobs fail with `qr-p has no sin`, since sin of a rational is not rational. They stay failed unless the author wants a definition. `tent_map:mu_2` at 53 bits and above is fully censored, because the 30-bit dyadic ICs are exact there and the orbit matches the reference until collapse.

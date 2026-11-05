@@ -72,7 +72,10 @@ for case, d in cs[cs.tol == 1e-6].groupby("case"):
     if len(v) >= 2:
         a, b = np.polyfit(v.bits, v.n_star_model_median, 1)
         slope, icpt = local_fit(loc, case)
-        law.append({"case": case, "orders_per_bit": a, "bits_per_order": 1 / a, "intercept": b, "predicted_bits_per_order": (-slope) / np.log10(2), "rho_over_h": 10 ** (-slope)})
+        # model_bits_per_order shares its local fit with predicted_bits_per_order, so only the empirical fit tests the law.
+        e = d[(d.emp_ics_with_plateau >= 0.5 * d.ics) & d.n_star_emp_median.notna()]
+        emp = 1 / np.polyfit(e.bits, e.n_star_emp_median, 1)[0] if len(e) >= 3 else np.nan
+        law.append({"case": case, "orders_per_bit": a, "model_bits_per_order": 1 / a, "intercept": b, "predicted_bits_per_order": (-slope) / np.log10(2), "empirical_bits_per_order": emp, "empirical_points": len(e), "rho_over_h": 10 ** (-slope)})
 save_table(pd.DataFrame(law), "e2_crossover_law")
 print(pd.DataFrame(law).to_string())
 print(cs[cs.tol == 1e-6][["case", "bits", "n_star_emp_median", "emp_ics_with_plateau", "ics", "censored_frac_at_max_n", "n_star_model_median", "model_q25", "model_q75"]].to_string())
