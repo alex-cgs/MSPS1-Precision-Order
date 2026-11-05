@@ -403,3 +403,23 @@ def test_radius_survives_coefficients_beyond_float_range():
     st = TaylorStepper(case, 4, f)
     assert st.radius([[1.0, 1.0, 1.0, 1.0, float("inf")]]) == 0.0
     assert st.radius([[1.0, 1.0, 1.0, 16.0, 16.0]]) == pytest.approx(min(16.0 ** (-1 / 3), 16.0 ** (-1 / 4)))
+
+
+def _pool_job(task):
+    import os
+    import time
+    _, rid, cfg = task
+    if cfg == "abort":
+        os.abort()
+    if cfg == "sleep":
+        time.sleep(60)
+    return rid, "done", 0.0, None
+
+
+def test_pool_survives_a_dying_worker_and_enforces_the_job_limit():
+    from msps.runner.queue import run_pool
+    args = [("S", "a", "ok"), ("S", "b", "abort"), ("S", "c", "sleep"), ("S", "d", "ok")]
+    out = {r[0]: r for r in run_pool(args, 2, job_limit_s=8, job_fn=_pool_job)}
+    assert out["a"][1] == out["d"][1] == "done"
+    assert out["b"][1] == "failed" and "worker died" in out["b"][3]
+    assert out["c"][1] == "failed" and "wall limit" in out["c"][3]

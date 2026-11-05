@@ -10,6 +10,7 @@ import resource
 import sqlite3
 import time
 import traceback
+from multiprocessing.connection import wait as mp_wait
 from pathlib import Path
 
 import yaml
@@ -138,6 +139,68 @@ def _init_worker(mem_bytes=None):
         resource.setrlimit(resource.RLIMIT_AS, (mem_bytes, mem_bytes))
 
 
+def _worker_loop(conn, mem_bytes, job_fn):
+    _init_worker(mem_bytes)
+    while (task := conn.recv()) is not None:
+        conn.send(job_fn(task))
+
+
+def run_pool(args, workers, mem_bytes=None, job_limit_s=None, job_fn=execute_job, max_tasks=200):
+    """Yields (run_id, status, wall, error) per job. Unlike mp.Pool, whose imap waits forever for a job lost with its worker,
+    a worker that dies (GMP and FLINT abort on a failed allocation) or passes job_limit_s fails that job and is replaced."""
+    ctx = mp.get_context("spawn")
+    todo = list(reversed(args))
+    busy = {}  # worker conn -> [process, task, t_start, tasks_done]
+    idle = []
+
+    def spawn():
+        parent, child = ctx.Pipe()
+        proc = ctx.Process(target=_worker_loop, args=(child, mem_bytes, job_fn))
+        proc.start()
+        child.close()
+        return parent, proc, 0
+
+    def stop(conn, proc):
+        proc.kill()
+        proc.join()
+        conn.close()
+
+    try:
+        while todo or busy:
+            while todo and len(busy) < workers:
+                conn, proc, n = idle.pop() if idle else spawn()
+                task = todo.pop()
+                conn.send(task)
+                busy[conn] = [proc, task, time.time(), n]
+            ready = set(mp_wait(list(busy) + [w[0].sentinel for w in busy.values()], timeout=2))
+            for conn, (proc, task, t0, n) in list(busy.items()):
+                wall = time.time() - t0
+                try:
+                    result = conn.recv() if conn in ready and conn.poll() else None
+                except EOFError:
+                    proc.join(5)
+                    result = None
+                reuse = result is not None and n + 1 < max_tasks
+                if result is None:
+                    if not proc.is_alive():
+                        result = (task[1], "failed", wall, f"worker died, exit code {proc.exitcode}")
+                    elif job_limit_s is not None and wall > job_limit_s:
+                        result = (task[1], "failed", wall, f"killed at the job wall limit of {job_limit_s} s")
+                    else:
+                        continue
+                del busy[conn]
+                if reuse:
+                    idle.append((conn, proc, n + 1))
+                else:
+                    stop(conn, proc)
+                yield result
+    finally:
+        for conn, w in busy.items():
+            stop(conn, w[0])
+        for conn, proc, _ in idle:
+            stop(conn, proc)
+
+
 def run_experiment(path, mode="dev", workers=4, stop_after_s=None, limit=None, window=None, raw_budget_gb=20.0, log=print,
                    groups=None, mem_gb=None) -> dict:
     exp = load_experiment(path)
@@ -165,23 +228,22 @@ def run_experiment(path, mode="dev", workers=4, stop_after_s=None, limit=None, w
         log(f"{study}/{grp}: {len(pending)} pending")
         args = [(study, r, c) for r, c in pending]
         done = 0
-        ctx = mp.get_context("spawn")
-        with ctx.Pool(workers, initializer=_init_worker, initargs=(mem_bytes,), maxtasksperchild=200) as pool:
-            for rid, status, wall, err in pool.imap_unordered(execute_job, args, chunksize=1):
-                q.mark(rid, status, wall, err)
-                done += 1
-                if err:
-                    log(f"FAILED {rid}: {err.splitlines()[-1] if err else ''}")
-                if done % max(1, len(args) // 20) == 0:
-                    log(f"{study}/{grp}: {done}/{len(args)} elapsed {time.time() - t_start:.0f}s")
-                over_budget = done % 200 == 0 and rio.disk_usage_mb(rio.RESULTS / "raw") / 1e3 > raw_budget_gb
-                over_time = stop_after_s is not None and time.time() - t_start > stop_after_s
-                over_window = window is not None and window.must_stop(margin_s=30)
-                if over_budget or over_time or over_window:
-                    log(f"{study}: stopping (budget={over_budget} time={over_time} window={over_window})")
-                    pool.terminate()
-                    stopped = True
-                    break
+        results = run_pool(args, workers, mem_bytes, exp.get("job_wall_limit_s"))
+        for rid, status, wall, err in results:
+            q.mark(rid, status, wall, err)
+            done += 1
+            if err:
+                log(f"FAILED {rid}: {err.splitlines()[-1] if err else ''}")
+            if done % max(1, len(args) // 20) == 0:
+                log(f"{study}/{grp}: {done}/{len(args)} elapsed {time.time() - t_start:.0f}s")
+            over_budget = done % 200 == 0 and rio.disk_usage_mb(rio.RESULTS / "raw") / 1e3 > raw_budget_gb
+            over_time = stop_after_s is not None and time.time() - t_start > stop_after_s
+            over_window = window is not None and window.must_stop(margin_s=30)
+            if over_budget or over_time or over_window:
+                log(f"{study}: stopping (budget={over_budget} time={over_time} window={over_window})")
+                results.close()
+                stopped = True
+                break
         if stopped:
             break
     wall = time.time() - t_start

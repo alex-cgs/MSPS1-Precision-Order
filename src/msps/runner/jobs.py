@@ -355,14 +355,16 @@ def run_exact(cfg):
     bits = [max(_qbits(arith, v) for v in z)]
     walls = [0.0]
     t = Fraction(0)
+    d = case.system.degree
+    factor = (d - 1) * n + 1
     for h in hs:
         z = st.horner(st.coeffs(z), arith.convert(h))
         t += h
         bits.append(max(_qbits(arith, v) for v in z))
         walls.append(time.perf_counter() - t0)
-        if walls[-1] > budget or bits[-1] > limit_bits:
+        # the next step costs about `factor` times this one: stop before it, a single step cannot be interrupted
+        if walls[-1] + factor * (walls[-1] - walls[-2]) > budget or factor * bits[-1] > limit_bits:
             break
-    d = case.system.degree
     growth = [bits[i + 1] / bits[i] for i in range(len(bits) - 1)]
     return {"status": "completed", "degree": d, "predicted_factor": (d - 1) * n + 1, "growth": growth, "bits": bits,
             "walls": walls, "t_reached": float(t), "steps_done": len(bits) - 1,

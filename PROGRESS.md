@@ -20,7 +20,7 @@ Code built. E0 done. Dev grids running or analysed, then paper grids. See checkl
 - [x] symbolic, arith, integrators, schedules, systems + 19 case cards, diagnostics, models, runner, gpu, io
 - [x] Fast test suite passing
 - [x] E0 validation: 68/69 checks pass (`results/derived/e0_validation.csv`); the one miss is below
-- [x] H100 scripts and cron entries (02:30 `scripts/ops_night.sh`, 04:28 `scripts/ops_cleanup.sh`, tagged `# msps1` in the crontab; remove when E10 is finished)
+- [x] H100 scripts written. **The author dismissed the `ops`/H100 tests on 2026-11-05: E10 runs locally.** Cron lines removed; `~/msps1` (306 MB) left on ops, nothing running
 - [x] Bibliography saved (`MSPS1 bibliography.csv`, 43 entries)
 - [ ] E1 dev done, paper pending
 - [ ] E2 dev, paper
@@ -77,8 +77,13 @@ Pilot rerun on this machine: c_r = 4.197 (spec 4.21), 6235 fit points (spec 6207
 | E10 | 2 h per night | |
 | E11 | 10 | |
 
+## Second incident, E4 dev, 2026-11-05
+E4 sat idle from 04:21 to 09:25: `GNU MP: Cannot allocate memory` aborted a worker, and `mp.Pool.imap` waits forever for a job lost with its worker. Fixed: `run_pool` in `runner/queue.py` fails that job, replaces the worker and enforces an optional `job_wall_limit_s` (study YAML). `run_exact` now stops before a step predicted to pass `max_wall` or `max_bits` (bits and walls of completed steps unaffected). Nine E4 runs finished before the change are valid and kept; some of them ran past `max_wall` (up to 689 s against 200 s) and have more steps than the new rule would allow.
+
 ## Dry-run estimates
-- E2 dev (6,328 jobs): sweep 5.8 core-h, adaptive 0.9 core-h, refs/amp/local 0.3 core-h, about 56 MB raw. ~0.7 h wall on 11 workers.
+- E2 dev (6,328 jobs), first estimate: sweep 5.8 core-h, adaptive 0.9 core-h, refs/amp/local 0.3 core-h, about 56 MB raw. ~0.7 h wall on 11 workers. References were underestimated (see incident).
+- E2 dev sweep, redone on r4 references with 12 samples per group (`logs/E2_dry2.log`): sweep 0.42 core-h, adaptive 0.02 core-h, 32 MB. Sample walls stay under 2.1 s, so the long-lived high-n, high-p tail is probably missed; treat as a lower bound.
+- E4 dev (dry run hit my 150 s limit, rerun): 4.35 core-h total, 0.1 MB.
 
 ## Incident, night of 2026-11-05
 - Nine `nb3_ensemble` references ran from 00:07 to 02:35 without finishing, each near 2.4 GB, and took the machine to 247 MB available with swap full. Stopped by hand, with E4 removed from the chain. Sampled before stopping: 4–87% of T after 2.4 h, close encounters near 3e-4.
@@ -88,10 +93,10 @@ Pilot rerun on this machine: c_r = 4.197 (spec 4.21), 6235 fit points (spec 6207
 - **Old data:** kept on disk, nothing deleted. `experiments/superseded.yaml` lists the replaced cases and `msps.io.iter_runs` skips them.
 - **Safeguards:** per-worker memory cap (`--mem-gb`, default 80% of available / workers), reference LRU 8 to 2, queue and status restricted to the current grid. A memory failure inside GMP could abort a worker and hang the pool: check `logs/E*.log` for progress when a stage goes quiet.
 
-## H100 blocked (E10)
-`ssh ops` reaches a VMware VM with **no GPU visible**: no `/dev/nvidia*`, no `nvidia-smi`, no driver, `lspci` shows only VMware SVGA (checked 02:34, 2026-11-05). The first night's benchmark did not run; the pip failure in `logs/ops_night_2026-11-05.log` (jax CUDA wheels, network) is secondary. `ops_night.sh` now checks for the GPU first and exits without copying or installing anything if absent; cron stays on so a later attached GPU is picked up. Left on ops: `~/msps1` (306 MB, including a references copy) with a venv without JAX; nothing running. Open question 3.
+## H100 dismissed (E10)
+The author said on 2026-11-05 that the `ops` tests can be dismissed and that the tests can run locally. RQ8 is therefore not answered for the H100. History:
+`ssh ops` reaches a VMware VM with **no GPU visible**: no `/dev/nvidia*`, no `nvidia-smi`, no driver, `lspci` shows only VMware SVGA (checked 02:34, 2026-11-05). The first night's benchmark did not run; the pip failure in `logs/ops_night_2026-11-05.log` (jax CUDA wheels, network) is secondary. `ops_night.sh` now checks for the GPU first and exits without copying or installing anything if absent. Left on ops: `~/msps1` (306 MB, including a references copy) with a venv without JAX; nothing running. Open question 3.
 
 ## Open questions for Alexandre
-3. **`ops` shows no GPU.** Is the H100 attached to this VM, or is it on another host? Without it, E10 has local CPU and GTX 1080 Ti only and RQ8 stays unanswered for the H100.
 1. The pilot's `sum()` is compensated on Python ≥ 3.12 (see above). Should the paper quote the plain-IEEE numbers from the new engine? The T_pred table is unaffected.
 2. Escape criterion: Stone & Leigh give none that is operational. Is the definition above acceptable, and is r > 10 a the factor you want?

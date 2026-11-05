@@ -1,6 +1,7 @@
 study: E4
 description: exact-arithmetic bit growth against (d-1)n+1 (RQ9), N-body from the reference schedule, others at fixed dyadic h
 budget_hours: 1
+job_wall_limit_s: 1500
 groups:
   - name: nbody
     kind: exact
