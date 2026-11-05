@@ -44,6 +44,11 @@ def _fmt(v) -> str:
     return str(v)
 
 
+def sim_t_end(m: dict) -> float:
+    """Simulated end time. Runs before commit 4860044 hold a wall-clock stamp in t_end, so it is unknown for them."""
+    return m["t_end"] if m["t_end"] < 1e8 else float("nan")
+
+
 def traj_rows(study: str, groups=None) -> pd.DataFrame:
     """One row per (run, tolerance). Keeps run_path for later E(t) reads."""
     rows = []
@@ -54,7 +59,7 @@ def traj_rows(study: str, groups=None) -> pd.DataFrame:
         for tol, r in m["tpred"].items():
             rows.append({"run": str(d), "case": c["case"], "ic": c["ic"], "arith": c["arith"], "bits": bits_of(c["arith"]),
                          "method": c.get("method"), "n": c.get("n"), "schedule": c.get("schedule"), "tol": float(tol), "tpred": r["tpred"],
-                         "censored": bool(r["censored"]), "status": m["status"], "wall": m["wall"], "steps": m["steps"], "t_end": m["t_end"],
+                         "censored": bool(r["censored"]), "status": m["status"], "wall": m["wall"], "steps": m["steps"], "t_end": sim_t_end(m),
                          "substeps": c.get("substeps", 1), "s": c.get("s"), "k": c.get("k"), "rtol": c.get("rtol"), "solver_tol": c.get("solver_tol"),
                          "solver_iterations": m.get("solver_iterations"), "solver_failures": m.get("solver_failures"),
                          "sample_all": bool(c.get("sample_all", False))})

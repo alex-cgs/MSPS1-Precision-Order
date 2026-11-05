@@ -1,7 +1,7 @@
 """E5: statistics vs trajectories (RQ3). Reference ensemble = the highest (bits, n) in each case's grid; noise floor = split-half W1 of that ensemble."""
 import numpy as np
 import pandas as pd
-from common import bits_of, kind_runs, load_data, save_table
+from common import bits_of, kind_runs, load_data, save_table, sim_t_end
 from msps.diagnostics import ks_escape, wasserstein1_hist
 
 rows = []
@@ -48,7 +48,7 @@ for case, runs in by_case.items():
                "lambda_q75": float(np.nanpercentile(lams, 75)), "lambda_ref": float(ref_lam), "lambda_abs_err": float(abs(np.nanmedian(lams) - ref_lam)),
                "tpred_median_1e-6": float(np.median(tp6)) if tp6 else np.nan, "censored_frac_1e-6": float(np.mean(cens6)) if cens6 else np.nan, "tpred_median_1e-3": float(np.median(tp3)) if tp3 else np.nan,
                "status": str(status), "wall_median": float(np.median([m["wall"] for _, m in items])), "steps_median": float(np.median([m["steps"] for _, m in items])),
-               "t_end_median": float(np.median([m["t_end"] for _, m in items])), "is_reference": key == ref_key}
+               "t_end_median": float(np.nanmedian([sim_t_end(m) for _, m in items])), "is_reference": key == ref_key}
         for o in obs:
             ics = sorted(ens[key][o])
             a = sum(ens[key][o][i][0] for i in ics)

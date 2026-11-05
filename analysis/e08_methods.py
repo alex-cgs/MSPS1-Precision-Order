@@ -15,7 +15,7 @@ for r in tr[tr.tol == 1e-6].itertuples():
     label = r.method
     param = {"taylor": f"n={r.n}", "rk4": f"m={r.substeps}", "dop853": f"m={r.substeps}" if r.schedule == "shared" else f"rtol={r.rtol}", "gl": f"s={r.s},m={r.substeps},tol={r.solver_tol}", "yoshida": f"k={r.k},m={r.substeps}"}[label]
     rows.append({"case": r.case, "method": label, "param": param, "arith": r.arith, "schedule": r.schedule, "tpred_1e-6": r.tpred, "censored": r.censored, "wall": r.wall, "steps": r.steps,
-                 "t_end": r.t_end, "status": r.status, "E_last": last_e, "solver_iterations": r.solver_iterations, "solver_failures": r.solver_failures, **cols})
+                 "t_end": float(d["t"].values[-1]), "status": r.status, "E_last": last_e, "solver_iterations": r.solver_iterations, "solver_failures": r.solver_failures, **cols})
 df = pd.DataFrame(rows).sort_values(["case", "method", "arith", "wall"])
 save_table(df, "e8_methods")
 print(df.groupby(["case", "method", "arith"]).agg(best_tpred=("tpred_1e-6", "max"), min_wall=("wall", "min"), max_wall=("wall", "max"), runs=("wall", "size")).to_string())

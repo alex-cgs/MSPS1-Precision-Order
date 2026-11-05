@@ -1,7 +1,7 @@
 # MSPS1 progress (agent memory; "continue from PROGRESS.md" is enough to resume)
 
 ## Current phase
-Code built. E0 done. Dev grids running or analysed, then paper grids. See checklist.
+Code built. E0 done. Dev grids E1, E2, E3, E4, E5, E9 finished; E8, E6, E7 dev running (`scripts/dev_chain.sh`); E1 paper running. Then E11 dev, E10 local on an idle machine, then paper grids. See checklist.
 
 ## How to resume
 1. Read this file, `CLAUDE.md`, the spec sections touched by the next item.
@@ -22,12 +22,14 @@ Code built. E0 done. Dev grids running or analysed, then paper grids. See checkl
 - [x] E0 validation: 68/69 checks pass (`results/derived/e0_validation.csv`); the one miss is below
 - [x] H100 scripts written. **The author dismissed the `ops`/H100 tests on 2026-11-05: E10 runs locally.** Cron lines removed; `~/msps1` (306 MB) left on ops, nothing running
 - [x] Bibliography saved (`MSPS1 bibliography.csv`, 43 entries)
-- [ ] E1 dev done, paper pending
-- [ ] E2 dev, paper
-- [ ] E4
-- [ ] E3 (analysis only, needs E2)
-- [ ] E5 dev, paper
-- [ ] E9, E8, E6, E11, E10, E7
+- [x] Code snapshot in Drive: `MSPS1/code` (folder id 1w6p--Df2pI5MirUF7CcJ4XovKlRZJMvM), commit ee91ef0, asked for by the author on 2026-11-05. Later code changes are not in it; `results/` is not in it
+- [ ] E1 dev done (66 runs), paper running: 7 long N-body references left at last check
+- [ ] E2 dev done (6,348 of 6,348), paper pending
+- [ ] E4 dev done (44 of 44; grid equal in paper mode)
+- [ ] E3 dev analysed, paper pending E2
+- [ ] E5 dev done (750 of 750), paper pending
+- [ ] E9 dev done (444 done, 30 failed by design, see below), paper pending
+- [ ] E8, E6, E7 dev running; E11 dev pending E1's references (its dry run hit the 25 min limit); E10 local pending
 - [ ] Figures, DIGEST, Drive upload, email, tag results-v1
 
 ## Running background jobs
@@ -65,22 +67,36 @@ Pilot rerun on this machine: c_r = 4.197 (spec 4.21), 6235 fit points (spec 6207
 | Study | Budget | Actual |
 |---|---|---|
 | E0 | 0.5 | 0.08 (dev) |
-| E1 | 2 | |
-| E2 | 12 | |
+| E1 | 2 | dev 167 s rerun; paper still running after 1.5 h |
+| E2 | 12 | dev about 9 core-h (3,915 s elapsed over three passes) |
 | E3 | analysis | |
-| E4 | 1 | |
-| E5 | 20 | |
+| E4 | 1 | dev 2,092 s of job wall before the hang, then 170 s |
+| E5 | 20 | dev 1,278 s elapsed, 7 workers |
 | E6 | 3 | |
 | E7 | 3 | |
 | E8 | 6 | |
-| E9 | 3 | |
+| E9 | 3 | dev 61 s after the fix |
 | E10 | 2 h per night | |
 | E11 | 10 | |
 
 ## Second incident, E4 dev, 2026-11-05
 E4 sat idle from 04:21 to 09:25: `GNU MP: Cannot allocate memory` aborted a worker, and `mp.Pool.imap` waits forever for a job lost with its worker. Fixed: `run_pool` in `runner/queue.py` fails that job, replaces the worker and enforces an optional `job_wall_limit_s` (study YAML). `run_exact` now stops before a step predicted to pass `max_wall` or `max_bits` (bits and walls of completed steps unaffected). Nine E4 runs finished before the change are valid and kept; some of them ran past `max_wall` (up to 689 s against 200 s) and have more steps than the new rule would allow.
 
+## Other defects found on 2026-11-05
+- **`IteratedMap.step` skipped `post_step`,** so `qr-p` map iterates were exact rationals and doubled in size per iteration. E9 sat for 56 minutes on seven workers before I saw it. Fixed in ee91ef0 with a test. No `qr` map run had been stored, and the other back-ends have a no-op `post_step`, so no stored result changes.
+- **`t_end` overwritten.** `execute_job` stored a wall-clock stamp under the name of the run's simulated `t_end`. Fixed in 4860044; the stamps are now `clock_start`, `clock_end`. Older runs hold no simulated end time, and `analysis/common.sim_t_end` reports NaN for them. T_pred, E(t) and all other columns are unaffected.
+- **`nb3_ensemble` card had no `tolerances`.** 1,300 E2 jobs failed with a KeyError; rerun after adding the same tolerances as every other card.
+- **E2 memory cap.** 81 jobs on the longest references hit MemoryError at 2.2 GB per worker. All completed on retry with 4 workers at 5 GB. Paper grids need the same second pass.
+- **Duplicate fixed ICs in E1.** Cases with a fixed IC (for instance `nb3_pythagorean`) run ic 0, 1, 2 with identical results, so their `ics` count in `e1_local_law` overstates independent samples. Medians are unaffected.
+
+## Flags against hypotheses and the plan (not adjusted)
+- **E4, RQ9:** Hénon–Heiles grows at 0.56–0.73 of (d−1)n+1. The exact degree of its order-n Taylor map is n/2+1 (`analysis/e04_hh_degree.py`), and measured growth follows that: 7.24 against 7 at n = 12, where the law gives 13. So the law is an upper bound, reached only when no such structure lowers the degree. N-body 0.86–1.00, Lorenz 0.81–0.93.
+- **E3, H2:** on `nb3_ensemble:r4` the model does not transfer across ICs: out-of-sample rms 2.84 decades, 32% of points within one decade; the FTLE variant is no better (2.70). Per-IC fits reach about 1.2 decades on most ICs, with c_t from 8.1 to 19.7 and c_r from 3.9 to 11.7. The other systems test at 0.75–1.35 decades, and the FTLE variant improves Lorenz (0.53) and Rössler (0.76). Dev grid, 20 ICs.
+- **E9, RQ6:** `sine_map` has no `qr-p` runs: 30 jobs fail with `qr-p has no sin`, since sin of a rational is not rational. They stay failed unless the author wants a definition. `tent_map:mu_2` at 53 bits and above is fully censored, because the 30-bit dyadic ICs are exact there and the orbit matches the reference until collapse.
+- **E5:** at n = 8, 11 of 20 `nb3_ensemble:r4` runs end in `step_underflow` under both f64 and 113 bits, so it is not a float-range effect. It reduces their escape fraction (0.40 against 0.85 at n = 32). Likely the per-run step collapsing into a close encounter at low order; cause not confirmed.
+
 ## Dry-run estimates
+- E5 dev 2.36 core-h, E9 0.06, E8 5.35, E6 2.51, E7 0.02 (`logs/dry_*.log`, 4 samples per group). E11 did not finish in 25 min: N = 6 references take 5 to 30 min and N = 10 are over 1.5 h each, so its paper grid may pass its 10 h budget.
 - E2 dev (6,328 jobs), first estimate: sweep 5.8 core-h, adaptive 0.9 core-h, refs/amp/local 0.3 core-h, about 56 MB raw. ~0.7 h wall on 11 workers. References were underestimated (see incident).
 - E2 dev sweep, redone on r4 references with 12 samples per group (`logs/E2_dry2.log`): sweep 0.42 core-h, adaptive 0.02 core-h, 32 MB. Sample walls stay under 2.1 s, so the long-lived high-n, high-p tail is probably missed; treat as a lower bound.
 - E4 dev (dry run hit my 150 s limit, rerun): 4.35 core-h total, 0.1 MB.
