@@ -435,3 +435,16 @@ def test_qr_map_rounds_every_iteration():
     for _ in range(200):
         x = m.step(x)
         assert int(x.q) <= 2**24
+
+
+@pytest.mark.parametrize("s", [2, 3, 4, 6])
+def test_gauss_legendre_tableau_order_conditions(s):
+    from msps.integrators.gauss_legendre import tableau
+    A, b = tableau(s)
+    c = [sum(row) for row in A]
+    assert all(0 < x < 1 for x in c) and all(y - x > Fraction(1, 100) for x, y in zip(c, c[1:]))
+    for k in range(2 * s):
+        assert abs(sum(bi * ci**k for bi, ci in zip(b, c)) - Fraction(1, k + 1)) < Fraction(1, 10**300)
+    for i in range(s):
+        for k in range(s):
+            assert abs(sum(aij * cj**k for aij, cj in zip(A[i], c)) - c[i] ** (k + 1) / (k + 1)) < Fraction(1, 10**300)

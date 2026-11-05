@@ -7,6 +7,7 @@ canonical-symplectic only on the original (q, v) variables.
 from __future__ import annotations
 
 from fractions import Fraction
+from math import comb
 
 import mpmath as mp
 
@@ -16,9 +17,9 @@ from .rk import _RHS
 def tableau(s: int, digits: int = 320):
     """(A, b) as exact Fractions approximating the GL coefficients to `digits` digits."""
     with mp.workdps(digits):
-        P = lambda x: mp.legendre(s, 2 * x - 1)  # noqa: E731
-        guesses = [(1 - mp.cos(mp.pi * (k + mp.mpf(3) / 4) / (s + mp.mpf(1) / 2))) / 2 for k in range(s)]
-        c = sorted(mp.findroot(P, g) for g in guesses)
+        # nodes: roots of the shifted Legendre polynomial, from its exact coefficients, highest degree first
+        coeffs = [mp.mpf((-1) ** (s + j) * comb(s, j) * comb(s + j, j)) for j in range(s, -1, -1)]
+        c = sorted(mp.re(r) for r in mp.polyroots(coeffs, maxsteps=500, extraprec=2 * digits))
         V = mp.matrix(s, s)
         for i in range(s):
             for j in range(s):
