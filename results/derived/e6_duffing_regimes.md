@@ -1,74 +1,74 @@
-| case | n | arith | distinct_median | lambda_median | blown | regime_changed |
-|---|---|---|---|---|---|---|
-| duffing:gamma_0_20 | 2 | f32 | 300 | 0.01197 | 0 | True |
-| duffing:gamma_0_20 | 2 | f64 | 300 | 0.03115 | 0 | True |
-| duffing:gamma_0_20 | 3 | f32 | 300 | -0.1502 | 0 | True |
-| duffing:gamma_0_20 | 3 | f64 | 300 | -0.1503 | 0 | True |
-| duffing:gamma_0_20 | 4 | f32 | 288 | -0.1502 | 0 | True |
-| duffing:gamma_0_20 | 4 | f64 | 300 | -0.1502 | 0 | True |
-| duffing:gamma_0_20 | 6 | f32 | 1 | -0.15 | 0 | False |
-| duffing:gamma_0_20 | 6 | f64 | 1 | -0.15 | 0 | False |
-| duffing:gamma_0_20 | 8 | f32 | 1 | -0.15 | 0 | False |
-| duffing:gamma_0_20 | 8 | f64 | 1 | -0.15 | 0 | False |
-| duffing:gamma_0_20 | 16 | f32 | 1 | -0.15 | 0 | False |
-| duffing:gamma_0_20 | 16 | f64 | 1 | -0.15 | 0 | False |
-| duffing:gamma_0_28 | 2 | f32 | 300 | 0.0521 | 0 | True |
-| duffing:gamma_0_28 | 2 | f64 | 300 | 0.04626 | 0 | True |
-| duffing:gamma_0_28 | 3 | f32 | 300 | -0.1111 | 0 | True |
-| duffing:gamma_0_28 | 3 | f64 | 300 | -0.111 | 0 | True |
-| duffing:gamma_0_28 | 4 | f32 | 177 | -0.1503 | 0 | True |
-| duffing:gamma_0_28 | 4 | f64 | 151 | -0.1497 | 0 | True |
-| duffing:gamma_0_28 | 6 | f32 | 3 | -0.1499 | 0 | True |
-| duffing:gamma_0_28 | 6 | f64 | 2 | -0.1505 | 0 | False |
-| duffing:gamma_0_28 | 8 | f32 | 3 | -0.1501 | 0 | True |
-| duffing:gamma_0_28 | 8 | f64 | 2 | -0.1501 | 0 | False |
-| duffing:gamma_0_28 | 16 | f32 | 3 | -0.1501 | 0 | True |
-| duffing:gamma_0_28 | 16 | f64 | 2 | -0.1499 | 0 | False |
-| duffing:gamma_0_29 | 2 | f32 | 300 | 0.08538 | 0 | True |
-| duffing:gamma_0_29 | 2 | f64 | 300 | 0.08685 | 0 | True |
-| duffing:gamma_0_29 | 3 | f32 | 299 | -0.0498 | 0 | True |
-| duffing:gamma_0_29 | 3 | f64 | 299 | -0.04996 | 0 | True |
-| duffing:gamma_0_29 | 4 | f32 | 222 | -0.03857 | 0 | True |
-| duffing:gamma_0_29 | 4 | f64 | 226 | -0.03837 | 0 | True |
-| duffing:gamma_0_29 | 6 | f32 | 10 | -0.0359 | 0 | True |
-| duffing:gamma_0_29 | 6 | f64 | 4 | -0.03579 | 0 | False |
-| duffing:gamma_0_29 | 8 | f32 | 9 | -0.03601 | 0 | True |
-| duffing:gamma_0_29 | 8 | f64 | 4 | -0.03579 | 0 | False |
-| duffing:gamma_0_29 | 16 | f32 | 9 | -0.03601 | 0 | True |
-| duffing:gamma_0_29 | 16 | f64 | 4 | -0.03579 | 0 | False |
-| duffing:gamma_0_37 | 2 | f32 | 300 | 0.0896 | 0 | True |
-| duffing:gamma_0_37 | 2 | f64 | 300 | 0.09787 | 0 | True |
-| duffing:gamma_0_37 | 3 | f32 | 300 | 0.1177 | 0 | True |
-| duffing:gamma_0_37 | 3 | f64 | 300 | 0.1153 | 0 | True |
-| duffing:gamma_0_37 | 4 | f32 | 235 | -0.05388 | 0 | True |
-| duffing:gamma_0_37 | 4 | f64 | 241 | -0.05425 | 0 | True |
-| duffing:gamma_0_37 | 6 | f32 | 6 | -0.05265 | 0 | True |
-| duffing:gamma_0_37 | 6 | f64 | 5 | -0.05299 | 0 | False |
-| duffing:gamma_0_37 | 8 | f32 | 6 | -0.05263 | 0 | True |
-| duffing:gamma_0_37 | 8 | f64 | 5 | -0.05299 | 0 | False |
-| duffing:gamma_0_37 | 16 | f32 | 6 | -0.05263 | 0 | True |
-| duffing:gamma_0_37 | 16 | f64 | 5 | -0.05299 | 0 | False |
-| duffing:gamma_0_50 | 2 | f32 | 300 | 0.1043 | 0 | False |
-| duffing:gamma_0_50 | 2 | f64 | 300 | 0.1334 | 0 | False |
-| duffing:gamma_0_50 | 3 | f32 | 300 | 0.1747 | 0 | False |
-| duffing:gamma_0_50 | 3 | f64 | 300 | 0.1658 | 0 | False |
-| duffing:gamma_0_50 | 4 | f32 | 300 | 0.1203 | 0 | False |
-| duffing:gamma_0_50 | 4 | f64 | 300 | 0.1209 | 0 | False |
-| duffing:gamma_0_50 | 6 | f32 | 300 | 0.1022 | 0 | False |
-| duffing:gamma_0_50 | 6 | f64 | 300 | 0.1137 | 0 | False |
-| duffing:gamma_0_50 | 8 | f32 | 300 | 0.108 | 0 | False |
-| duffing:gamma_0_50 | 8 | f64 | 300 | 0.1099 | 0 | False |
-| duffing:gamma_0_50 | 16 | f32 | 300 | 0.09982 | 0 | False |
-| duffing:gamma_0_50 | 16 | f64 | 300 | 0.118 | 0 | False |
-| duffing:gamma_0_65 | 2 | f32 | 300 | -0.1497 | 0 | True |
-| duffing:gamma_0_65 | 2 | f64 | 300 | -0.1497 | 0 | True |
-| duffing:gamma_0_65 | 3 | f32 | 300 | 0.1628 | 0 | True |
-| duffing:gamma_0_65 | 3 | f64 | 300 | 0.1576 | 0 | True |
-| duffing:gamma_0_65 | 4 | f32 | 293 | -0.1496 | 0 | True |
-| duffing:gamma_0_65 | 4 | f64 | 300 | -0.1496 | 0 | True |
-| duffing:gamma_0_65 | 6 | f32 | 7 | -0.1498 | 0 | True |
-| duffing:gamma_0_65 | 6 | f64 | 2 | -0.1497 | 0 | False |
-| duffing:gamma_0_65 | 8 | f32 | 6 | -0.1499 | 0 | True |
-| duffing:gamma_0_65 | 8 | f64 | 2 | -0.1497 | 0 | False |
-| duffing:gamma_0_65 | 16 | f32 | 6 | -0.1499 | 0 | True |
-| duffing:gamma_0_65 | 16 | f64 | 2 | -0.1497 | 0 | False |
+| case | n | arith | distinct_median | lambda_median | blown | regime_changed | spurious_chaos | spurious_order |
+|---|---|---|---|---|---|---|---|---|
+| duffing:gamma_0_20 | 2 | f32 | 300 | 0.01197 | 0 | True | False | False |
+| duffing:gamma_0_20 | 2 | f64 | 300 | 0.03115 | 0 | True | True | False |
+| duffing:gamma_0_20 | 3 | f32 | 300 | -0.1502 | 0 | True | False | False |
+| duffing:gamma_0_20 | 3 | f64 | 300 | -0.1503 | 0 | True | False | False |
+| duffing:gamma_0_20 | 4 | f32 | 288 | -0.1502 | 0 | True | False | False |
+| duffing:gamma_0_20 | 4 | f64 | 300 | -0.1502 | 0 | True | False | False |
+| duffing:gamma_0_20 | 6 | f32 | 1 | -0.15 | 0 | False | False | False |
+| duffing:gamma_0_20 | 6 | f64 | 1 | -0.15 | 0 | False | False | False |
+| duffing:gamma_0_20 | 8 | f32 | 1 | -0.15 | 0 | False | False | False |
+| duffing:gamma_0_20 | 8 | f64 | 1 | -0.15 | 0 | False | False | False |
+| duffing:gamma_0_20 | 16 | f32 | 1 | -0.15 | 0 | False | False | False |
+| duffing:gamma_0_20 | 16 | f64 | 1 | -0.15 | 0 | False | False | False |
+| duffing:gamma_0_28 | 2 | f32 | 300 | 0.0521 | 0 | True | True | False |
+| duffing:gamma_0_28 | 2 | f64 | 300 | 0.04626 | 0 | True | True | False |
+| duffing:gamma_0_28 | 3 | f32 | 300 | -0.1111 | 0 | True | False | False |
+| duffing:gamma_0_28 | 3 | f64 | 300 | -0.111 | 0 | True | False | False |
+| duffing:gamma_0_28 | 4 | f32 | 177 | -0.1503 | 0 | True | False | False |
+| duffing:gamma_0_28 | 4 | f64 | 151 | -0.1497 | 0 | True | False | False |
+| duffing:gamma_0_28 | 6 | f32 | 3 | -0.1499 | 0 | True | False | False |
+| duffing:gamma_0_28 | 6 | f64 | 2 | -0.1505 | 0 | False | False | False |
+| duffing:gamma_0_28 | 8 | f32 | 3 | -0.1501 | 0 | True | False | False |
+| duffing:gamma_0_28 | 8 | f64 | 2 | -0.1501 | 0 | False | False | False |
+| duffing:gamma_0_28 | 16 | f32 | 3 | -0.1501 | 0 | True | False | False |
+| duffing:gamma_0_28 | 16 | f64 | 2 | -0.1499 | 0 | False | False | False |
+| duffing:gamma_0_29 | 2 | f32 | 300 | 0.08538 | 0 | True | True | False |
+| duffing:gamma_0_29 | 2 | f64 | 300 | 0.08685 | 0 | True | True | False |
+| duffing:gamma_0_29 | 3 | f32 | 299 | -0.0498 | 0 | True | False | False |
+| duffing:gamma_0_29 | 3 | f64 | 299 | -0.04996 | 0 | True | False | False |
+| duffing:gamma_0_29 | 4 | f32 | 222 | -0.03857 | 0 | True | False | False |
+| duffing:gamma_0_29 | 4 | f64 | 226 | -0.03837 | 0 | True | False | False |
+| duffing:gamma_0_29 | 6 | f32 | 10 | -0.0359 | 0 | True | False | False |
+| duffing:gamma_0_29 | 6 | f64 | 4 | -0.03579 | 0 | False | False | False |
+| duffing:gamma_0_29 | 8 | f32 | 9 | -0.03601 | 0 | True | False | False |
+| duffing:gamma_0_29 | 8 | f64 | 4 | -0.03579 | 0 | False | False | False |
+| duffing:gamma_0_29 | 16 | f32 | 9 | -0.03601 | 0 | True | False | False |
+| duffing:gamma_0_29 | 16 | f64 | 4 | -0.03579 | 0 | False | False | False |
+| duffing:gamma_0_37 | 2 | f32 | 300 | 0.0896 | 0 | True | True | False |
+| duffing:gamma_0_37 | 2 | f64 | 300 | 0.09787 | 0 | True | True | False |
+| duffing:gamma_0_37 | 3 | f32 | 300 | 0.1177 | 0 | True | True | False |
+| duffing:gamma_0_37 | 3 | f64 | 300 | 0.1153 | 0 | True | True | False |
+| duffing:gamma_0_37 | 4 | f32 | 235 | -0.05388 | 0 | True | False | False |
+| duffing:gamma_0_37 | 4 | f64 | 241 | -0.05425 | 0 | True | False | False |
+| duffing:gamma_0_37 | 6 | f32 | 6 | -0.05265 | 0 | True | False | False |
+| duffing:gamma_0_37 | 6 | f64 | 5 | -0.05299 | 0 | False | False | False |
+| duffing:gamma_0_37 | 8 | f32 | 6 | -0.05263 | 0 | True | False | False |
+| duffing:gamma_0_37 | 8 | f64 | 5 | -0.05299 | 0 | False | False | False |
+| duffing:gamma_0_37 | 16 | f32 | 6 | -0.05263 | 0 | True | False | False |
+| duffing:gamma_0_37 | 16 | f64 | 5 | -0.05299 | 0 | False | False | False |
+| duffing:gamma_0_50 | 2 | f32 | 300 | 0.1043 | 0 | False | False | False |
+| duffing:gamma_0_50 | 2 | f64 | 300 | 0.1334 | 0 | False | False | False |
+| duffing:gamma_0_50 | 3 | f32 | 300 | 0.1747 | 0 | False | False | False |
+| duffing:gamma_0_50 | 3 | f64 | 300 | 0.1658 | 0 | False | False | False |
+| duffing:gamma_0_50 | 4 | f32 | 300 | 0.1203 | 0 | False | False | False |
+| duffing:gamma_0_50 | 4 | f64 | 300 | 0.1209 | 0 | False | False | False |
+| duffing:gamma_0_50 | 6 | f32 | 300 | 0.1022 | 0 | False | False | False |
+| duffing:gamma_0_50 | 6 | f64 | 300 | 0.1137 | 0 | False | False | False |
+| duffing:gamma_0_50 | 8 | f32 | 300 | 0.108 | 0 | False | False | False |
+| duffing:gamma_0_50 | 8 | f64 | 300 | 0.1099 | 0 | False | False | False |
+| duffing:gamma_0_50 | 16 | f32 | 300 | 0.09982 | 0 | False | False | False |
+| duffing:gamma_0_50 | 16 | f64 | 300 | 0.118 | 0 | False | False | False |
+| duffing:gamma_0_65 | 2 | f32 | 300 | -0.1497 | 0 | True | False | False |
+| duffing:gamma_0_65 | 2 | f64 | 300 | -0.1497 | 0 | True | False | False |
+| duffing:gamma_0_65 | 3 | f32 | 300 | 0.1628 | 0 | True | True | False |
+| duffing:gamma_0_65 | 3 | f64 | 300 | 0.1576 | 0 | True | True | False |
+| duffing:gamma_0_65 | 4 | f32 | 293 | -0.1496 | 0 | True | False | False |
+| duffing:gamma_0_65 | 4 | f64 | 300 | -0.1496 | 0 | True | False | False |
+| duffing:gamma_0_65 | 6 | f32 | 7 | -0.1498 | 0 | True | False | False |
+| duffing:gamma_0_65 | 6 | f64 | 2 | -0.1497 | 0 | False | False | False |
+| duffing:gamma_0_65 | 8 | f32 | 6 | -0.1499 | 0 | True | False | False |
+| duffing:gamma_0_65 | 8 | f64 | 2 | -0.1497 | 0 | False | False | False |
+| duffing:gamma_0_65 | 16 | f32 | 6 | -0.1499 | 0 | True | False | False |
+| duffing:gamma_0_65 | 16 | f64 | 2 | -0.1497 | 0 | False | False | False |

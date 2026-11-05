@@ -1,7 +1,7 @@
 # MSPS1 progress (agent memory; "continue from PROGRESS.md" is enough to resume)
 
 ## Current phase
-Code built. E0 done. Dev grids E1, E2, E3, E4, E5, E9 finished; E8, E6, E7 dev running (`scripts/dev_chain.sh`); E1 paper running. Then E11 dev, E10 local on an idle machine, then paper grids. See checklist.
+Code built. E0 done. All dev grids finished except E11. Paper grids running in order through `scripts/paper_chain.sh` (E2, E5, E9, E8, E6, E7, E4), restartable: finished runs are skipped. E1 paper running separately; E11 dev starts when it ends. E10 local goes last on an idle machine, on `nb3_ensemble:r4` once E2 paper has made its 100 ICs. Then figures, DIGEST, Drive, email, tag. See checklist.
 
 ## How to resume
 1. Read this file, `CLAUDE.md`, the spec sections touched by the next item.
@@ -29,7 +29,8 @@ Code built. E0 done. Dev grids E1, E2, E3, E4, E5, E9 finished; E8, E6, E7 dev r
 - [ ] E3 dev analysed, paper pending E2
 - [ ] E5 dev done (750 of 750), paper pending
 - [ ] E9 dev done (444 done, 30 failed by design, see below), paper pending
-- [ ] E8, E6, E7 dev running; E11 dev pending E1's references (its dry run hit the 25 min limit); E10 local pending
+- [ ] E8 dev done (364 of 364), E6 dev done (810 of 810), E7 dev done (100 of 100); paper running in the chain
+- [ ] E11 dev pending E1's references (its dry run hit the 25 min limit); paper only after looking at dev; E10 local pending
 - [ ] Figures, DIGEST, Drive upload, email, tag results-v1
 
 ## Running background jobs
@@ -72,9 +73,9 @@ Pilot rerun on this machine: c_r = 4.197 (spec 4.21), 6235 fit points (spec 6207
 | E3 | analysis | |
 | E4 | 1 | dev 2,092 s of job wall before the hang, then 170 s |
 | E5 | 20 | dev 1,278 s elapsed, 7 workers |
-| E6 | 3 | |
-| E7 | 3 | |
-| E8 | 6 | |
+| E6 | 3 | dev 288 s, 7 workers |
+| E7 | 3 | dev 16 s, 7 workers |
+| E8 | 6 | dev 1,075 s plus 26 s retry, 7 workers |
 | E9 | 3 | dev 61 s after the fix |
 | E10 | 2 h per night | |
 | E11 | 10 | |
@@ -94,6 +95,11 @@ E4 sat idle from 04:21 to 09:25: `GNU MP: Cannot allocate memory` aborted a work
 - **E3, H2:** on `nb3_ensemble:r4` the model does not transfer across ICs: out-of-sample rms 2.84 decades, 32% of points within one decade; the FTLE variant is no better (2.70). Per-IC fits reach about 1.2 decades on most ICs, with c_t from 8.1 to 19.7 and c_r from 3.9 to 11.7. The other systems test at 0.75–1.35 decades, and the FTLE variant improves Lorenz (0.53) and Rössler (0.76). Dev grid, 20 ICs.
 - **E9, RQ6:** `sine_map` has no `qr-p` runs: 30 jobs fail with `qr-p has no sin`, since sin of a rational is not rational. They stay failed unless the author wants a definition. `tent_map:mu_2` at 53 bits and above is fully censored, because the 30-bit dyadic ICs are exact there and the orbit matches the reference until collapse.
 - **E5:** at n = 8, 11 of 20 `nb3_ensemble:r4` runs end in `step_underflow` under both f64 and 113 bits, so it is not a float-range effect. It reduces their escape fraction (0.40 against 0.85 at n = 32). Likely the per-run step collapsing into a close encounter at low order; cause not confirmed.
+
+- **E6, RQ4:** distinct stroboscopic values overstate regime changes. At n = 3, 4 with gamma = 0.20, lambda stays near -0.15 and x moves by under 0.06, yet all 300 values differ at 1e-6: the fixed point drifts slowly, which fits non-conservation of the lifted forcing (cause not confirmed). `regime_changed` (58% of rows, dev) counts these; `spurious_chaos` and `spurious_order` use the sign of lambda only. Spurious chaos appears at n = 2 for every non-chaotic gamma except 0.65, and at n = 3 for gamma = 0.37 and 0.65. Lambda values are for f64, dev grid.
+- **E9, RQ6:** rounding to 2^-53 beats f64 on Lorenz (T_pred about 23 against 19 at top n) and loses on the pilot (about 64 against 70). Expected direction, since absolute rounding is finer than relative at |x| near 30 and coarser for large u_ij at close encounters, but the mechanism is not tested separately.
+- **E7, RQ5:** sensitivity to (n, p) tracks FTLE: Spearman 0.90, AUC 0.98 at n = 16, 77 points, dev grid.
+- **E8 Gauss–Legendre:** s = 4, 6 failed at construction (repeated root in `tableau`), fixed in 68eeb15 and rerun. Stored s = 2 runs stay valid: the tableau is unchanged at working precision.
 
 ## Dry-run estimates
 - E5 dev 2.36 core-h, E9 0.06, E8 5.35, E6 2.51, E7 0.02 (`logs/dry_*.log`, 4 samples per group). E11 did not finish in 25 min: N = 6 references take 5 to 30 min and N = 10 are over 1.5 h each, so its paper grid may pass its 10 h budget.

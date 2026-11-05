@@ -37,8 +37,11 @@ if len(df):
     g = df.groupby(["case", "n", "arith"]).agg(distinct_median=("distinct", "median"), lambda_median=("lambda_est", "median"), blown=("status", lambda x: (x != "completed").mean())).reset_index()
     ref = g[(g.n == 16) & (g.arith == "f64")].set_index("case")
     g["regime_changed"] = [(row.distinct_median != ref.loc[row.case, "distinct_median"]) or ((row.lambda_median > 0.02) != (ref.loc[row.case, "lambda_median"] > 0.02)) for row in g.itertuples()]
+    # distinct counts also rise for a slowly drifting fixed point; only a sign change of lambda is a change of dynamics
+    g["spurious_chaos"] = [(row.lambda_median > 0.02) and not (ref.loc[row.case, "lambda_median"] > 0.02) for row in g.itertuples()]
+    g["spurious_order"] = [(row.lambda_median <= 0.02) and (ref.loc[row.case, "lambda_median"] > 0.02) for row in g.itertuples()]
     save_table(g, "e6_duffing_regimes")
-    print(g[g.regime_changed].to_string())
+    print(g[g.spurious_chaos | g.spurious_order].to_string())
 rows = []
 secs = {}
 for d, m in kind_runs("E6", "poincare"):
