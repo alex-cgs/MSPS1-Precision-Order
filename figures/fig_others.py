@@ -206,7 +206,7 @@ def spurious(theme, t):
         for i in range(len(gammas)):
             for j in range(len(ns)):
                 ax.text(j, i, f"{int(M[i, j])}" if M[i, j] == M[i, j] else "–", ha="center", va="center", fontsize=7.5, color=t["INK"] if M[i, j] < 20 else t["SURF"])
-        ax.grid(False); ax.set_title("Duffing: distinct stroboscopic values, f64 (true periods need n ≥ ...)", fontsize=9.5)
+        ax.grid(False); ax.set_title("Duffing: distinct stroboscopic values, f64", fontsize=9.5)
     ax = axs[1, 1]
     drawn = False
     secs = {}
@@ -224,6 +224,9 @@ def spurious(theme, t):
         ax.set_xlabel("y"); ax.set_ylabel("p_y"); ax.set_title("Hénon–Heiles section E = 1/8", fontsize=9.5)
         ax.set_xlim(-0.6, 1.0); ax.set_ylim(-0.6, 0.6)
         ax.legend(markerscale=8, fontsize=8)
+    if not any(ax.has_data() or ax.images for ax in axs.flat):
+        plt.close(fig)
+        return
     fig.suptitle("Spurious dynamics at low precision and low order", color=t["INK"], fontsize=11)
     fig.tight_layout()
     save(fig, "e6_spurious", theme)

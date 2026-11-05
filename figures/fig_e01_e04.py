@@ -1,4 +1,5 @@
-from style import BITS_LABEL, MARKERS, both, np, plt, read, save, short_case
+from style import re
+import BITS_LABEL, MARKERS, both, np, plt, read, save, short_case
 
 
 @both
@@ -6,7 +7,7 @@ def local_law(theme, t):
     med, law = read("e1_local_medians"), read("e1_local_law")
     if med is None:
         return
-    cases = sorted(med.case.unique())
+    cases = sorted(med.case.unique(), key=lambda c: [int(x) if x.isdigit() else x for x in re.split(r"(\d+)", c)])
     cols = 4
     rows = int(np.ceil(len(cases) / cols))
     fig, axs = plt.subplots(rows, cols, figsize=(3.0 * cols, 2.3 * rows), squeeze=False, sharey=True)
