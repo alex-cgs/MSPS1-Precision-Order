@@ -115,7 +115,7 @@ def execute_job(args):
     try:
         cfg2 = {**cfg, "_study": study, "_run_id": rid}
         meta, data, states = KINDS[cfg["kind"]](cfg2)
-        meta = {**meta, "config": cfg, "study": study, "run_id": rid, "t_start": t0, "t_end": time.time(),
+        meta = {**meta, "config": cfg, "study": study, "run_id": rid, "clock_start": t0, "clock_end": time.time(),
                 "wall_total": time.time() - t0, "provenance": provenance(cfg.get("ic"))}
         rio.write_run(study, rid, meta, data, states)
         return rid, "done", time.time() - t0, None
