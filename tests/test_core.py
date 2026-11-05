@@ -339,19 +339,12 @@ def test_window_clock_advances_through_a_campaign():
     assert w.next_start() == datetime(2026, 11, 6, 2, 30)
 
 
-def test_filter_truth_stage_rejects_and_restores_precision():
-    import gmpy2
-
+def test_filter_restores_precision():
     from msps.systems import _passes_filter
     case = load_case("nb3_pilot")
-    z = case.ic(0)
-    flt = {"dmin0": "0", "dmax": "100", "T": "1", "order": 8, "max_steps": 10000, "truth": {"arith": "mpfr-64", "order": 8}}
     gmpy2.get_context().precision = 777
-    ok, why = _passes_filter(case, z, flt)
-    assert ok and why["truth_steps"] > 0
-    gmpy2.get_context().precision = 777
-    ok, why = _passes_filter(case, z, {**flt, "truth": {"arith": "mpfr-64", "order": 8, "max_steps": 1}})
-    assert not ok and why["reject"] == "truth_max_steps" and gmpy2.get_context().precision == 777
+    ok, why = _passes_filter(case, case.ic(0), {"dmin0": "0", "dmax": "100", "T": "1", "order": 8, "max_steps": 10000})
+    assert ok and why["filter_steps"] > 0 and gmpy2.get_context().precision == 777
 
 
 def test_reference_step_budget_and_failed_check(monkeypatch, tmp_path):

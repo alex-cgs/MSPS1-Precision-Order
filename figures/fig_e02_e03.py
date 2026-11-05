@@ -40,7 +40,7 @@ def _tpred_panels(t, tol, name, cases, theme, title):
     save(fig, name, theme)
 
 
-CASES = ["nb3_pilot", "nb3_ensemble:r3", "lorenz63:rho_28", "henon_heiles:E_1_8", "henon_heiles:E_1_6_r2", "rossler"]
+CASES = ["nb3_pilot", "nb3_ensemble:r4", "lorenz63:rho_28", "henon_heiles:E_1_8", "henon_heiles:E_1_6_r2", "rossler"]
 
 
 @both

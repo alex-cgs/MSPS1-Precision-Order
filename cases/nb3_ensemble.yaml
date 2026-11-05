@@ -14,13 +14,6 @@ ic:
 reference: {order: 56, bits: 400, check_order: 64, check_bits: 500, safety: 8, cap: "1/2", tol_check: 1.0e-30}
 T: 120
 variants:
-  # r2 rested on a wrong diagnosis (see PROGRESS.md, incident): kept so that its stored references stay reproducible.
-  r2:
-    ic: {filter: {energy_max: "0", dmin0: "1/2", dmax: "40", T: "120", order: 16, max_steps: 100000, truth: {arith: mpfr-256, order: 48}}}
-    reference: {order: 64, bits: 500, check_order: 72, check_bits: 600, max_steps: 150000}
-  # r3: the spec's filter as in the base card; reference raised because #1 at 56/400 missed tol_check (4.5e-30).
-  r3:
-    reference: {order: 64, bits: 500, check_order: 72, check_bits: 600, max_steps: 150000}
-tolerances: [1.0e-6, 1.0e-3]
-observables: [positions, pair_distances, invariants, constraints, escape]
-role: statistics over initial conditions (RQ2, RQ3)
+  # the base card's filter and ICs; at 56/400 #1 missed tol_check (4.5e-30), at 64/500 #2 and #14 did (2.6e-30 worst)
+  r4:
+    reference: {order: 80, bits: 600, check_order: 90, check_bits: 700, max_steps: 150000}

@@ -1,6 +1,7 @@
 # Cases whose stored runs msps.io.iter_runs leaves out. The data stays on disk; nothing is deleted.
 cases:
-  nb3_ensemble: replaced by nb3_ensemble:r3. Nine references never finished because of the radius() float-overflow bug, and #1 missed its check (4.5e-30).
-  nb3_ensemble:r2: replaced by nb3_ensemble:r3. Its truth filter was added on a wrong diagnosis and may have rejected ICs because of the same bug.
+  nb3_ensemble: replaced by nb3_ensemble:r4. Nine references never finished because of the radius() float-overflow bug, and #1 missed its check (4.5e-30).
+  nb3_ensemble:r2: replaced by nb3_ensemble:r4. Its extra 256-bit filter (commit 76f70d8) came from a wrong diagnosis and may have rejected ICs because of the same bug.
+  nb3_ensemble:r3: replaced by nb3_ensemble:r4. Order 64/500 (commit 8787131), reference check failed on 2 of 20 ICs, worst 2.6e-30.
   henon_heiles:E_1_6: replaced by henon_heiles:E_1_6_r2. Reference check failed on 18 of 20 ICs, worst 6.8e-6, above the T_pred tolerance 1e-6.
   double_pendulum: replaced by double_pendulum:r2. Reference check failed on 2 of 3 ICs, worst 1.7e-10.

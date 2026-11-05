@@ -24,6 +24,6 @@ groups:
     dev: {grid: {n: [4, 16, 32], arith: [f32, f64]}}
   - name: nb3
     kind: stats
-    fixed: {case: "nb3_ensemble:r3", T: 1000, sample_dt: "1/2", renorm_dt: 2, observables: {log10_rmin: [-5, 2, 70], rmax: [0, 60, 120]}, method: taylor, max_wall: 3600, escape_r_factor: 10}
+    fixed: {case: "nb3_ensemble:r4", T: 1000, sample_dt: "1/2", renorm_dt: 2, observables: {log10_rmin: [-5, 2, 70], rmax: [0, 60, 120]}, method: taylor, max_wall: 3600, escape_r_factor: 10}
     grid: {ic: auto, n: [4, 6, 8, 12, 16, 24, 32], arith: [f32, f64, dd, mpfr-113]}
     dev: {grid: {n: [8, 16, 32], arith: [f64, mpfr-113]}}

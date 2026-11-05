@@ -123,8 +123,7 @@ class Case:
 
 
 def _passes_filter(case, z, flt):
-    """f64 orbit first (cheap), then, if the card asks, an orbit accurate to T: a chaotic f64 run leaves the true
-    orbit well before T, so on its own it says nothing about close encounters of the true orbit."""
+    """Screening on an f64 orbit. A chaotic run leaves the true orbit early, so this bounds its cost only, not the reference's."""
     import gmpy2
 
     from ..arith import get_arith
@@ -141,16 +140,7 @@ def _passes_filter(case, z, flt):
         ok, why = _filter_orbit(case, z, arith, int(flt["order"]), int(flt["max_steps"]), flt)
         if not ok:
             return False, why
-        out = {"energy": float(energy), "filter_steps": why["steps"]}
-        truth = flt.get("truth")
-        if truth:
-            a = get_arith(truth["arith"])
-            a.activate()
-            ok, why = _filter_orbit(case, z, a, int(truth["order"]), int(truth.get("max_steps", flt["max_steps"])), flt)
-            if not ok:
-                return False, {**why, "reject": f"truth_{why['reject']}"}
-            out["truth_steps"] = why["steps"]
-        return True, out
+        return True, {"energy": float(energy), "filter_steps": why["steps"]}
     finally:
         gmpy2.get_context().precision = prec
 

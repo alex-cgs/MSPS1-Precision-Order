@@ -40,7 +40,7 @@ def escapes(theme, t):
     d = read("e5_stats_summary")
     if d is None or "esc_ks" not in d:
         return
-    g = d[d.case == "nb3_ensemble:r3"]
+    g = d[d.case == "nb3_ensemble:r4"]
     if not len(g):
         return
     fig, axs = plt.subplots(1, 3, figsize=(11, 3.2))
@@ -236,7 +236,7 @@ def dimension(theme, t):
         return
     fig, axs = plt.subplots(1, 2, figsize=(10, 3.8))
     fam = {"nbN_circle": (0, "o", "circle"), "nbN_alternating_rings": (1, "s", "two rings"), "nbN_alternating_hier": (1, "v", "binary + perturbers"), "nbN_cluster": (2, "^", "cluster"),
-           "nb3_ensemble:r3": (3, "D", "3-body ensemble"), "nb2_kepler": (3, "P", "Kepler (2 bodies)")}
+           "nb3_ensemble:r4": (3, "D", "3-body ensemble"), "nb2_kepler": (3, "P", "Kepler (2 bodies)")}
     for name, (i, mk, lab) in fam.items():
         g = d[(d.family == name) & (d.bits == 53)].sort_values("N")
         if len(g):
