@@ -46,7 +46,7 @@ def exact_growth(theme, t):
     ax.set_xscale("log"); ax.set_yscale("log")
     ax.set_xlabel("predicted growth factor per step, (d−1)n+1")
     ax.set_ylabel("measured growth factor per step")
-    ax.set_title("Exact rationals: bit size per step follows the degree law")
+    ax.set_title("Exact rationals: bit growth per step against (d−1)n+1")
     ax.legend(loc="upper left")
     fig.tight_layout()
     save(fig, "e4_exact_growth", theme)

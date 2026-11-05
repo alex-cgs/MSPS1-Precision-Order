@@ -68,11 +68,14 @@ def kind_runs(study: str, kind: str):
 
 
 def amp_table(study: str) -> dict:
-    """{(case, ic): DataFrame t, A, log_growth, h, rho}"""
-    out = {}
+    """{(case, ic): DataFrame t, A, log_growth, h, rho}. When a case has runs at several perturbations, keeps the smallest: it saturates last."""
+    best = {}
     for d, m in kind_runs(study, "amplification"):
-        out[(m["config"]["case"], m["config"]["ic"])] = load_data(d)
-    return out
+        key = (m["config"]["case"], m["config"]["ic"])
+        eps = float(m["config"].get("perturbation", "inf"))
+        if key not in best or eps < best[key][0]:
+            best[key] = (eps, d)
+    return {k: load_data(d) for k, (_, d) in best.items()}
 
 
 def local_table(study: str) -> pd.DataFrame:
