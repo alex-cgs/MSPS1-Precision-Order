@@ -1,5 +1,6 @@
-from style import re
-import BITS_LABEL, MARKERS, both, np, plt, read, save, short_case
+import re
+
+from style import BITS_LABEL, MARKERS, both, np, plt, read, save, short_case
 
 
 @both
