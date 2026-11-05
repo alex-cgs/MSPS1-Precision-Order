@@ -65,6 +65,10 @@ class Arithmetic:
     def isfinite(self, x) -> bool:
         return math.isfinite(self.to_float(x))
 
+    def log2_abs(self, x) -> float:
+        """log2|x| for finite x whose value may lie outside float64's range."""
+        return float(gmpy2.log2(abs(self.to_mpfr(x))))
+
 
 class _IEEE(Arithmetic):
     dtype = None
@@ -149,6 +153,9 @@ class F80(Arithmetic):
 
     def to_float(self, x):
         return float(x)
+
+    def isfinite(self, x):
+        return bool(np.isfinite(x))
 
     def to_fraction(self, x):
         m, e = np.frexp(x)
@@ -298,6 +305,9 @@ class Arb(Arithmetic):
 
     def to_float(self, x):
         return float(x.mid())
+
+    def isfinite(self, x):
+        return x.is_finite()
 
     def to_fraction(self, x):
         man, exp = x.mid().man_exp()

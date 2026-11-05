@@ -395,3 +395,18 @@ def test_superseded_cases_are_hidden_but_kept(monkeypatch, tmp_path):
         (d / "meta.json").write_text(json.dumps({"config": {"case": case}}))
     assert [m["config"]["case"] for _, m in rio.iter_runs("T")] == ["new"]
     assert len(list(rio.iter_runs("T", include_superseded=True))) == 2
+
+
+def test_radius_survives_coefficients_beyond_float_range():
+    case = load_case("nb3_pilot")
+    a = get_arith("mpfr-200")
+    a.activate()
+    st = TaylorStepper(case, 4, a)
+    big = gmpy2.mpfr("1e400")
+    one = gmpy2.mpfr(1)
+    assert st.radius([[one, one, one, one, big]]) == pytest.approx(10.0**-100, rel=1e-9)
+    f = get_arith("f64")
+    f.activate()
+    st = TaylorStepper(case, 4, f)
+    assert st.radius([[1.0, 1.0, 1.0, 1.0, float("inf")]]) == 0.0
+    assert st.radius([[1.0, 1.0, 1.0, 16.0, 16.0]]) == pytest.approx(min(16.0 ** (-1 / 3), 16.0 ** (-1 / 4)))

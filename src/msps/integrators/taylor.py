@@ -39,8 +39,12 @@ class TaylorStepper:
         best = float("inf")
         for k in (n - 1, n):
             mk = max(abs(f(v[k])) for v in c)
-            if mk > 0 and mk != float("inf"):
+            if mk == float("inf"):
+                # beyond float range is not overflow for mpfr, q or f80: at order 64 that is only rho < 1.5e-5
+                if all(self.arith.isfinite(v[k]) for v in c):
+                    best = min(best, 2.0 ** (-max(self.arith.log2_abs(v[k]) for v in c) / k))
+                else:
+                    best = 0.0
+            elif mk > 0:
                 best = min(best, mk ** (-1.0 / k))
-            elif mk == float("inf"):
-                best = 0.0
         return best

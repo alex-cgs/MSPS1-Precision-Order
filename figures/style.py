@@ -70,7 +70,7 @@ def both(fn):
 
 
 def short_case(c: str) -> str:
-    return c.replace(":r2", "").replace("_r2", "").replace("henon_heiles:E_1_8", "Hénon–Heiles E=1/8").replace("henon_heiles:E_1_6", "Hénon–Heiles E=1/6").replace("lorenz63:rho_28", "Lorenz-63").replace("rossler", "Rössler") \
+    return c.replace(":r2", "").replace(":r3", "").replace("_r2", "").replace("henon_heiles:E_1_8", "Hénon–Heiles E=1/8").replace("henon_heiles:E_1_6", "Hénon–Heiles E=1/6").replace("lorenz63:rho_28", "Lorenz-63").replace("rossler", "Rössler") \
         .replace("nb3_pilot", "3-body pilot").replace("nb3_ensemble", "3-body ensemble").replace("double_pendulum", "double pendulum").replace("duffing:gamma_0_50", "Duffing γ=0.5") \
         .replace("lorenz96:N_", "Lorenz-96 N=").replace("fput_beta:N_", "FPUT-β N=")
 
