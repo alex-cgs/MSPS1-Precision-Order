@@ -13,6 +13,7 @@ ic:
   filter: {energy_max: "0", dmin0: "1/2", dmax: "40", T: "120", order: 16, max_steps: 100000}
 reference: {order: 56, bits: 400, check_order: 64, check_bits: 500, safety: 8, cap: "1/2", tol_check: 1.0e-30}
 T: 120
+tolerances: [1.0e-6, 1.0e-3]
 variants:
   # the base card's filter and ICs; at 56/400 #1 missed tol_check (4.5e-30), at 64/500 #2 and #14 did (2.6e-30 worst)
   r4:
