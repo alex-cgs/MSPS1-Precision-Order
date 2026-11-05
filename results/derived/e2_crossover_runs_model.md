@@ -1,0 +1,34 @@
+| case | ic | bits | n_star_model |
+|---|---|---|---|
+| henon_heiles:E_1_6_r2 | 0 | 24 | 7.32 |
+| henon_heiles:E_1_6_r2 | 0 | 53 | 15.15 |
+| henon_heiles:E_1_6_r2 | 0 | 80 | 22.43 |
+| henon_heiles:E_1_6_r2 | 0 | 106 | 29.45 |
+| henon_heiles:E_1_6_r2 | 0 | 113 | 31.34 |
+| henon_heiles:E_1_6_r2 | 0 | 160 | 44.03 |
+| henon_heiles:E_1_6_r2 | 0 | 256 | 69.94 |
+| henon_heiles:E_1_6_r2 | 1 | 24 | 6.234 |
+| henon_heiles:E_1_6_r2 | 1 | 53 | 14.08 |
+| henon_heiles:E_1_6_r2 | 1 | 80 | 21.38 |
+| henon_heiles:E_1_6_r2 | 1 | 106 | 28.41 |
+| henon_heiles:E_1_6_r2 | 1 | 113 | 30.3 |
+| henon_heiles:E_1_6_r2 | 1 | 160 | 43.01 |
+| henon_heiles:E_1_6_r2 | 1 | 256 | 68.97 |
+| henon_heiles:E_1_6_r2 | 2 | 24 | 7.784 |
+| henon_heiles:E_1_6_r2 | 2 | 53 | 15.58 |
+| henon_heiles:E_1_6_r2 | 2 | 80 | 22.84 |
+| henon_heiles:E_1_6_r2 | 2 | 106 | 29.83 |
+| henon_heiles:E_1_6_r2 | 2 | 113 | 31.71 |
+| henon_heiles:E_1_6_r2 | 2 | 160 | 44.34 |
+| henon_heiles:E_1_6_r2 | 2 | 256 | 70.15 |
+| henon_heiles:E_1_6_r2 | 3 | 24 | 7.097 |
+| henon_heiles:E_1_6_r2 | 3 | 53 | 14.9 |
+| henon_heiles:E_1_6_r2 | 3 | 80 | 22.16 |
+| henon_heiles:E_1_6_r2 | 3 | 106 | 29.16 |
+| henon_heiles:E_1_6_r2 | 3 | 113 | 31.04 |
+| henon_heiles:E_1_6_r2 | 3 | 160 | 43.69 |
+| henon_heiles:E_1_6_r2 | 3 | 256 | 69.52 |
+| henon_heiles:E_1_6_r2 | 4 | 24 | 6.977 |
+| henon_heiles:E_1_6_r2 | 4 | 53 | 14.82 |
+
+(first 30 of 707 rows; full table in e2_crossover_runs_model.csv)
