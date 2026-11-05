@@ -21,6 +21,7 @@ Code built. E0 done. Dev grids running or analysed, then paper grids. See checkl
 - [x] Fast test suite passing
 - [x] E0 validation: 68/69 checks pass (`results/derived/e0_validation.csv`); the one miss is below
 - [x] H100 scripts and cron entries (02:30 `scripts/ops_night.sh`, 04:28 `scripts/ops_cleanup.sh`, tagged `# msps1` in the crontab; remove when E10 is finished)
+- [x] Bibliography saved (`MSPS1 bibliography.csv`, 43 entries)
 - [ ] E1 dev done, paper pending
 - [ ] E2 dev, paper
 - [ ] E4
@@ -79,6 +80,19 @@ Pilot rerun on this machine: c_r = 4.197 (spec 4.21), 6235 fit points (spec 6207
 ## Dry-run estimates
 - E2 dev (6,328 jobs): sweep 5.8 core-h, adaptive 0.9 core-h, refs/amp/local 0.3 core-h, about 56 MB raw. ~0.7 h wall on 11 workers.
 
+## Incident, night of 2026-11-05
+- Nine `nb3_ensemble` references ran from 00:07 to 02:35 without finishing, each near 2.4 GB, and took the machine to 247 MB available with swap full. Stopped by hand, with E4 removed from the chain. Sampled before stopping: 4–87% of T after 2.4 h, close encounters near 3e-4.
+- **Cause:** the filter's `max_steps` was evaluated on an f64 orbit, which leaves the true orbit early; 9 of 20 admitted ICs form a hard binary on the true orbit. Dry run missed it: E2 refs estimated 0.3 core-h from a sample of 2.
+- **Change:** new variant `nb3_ensemble:r2`: same draws and same 100,000-step limit, now also checked on a 256-bit, order-48 orbit. Reference raised to 64/500 (check 72/600), hard limit 150,000 steps. This is a selection: the ensemble excludes orbits with a tight binary before T = 120. Rejection counts are stored per IC under `filter.rejects`. Open question 4.
+- **Invalid references found:** `henon_heiles:E_1_6` failed its check on 18 of 20 ICs (worst 6.8e-6, above the T_pred tolerance 1e-6), `double_pendulum` on 2 of 3 (worst 1.7e-10), `nb3_ensemble` #1 narrowly (4.5e-30). The runner did not act on a failed check, so the E1 dev runs on these two cases started from these references. New variants `henon_heiles:E_1_6_r2` and `double_pendulum:r2` use 96/600 (check 108/700). `Reference` now refuses a failed check and the reference job is marked failed.
+- **Old data:** kept on disk, nothing deleted. `experiments/superseded.yaml` lists the replaced cases and `msps.io.iter_runs` skips them.
+- **Safeguards:** per-worker memory cap (`--mem-gb`, default 80% of available / workers), reference LRU 8 to 2, queue and status restricted to the current grid. A memory failure inside GMP could abort a worker and hang the pool: check `logs/E*.log` for progress when a stage goes quiet.
+
+## H100 blocked (E10)
+`ssh ops` reaches a VMware VM with **no GPU visible**: no `/dev/nvidia*`, no `nvidia-smi`, no driver, `lspci` shows only VMware SVGA (checked 02:34, 2026-11-05). The first night's benchmark did not run; the pip failure in `logs/ops_night_2026-11-05.log` (jax CUDA wheels, network) is secondary. `ops_night.sh` now checks for the GPU first and exits without copying or installing anything if absent; cron stays on so a later attached GPU is picked up. Left on ops: `~/msps1` (306 MB, including a references copy) with a venv without JAX; nothing running. Open question 3.
+
 ## Open questions for Alexandre
+3. **`ops` shows no GPU.** Is the H100 attached to this VM, or is it on another host? Without it, E10 has local CPU and GTX 1080 Ti only and RQ8 stays unanswered for the H100.
+4. **Ensemble selection.** Is excluding orbits that form a tight binary before T = 120 (over 100,000 adaptive steps on the true orbit) acceptable? The alternative is to keep them and cap each reference's T, which needs much more compute.
 1. The pilot's `sum()` is compensated on Python ≥ 3.12 (see above). Should the paper quote the plain-IEEE numbers from the new engine? The T_pred table is unaffected.
 2. Escape criterion: Stone & Leigh give none that is operational. Is the definition above acceptable, and is r > 10 a the factor you want?
