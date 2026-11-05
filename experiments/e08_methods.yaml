@@ -1,6 +1,7 @@
 study: E8
 description: method families on a common footing (RQ7). All on the case's shared schedule refined by substeps, so accuracy and cost are compared at matched grids; run to T unless blown up so invariants are measured
 budget_hours: 6
+job_wall_limit_s: 14400
 groups:
   - name: refs
     kind: reference

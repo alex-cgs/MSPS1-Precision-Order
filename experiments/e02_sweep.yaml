@@ -1,6 +1,7 @@
 study: E2
 description: (n, p) sweep on the shared schedule, plus a per-run adaptive check; T_pred at tol 1e-6 and 1e-3 from every step
 budget_hours: 12
+job_wall_limit_s: 14400
 groups:
   - {name: refs, kind: reference, grid: {case: [nb3_pilot, "nb3_ensemble:r4", "lorenz63:rho_28", "henon_heiles:E_1_8", "henon_heiles:E_1_6_r2", rossler], ic: auto}}
   - {name: amp, kind: amplification, grid: {case: [nb3_pilot, "nb3_ensemble:r4", "lorenz63:rho_28", "henon_heiles:E_1_8", "henon_heiles:E_1_6_r2", rossler], ic: auto}}

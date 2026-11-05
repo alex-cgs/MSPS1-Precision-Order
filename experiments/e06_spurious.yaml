@@ -1,6 +1,7 @@
 study: E6
 description: spurious dynamics (RQ4). Fake periodicity at low precision, bifurcation shifts, Hénon–Heiles section survival
 budget_hours: 3
+job_wall_limit_s: 14400
 groups:
   - name: periodicity
     kind: map

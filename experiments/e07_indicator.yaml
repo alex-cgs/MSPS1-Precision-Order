@@ -2,6 +2,7 @@ study: E7
 description: "chaos indicator map (RQ5): sensitivity to (n,p) vs FTLE on a H\xE9non\u2013\
   Heiles grid"
 budget_hours: 3
+job_wall_limit_s: 14400
 groups:
 - name: grid
   kind: indicator

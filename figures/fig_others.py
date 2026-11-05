@@ -14,7 +14,8 @@ def stats_vs_traj(theme, t):
         for b in sorted(g.bits.unique()):
             h = g[g.bits == b].sort_values("n")
             col = bits_color(t, b)
-            row[0].plot(h.n, h["tpred_median_1e-6"], color=col, marker=bits_marker(b), ms=4, label=BITS_LABEL[b])
+            full = d[(d.case == c) & (d.bits == b)].sort_values("n")  # the reference group has a T_pred too
+            row[0].plot(full.n, full["tpred_median_1e-6"], color=col, marker=bits_marker(b), ms=4, label=BITS_LABEL[b])
             row[1].plot(h.n, np.maximum(h[ob], 1e-6), color=col, marker=bits_marker(b), ms=4)
             row[2].plot(h.n, np.maximum(h.lambda_abs_err, 1e-5), color=col, marker=bits_marker(b), ms=4)
         floor = d[d.case == c]["W1_floor_" + ob[3:]].iloc[0]

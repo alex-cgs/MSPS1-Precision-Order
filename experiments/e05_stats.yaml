@@ -1,6 +1,7 @@
 study: E5
 description: statistics vs trajectories (RQ3). Per-run adaptive step; lambda from a twin in the same arithmetic, histograms, escapes; T_pred from the reference
 budget_hours: 20
+job_wall_limit_s: 14400
 groups:
   - name: lorenz
     kind: stats
