@@ -1,6 +1,7 @@
 study: E9
 description: representation vs bit count (RQ6). f64 vs mpfr-53 vs qr-53, f32 vs mpfr-24 vs qr-24
 budget_hours: 3
+job_wall_limit_s: 9000
 groups:
   - name: maps
     kind: map

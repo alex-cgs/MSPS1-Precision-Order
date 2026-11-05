@@ -423,3 +423,15 @@ def test_pool_survives_a_dying_worker_and_enforces_the_job_limit():
     assert out["a"][1] == out["d"][1] == "done"
     assert out["b"][1] == "failed" and "worker died" in out["b"][3]
     assert out["c"][1] == "failed" and "wall limit" in out["c"][3]
+
+
+def test_qr_map_rounds_every_iteration():
+    from msps.arith import get_arith
+    from msps.integrators.maps import IteratedMap
+    arith = get_arith("qr-24")
+    arith.activate()
+    m = IteratedMap("logistic_map", arith)
+    x = arith.convert(Fraction(1, 3))
+    for _ in range(200):
+        x = m.step(x)
+        assert int(x.q) <= 2**24

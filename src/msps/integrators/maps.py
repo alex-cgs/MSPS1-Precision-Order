@@ -65,10 +65,12 @@ class IteratedMap:
 
     def step(self, x):
         if self._branch == "tent":
-            return self.mu * x if x < self.half else self.mu * (self.one - x)
-        if self._branch == "sine":
-            return self.mu * self.arith.sin(self.pi * x)
-        return self._fn([x], self.K)[0]
+            y = self.mu * x if x < self.half else self.mu * (self.one - x)
+        elif self._branch == "sine":
+            y = self.mu * self.arith.sin(self.pi * x)
+        else:
+            y = self._fn([x], self.K)[0]
+        return self.arith.post_step([y])[0]
 
     def iterate(self, x, count: int):
         for _ in range(count):
