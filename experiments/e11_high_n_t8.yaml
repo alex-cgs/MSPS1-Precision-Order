@@ -5,7 +5,7 @@ job_wall_limit_s: 21600
 groups:
   - {name: t8_n8, kind: reference, grid: {case: ["nbN_circle:N_8_T8", "nbN_alternating:rings_N_8_T8", "nbN_cluster:N_8_T8"], ic: [0, 1, 2]}, paper: {grid: {ic: [0, 1, 2, 3, 4]}}}
   - {name: t8_n10, kind: reference, grid: {case: ["nbN_circle:N_10_T8", "nbN_alternating:rings_N_10_T8", "nbN_cluster:N_10_T8"], ic: [0, 1, 2]}, paper: {grid: {ic: [0, 1, 2, 3, 4]}}}
-  - {name: amp, kind: amplification, grid: {case: ["nbN_circle:N_8_T8", "nbN_alternating:rings_N_8_T8", "nbN_cluster:N_8_T8", "nbN_circle:N_10_T8", "nbN_alternating:rings_N_10_T8", "nbN_cluster:N_10_T8"], ic: [0, 1, 2, 3, 4]}}
+  - {name: amp, kind: amplification, grid: {case: ["nbN_circle:N_8_T8", "nbN_alternating:rings_N_8_T8", "nbN_cluster:N_8_T8", "nbN_circle:N_10_T8", "nbN_alternating:rings_N_10_T8", "nbN_cluster:N_10_T8"], ic: [0, 1, 2]}, paper: {grid: {ic: [0, 1, 2, 3, 4]}}}
   - name: local
     kind: local
     fixed: {orders: [4, 8, 12, 16, 20, 24, 28, 32, 36, 40], states: 60}
@@ -13,7 +13,8 @@ groups:
   - name: sweep
     kind: traj
     fixed: {method: taylor, schedule: shared, stop_err: 1.0}
-    grid: {case: ["nbN_circle:N_8_T8", "nbN_alternating:rings_N_8_T8", "nbN_cluster:N_8_T8", "nbN_circle:N_10_T8", "nbN_alternating:rings_N_10_T8", "nbN_cluster:N_10_T8"], ic: [0, 1, 2, 3, 4], arith: [f32, f64, dd, mpfr-80, mpfr-113], n: [4, 8, 12, 16, 20, 24, 28, 32]}
+    grid: {case: ["nbN_circle:N_8_T8", "nbN_alternating:rings_N_8_T8", "nbN_cluster:N_8_T8", "nbN_circle:N_10_T8", "nbN_alternating:rings_N_10_T8", "nbN_cluster:N_10_T8"], ic: [0, 1, 2], arith: [f32, f64, dd, mpfr-80, mpfr-113], n: [4, 8, 12, 16, 20, 24, 28, 32]}
+    paper: {grid: {ic: [0, 1, 2, 3, 4]}}
   - name: bridge
     kind: traj
     fixed: {method: taylor, schedule: shared, stop_err: 1.0}
