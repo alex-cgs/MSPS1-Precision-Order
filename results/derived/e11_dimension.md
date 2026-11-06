@@ -1,30 +1,82 @@
-| case | family | N | dim | tape_mul | arith | bits | tpred_at_max_n | censored_frac_at_max_n | n_star_empirical | ics_with_plateau | ics | slope | rho_over_h | wall_median_at_max_n |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| lorenz96:N_8 | lorenz96 | 8 | 8 | 8 | f64 | 53 | 12.88 | 0 | 16 | 1 | 3 | -1.152 | 14.18 | 0.2705 |
-| lorenz96:N_8 | lorenz96 | 8 | 8 | 8 | mpfr-113 | 113 | 25 | 1 | nan | 0 | 3 | -1.152 | 14.18 | 1.136 |
-| lorenz96:N_16 | lorenz96 | 16 | 16 | 16 | f64 | 53 | 14.38 | 0 | 16 | 3 | 3 | -1.163 | 14.55 | 0.7157 |
-| lorenz96:N_16 | lorenz96 | 16 | 16 | 16 | mpfr-113 | 113 | 25 | 1 | nan | 0 | 3 | -1.163 | 14.55 | 2.581 |
-| lorenz96:N_40 | lorenz96 | 40 | 40 | 40 | f64 | 53 | 11.31 | 0 | 16 | 3 | 3 | -1.147 | 14.04 | 1.834 |
-| lorenz96:N_40 | lorenz96 | 40 | 40 | 40 | mpfr-113 | 113 | 25 | 1 | nan | 0 | 3 | -1.147 | 14.04 | 7.732 |
-| nb2_kepler:e_1_2 | nb2_kepler | 2 | 9 | 7 | f64 | 53 | 20 | 1 | nan | 0 | 3 | -1.074 | 11.86 | 0.03802 |
-| nb2_kepler:e_1_2 | nb2_kepler | 2 | 9 | 7 | mpfr-113 | 113 | 20 | 1 | nan | 0 | 3 | -1.074 | 11.86 | 0.117 |
-| nb3_ensemble:r4 | nb3_ensemble | 3 | 15 | 21 | f64 | 53 | 28.99 | 0 | 16 | 1 | 3 | -1.117 | 13.08 | 2.238 |
-| nb3_ensemble:r4 | nb3_ensemble | 3 | 15 | 21 | mpfr-113 | 113 | 120 | 0.6667 | nan | 0 | 3 | -1.117 | 13.08 | 24.12 |
-| nbN_alternating:hier_N_4 | nbN_alternating_hier | 4 | 22 | 42 | f64 | 53 | 30 | 1 | nan | 0 | 3 | -1.101 | 12.62 | 0.948 |
-| nbN_alternating:hier_N_4 | nbN_alternating_hier | 4 | 22 | 42 | mpfr-113 | 113 | 30 | 1 | nan | 0 | 3 | -1.101 | 12.62 | 2.991 |
-| nbN_alternating:hier_N_6 | nbN_alternating_hier | 6 | 39 | 105 | f64 | 53 | 24.99 | 0.3333 | 16 | 2 | 3 | -1.092 | 12.37 | 11.24 |
-| nbN_alternating:hier_N_6 | nbN_alternating_hier | 6 | 39 | 105 | mpfr-113 | 113 | 30 | 1 | nan | 0 | 3 | -1.092 | 12.37 | 38.44 |
-| nbN_alternating:rings_N_4 | nbN_alternating_rings | 4 | 22 | 42 | f64 | 53 | 30 | 0.6667 | nan | 0 | 3 | -1.055 | 11.36 | 1.083 |
-| nbN_alternating:rings_N_4 | nbN_alternating_rings | 4 | 22 | 42 | mpfr-113 | 113 | 30 | 1 | nan | 0 | 3 | -1.055 | 11.36 | 5.051 |
-| nbN_alternating:rings_N_6 | nbN_alternating_rings | 6 | 39 | 105 | f64 | 53 | 8.212 | 0 | 16 | 1 | 3 | -1.096 | 12.46 | 10.79 |
-| nbN_alternating:rings_N_6 | nbN_alternating_rings | 6 | 39 | 105 | mpfr-113 | 113 | 30 | 1 | nan | 0 | 3 | -1.096 | 12.46 | 40.78 |
-| nbN_circle:N_4 | nbN_circle | 4 | 22 | 42 | f64 | 53 | 30 | 1 | nan | 0 | 3 | -1.077 | 11.94 | 2.169 |
-| nbN_circle:N_4 | nbN_circle | 4 | 22 | 42 | mpfr-113 | 113 | 30 | 1 | nan | 0 | 3 | -1.077 | 11.94 | 6.992 |
-| nbN_circle:N_5 | nbN_circle | 5 | 30 | 70 | f64 | 53 | 19.08 | 0.3333 | 16 | 2 | 3 | -1.152 | 14.18 | 11.29 |
-| nbN_circle:N_5 | nbN_circle | 5 | 30 | 70 | mpfr-113 | 113 | 30 | 1 | nan | 0 | 3 | -1.152 | 14.18 | 28.27 |
-| nbN_circle:N_6 | nbN_circle | 6 | 39 | 105 | f64 | 53 | 7.908 | 0 | 16 | 1 | 3 | -1.111 | 12.91 | 54.4 |
-| nbN_circle:N_6 | nbN_circle | 6 | 39 | 105 | mpfr-113 | 113 | 30 | 1 | nan | 0 | 3 | -1.111 | 12.91 | 171.6 |
-| nbN_cluster:N_4 | nbN_cluster | 4 | 22 | 42 | f64 | 53 | 29.57 | 0.3333 | 16 | 1 | 3 | -1.115 | 13.04 | 1.77 |
-| nbN_cluster:N_4 | nbN_cluster | 4 | 22 | 42 | mpfr-113 | 113 | 30 | 1 | nan | 0 | 3 | -1.115 | 13.04 | 5.717 |
-| nbN_cluster:N_6 | nbN_cluster | 6 | 39 | 105 | f64 | 53 | 11.21 | 0 | 16 | 1 | 3 | -1.118 | 13.12 | 11.4 |
-| nbN_cluster:N_6 | nbN_cluster | 6 | 39 | 105 | mpfr-113 | 113 | 30 | 1 | nan | 0 | 3 | -1.118 | 13.12 | 176.1 |
+| case | family | N | T | dim | tape_mul | arith | bits | tpred_at_max_n | censored_frac_at_max_n | n_star_empirical | ics_with_plateau | ics | slope | rho_over_h | wall_median_at_max_n |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| lorenz96:N_8 | lorenz96 | 8 | 25 | 8 | 8 | f32 | 24 | 0.4531 | 0 | 8 | 5 | 5 | -1.152 | 14.18 | 0.2264 |
+| lorenz96:N_8 | lorenz96 | 8 | 25 | 8 | 8 | f64 | 53 | 11.08 | 0 | 16 | 5 | 5 | -1.152 | 14.18 | 0.2683 |
+| lorenz96:N_8 | lorenz96 | 8 | 25 | 8 | 8 | mpfr-80 | 80 | 21.72 | 0.2 | 24 | 2 | 5 | -1.152 | 14.18 | 1.153 |
+| lorenz96:N_8 | lorenz96 | 8 | 25 | 8 | 8 | dd | 106 | 25 | 1 | nan | 0 | 5 | -1.152 | 14.18 | 5.144 |
+| lorenz96:N_8 | lorenz96 | 8 | 25 | 8 | 8 | mpfr-113 | 113 | 25 | 1 | nan | 0 | 5 | -1.152 | 14.18 | 1.136 |
+| lorenz96:N_16 | lorenz96 | 16 | 25 | 16 | 16 | f32 | 24 | 0.375 | 0 | 8 | 5 | 5 | -1.163 | 14.55 | 0.6493 |
+| lorenz96:N_16 | lorenz96 | 16 | 25 | 16 | 16 | f64 | 53 | 15.12 | 0 | 16 | 5 | 5 | -1.163 | 14.55 | 0.7199 |
+| lorenz96:N_16 | lorenz96 | 16 | 25 | 16 | 16 | mpfr-80 | 80 | 25 | 0.8 | 24 | 1 | 5 | -1.163 | 14.55 | 2.685 |
+| lorenz96:N_16 | lorenz96 | 16 | 25 | 16 | 16 | dd | 106 | 25 | 1 | nan | 0 | 5 | -1.163 | 14.55 | 12.27 |
+| lorenz96:N_16 | lorenz96 | 16 | 25 | 16 | 16 | mpfr-113 | 113 | 25 | 1 | nan | 0 | 5 | -1.163 | 14.55 | 2.592 |
+| lorenz96:N_40 | lorenz96 | 40 | 25 | 40 | 40 | f32 | 24 | 0.125 | 0 | 8 | 5 | 5 | -1.147 | 14.04 | 1.46 |
+| lorenz96:N_40 | lorenz96 | 40 | 25 | 40 | 40 | f64 | 53 | 11.31 | 0 | 16 | 5 | 5 | -1.147 | 14.04 | 1.834 |
+| lorenz96:N_40 | lorenz96 | 40 | 25 | 40 | 40 | mpfr-80 | 80 | 22.25 | 0.2 | 24 | 4 | 5 | -1.147 | 14.04 | 7.865 |
+| lorenz96:N_40 | lorenz96 | 40 | 25 | 40 | 40 | dd | 106 | 25 | 1 | nan | 0 | 5 | -1.147 | 14.04 | 35.78 |
+| lorenz96:N_40 | lorenz96 | 40 | 25 | 40 | 40 | mpfr-113 | 113 | 25 | 1 | nan | 0 | 5 | -1.147 | 14.04 | 7.76 |
+| nb2_kepler:e_1_2 | nb2_kepler | 2 | 20 | 9 | 7 | f32 | 24 | 7.688 | 0 | 12 | 5 | 5 | -1.074 | 11.86 | 0.07668 |
+| nb2_kepler:e_1_2 | nb2_kepler | 2 | 20 | 9 | 7 | f64 | 53 | 20 | 1 | nan | 0 | 5 | -1.074 | 11.86 | 0.0384 |
+| nb2_kepler:e_1_2 | nb2_kepler | 2 | 20 | 9 | 7 | mpfr-80 | 80 | 20 | 1 | nan | 0 | 5 | -1.074 | 11.86 | 0.1176 |
+| nb2_kepler:e_1_2 | nb2_kepler | 2 | 20 | 9 | 7 | dd | 106 | 20 | 1 | nan | 0 | 5 | -1.074 | 11.86 | 0.5878 |
+| nb2_kepler:e_1_2 | nb2_kepler | 2 | 20 | 9 | 7 | mpfr-113 | 113 | 20 | 1 | nan | 0 | 5 | -1.074 | 11.86 | 0.1174 |
+| nb3_ensemble:r4 | nb3_ensemble | 3 | 120 | 15 | 21 | f32 | 24 | 1.074 | 0 | 8 | 3 | 5 | -1.117 | 13.08 | 0.07734 |
+| nb3_ensemble:r4 | nb3_ensemble | 3 | 120 | 15 | 21 | f64 | 53 | 28.99 | 0.2 | 18 | 4 | 5 | -1.117 | 13.08 | 3.37 |
+| nb3_ensemble:r4 | nb3_ensemble | 3 | 120 | 15 | 21 | mpfr-80 | 80 | 120 | 0.6 | nan | 0 | 5 | -1.117 | 13.08 | 11.39 |
+| nb3_ensemble:r4 | nb3_ensemble | 3 | 120 | 15 | 21 | dd | 106 | 120 | 0.8 | nan | 0 | 5 | -1.117 | 13.08 | 62.97 |
+| nb3_ensemble:r4 | nb3_ensemble | 3 | 120 | 15 | 21 | mpfr-113 | 113 | 120 | 0.8 | nan | 0 | 5 | -1.117 | 13.08 | 13.28 |
+| nbN_alternating:hier_N_4 | nbN_alternating_hier | 4 | 30 | 22 | 42 | f32 | 24 | 1.938 | 0 | 8 | 5 | 5 | -1.101 | 12.62 | 1.607 |
+| nbN_alternating:hier_N_4 | nbN_alternating_hier | 4 | 30 | 22 | 42 | f64 | 53 | 30 | 1 | nan | 0 | 5 | -1.101 | 12.62 | 0.6891 |
+| nbN_alternating:hier_N_4 | nbN_alternating_hier | 4 | 30 | 22 | 42 | mpfr-80 | 80 | 30 | 1 | nan | 0 | 5 | -1.101 | 12.62 | 2.189 |
+| nbN_alternating:hier_N_4 | nbN_alternating_hier | 4 | 30 | 22 | 42 | dd | 106 | 30 | 1 | nan | 0 | 5 | -1.101 | 12.62 | 10.37 |
+| nbN_alternating:hier_N_4 | nbN_alternating_hier | 4 | 30 | 22 | 42 | mpfr-113 | 113 | 30 | 1 | nan | 0 | 5 | -1.101 | 12.62 | 2.144 |
+| nbN_alternating:hier_N_6 | nbN_alternating_hier | 6 | 30 | 39 | 105 | f32 | 24 | 2.25 | 0 | 8 | 5 | 5 | -1.092 | 12.37 | 0.8461 |
+| nbN_alternating:hier_N_6 | nbN_alternating_hier | 6 | 30 | 39 | 105 | f64 | 53 | 24.99 | 0.4 | 16 | 3 | 5 | -1.092 | 12.37 | 11.24 |
+| nbN_alternating:hier_N_6 | nbN_alternating_hier | 6 | 30 | 39 | 105 | mpfr-80 | 80 | 30 | 1 | nan | 0 | 5 | -1.092 | 12.37 | 37.13 |
+| nbN_alternating:hier_N_6 | nbN_alternating_hier | 6 | 30 | 39 | 105 | dd | 106 | 30 | 1 | nan | 0 | 5 | -1.092 | 12.37 | 172.1 |
+| nbN_alternating:hier_N_6 | nbN_alternating_hier | 6 | 30 | 39 | 105 | mpfr-113 | 113 | 30 | 1 | nan | 0 | 5 | -1.092 | 12.37 | 38.44 |
+| nbN_alternating:rings_N_4 | nbN_alternating_rings | 4 | 30 | 22 | 42 | f32 | 24 | 4.5 | 0 | 8 | 5 | 5 | -1.055 | 11.36 | 0.1548 |
+| nbN_alternating:rings_N_4 | nbN_alternating_rings | 4 | 30 | 22 | 42 | f64 | 53 | 30 | 0.8 | 16 | 1 | 5 | -1.055 | 11.36 | 1.184 |
+| nbN_alternating:rings_N_4 | nbN_alternating_rings | 4 | 30 | 22 | 42 | mpfr-80 | 80 | 30 | 1 | nan | 0 | 5 | -1.055 | 11.36 | 5.026 |
+| nbN_alternating:rings_N_4 | nbN_alternating_rings | 4 | 30 | 22 | 42 | dd | 106 | 30 | 1 | nan | 0 | 5 | -1.055 | 11.36 | 23.95 |
+| nbN_alternating:rings_N_4 | nbN_alternating_rings | 4 | 30 | 22 | 42 | mpfr-113 | 113 | 30 | 1 | nan | 0 | 5 | -1.055 | 11.36 | 5.051 |
+| nbN_alternating:rings_N_6 | nbN_alternating_rings | 6 | 30 | 39 | 105 | f32 | 24 | 2.438 | 0 | 8 | 5 | 5 | -1.096 | 12.46 | 0.3095 |
+| nbN_alternating:rings_N_6 | nbN_alternating_rings | 6 | 30 | 39 | 105 | f64 | 53 | 13.29 | 0 | 16 | 5 | 5 | -1.096 | 12.46 | 10.79 |
+| nbN_alternating:rings_N_6 | nbN_alternating_rings | 6 | 30 | 39 | 105 | mpfr-80 | 80 | 30 | 0.8 | 20 | 1 | 5 | -1.096 | 12.46 | 40.46 |
+| nbN_alternating:rings_N_6 | nbN_alternating_rings | 6 | 30 | 39 | 105 | dd | 106 | 30 | 1 | nan | 0 | 5 | -1.096 | 12.46 | 165.6 |
+| nbN_alternating:rings_N_6 | nbN_alternating_rings | 6 | 30 | 39 | 105 | mpfr-113 | 113 | 30 | 1 | nan | 0 | 5 | -1.096 | 12.46 | 40.78 |
+| nbN_circle:N_4 | nbN_circle | 4 | 30 | 22 | 42 | f32 | 24 | 4.5 | 0 | 8 | 5 | 5 | -1.077 | 11.94 | 0.3587 |
+| nbN_circle:N_4 | nbN_circle | 4 | 30 | 22 | 42 | f64 | 53 | 30 | 0.8 | 16 | 1 | 5 | -1.077 | 11.94 | 2.169 |
+| nbN_circle:N_4 | nbN_circle | 4 | 30 | 22 | 42 | mpfr-80 | 80 | 30 | 1 | nan | 0 | 5 | -1.077 | 11.94 | 5.712 |
+| nbN_circle:N_4 | nbN_circle | 4 | 30 | 22 | 42 | dd | 106 | 30 | 1 | nan | 0 | 5 | -1.077 | 11.94 | 27.43 |
+| nbN_circle:N_4 | nbN_circle | 4 | 30 | 22 | 42 | mpfr-113 | 113 | 30 | 1 | nan | 0 | 5 | -1.077 | 11.94 | 6.992 |
+| nbN_circle:N_5 | nbN_circle | 5 | 30 | 30 | 70 | f32 | 24 | 3.75 | 0 | 8 | 5 | 5 | -1.152 | 14.18 | 0.3044 |
+| nbN_circle:N_5 | nbN_circle | 5 | 30 | 30 | 70 | f64 | 53 | 21.41 | 0.4 | 16 | 3 | 5 | -1.152 | 14.18 | 10.78 |
+| nbN_circle:N_5 | nbN_circle | 5 | 30 | 30 | 70 | mpfr-80 | 80 | 30 | 0.6 | 24 | 1 | 5 | -1.152 | 14.18 | 31.65 |
+| nbN_circle:N_5 | nbN_circle | 5 | 30 | 30 | 70 | dd | 106 | 30 | 1 | nan | 0 | 5 | -1.152 | 14.18 | 112.8 |
+| nbN_circle:N_5 | nbN_circle | 5 | 30 | 30 | 70 | mpfr-113 | 113 | 30 | 1 | nan | 0 | 5 | -1.152 | 14.18 | 28.27 |
+| nbN_circle:N_6 | nbN_circle | 6 | 30 | 39 | 105 | f32 | 24 | 2.781 | 0 | 8 | 5 | 5 | -1.111 | 12.91 | 0.38 |
+| nbN_circle:N_6 | nbN_circle | 6 | 30 | 39 | 105 | f64 | 53 | 7.908 | 0 | 16 | 5 | 5 | -1.111 | 12.91 | 10.26 |
+| nbN_circle:N_6 | nbN_circle | 6 | 30 | 39 | 105 | mpfr-80 | 80 | 30 | 0.8 | 24 | 1 | 5 | -1.111 | 12.91 | 115.1 |
+| nbN_circle:N_6 | nbN_circle | 6 | 30 | 39 | 105 | dd | 106 | 30 | 1 | nan | 0 | 5 | -1.111 | 12.91 | 385.4 |
+| nbN_circle:N_6 | nbN_circle | 6 | 30 | 39 | 105 | mpfr-113 | 113 | 30 | 1 | nan | 0 | 5 | -1.111 | 12.91 | 76.98 |
+| nbN_circle:N_8_hp | nbN_circle | 8 | 30 | 60 | 196 | f32 | 24 | 1.859 | 0 | 8 | 1 | 1 | nan | nan | 0.8324 |
+| nbN_circle:N_8_hp | nbN_circle | 8 | 30 | 60 | 196 | f64 | 53 | 3.59 | 0 | 20 | 1 | 1 | nan | nan | 6.23 |
+| nbN_circle:N_8_hp | nbN_circle | 8 | 30 | 60 | 196 | mpfr-80 | 80 | 11.56 | 0 | nan | 0 | 1 | nan | nan | 98.1 |
+| nbN_circle:N_8_hp | nbN_circle | 8 | 30 | 60 | 196 | dd | 106 | 4.76 | 0 | nan | 0 | 1 | nan | nan | 69.02 |
+| nbN_circle:N_8_hp | nbN_circle | 8 | 30 | 60 | 196 | mpfr-113 | 113 | 24.13 | 0 | nan | 0 | 1 | nan | nan | 157 |
+| nbN_circle:N_10_hp | nbN_circle | 10 | 30 | 85 | 315 | f32 | 24 | 1.375 | 0 | 8 | 1 | 1 | nan | nan | 0.9026 |
+| nbN_circle:N_10_hp | nbN_circle | 10 | 30 | 85 | 315 | f64 | 53 | 5.84 | 0 | 16 | 1 | 1 | nan | nan | 45.95 |
+| nbN_circle:N_10_hp | nbN_circle | 10 | 30 | 85 | 315 | mpfr-80 | 80 | 11.41 | 0 | 20 | 1 | 1 | nan | nan | 236 |
+| nbN_circle:N_10_hp | nbN_circle | 10 | 30 | 85 | 315 | dd | 106 | 11.07 | 0 | nan | 0 | 1 | nan | nan | 793.6 |
+| nbN_circle:N_10_hp | nbN_circle | 10 | 30 | 85 | 315 | mpfr-113 | 113 | 14.85 | 0 | nan | 0 | 1 | nan | nan | 347 |
+| nbN_cluster:N_4 | nbN_cluster | 4 | 30 | 22 | 42 | f32 | 24 | 2 | 0 | 8 | 5 | 5 | -1.115 | 13.04 | 0.1132 |
+| nbN_cluster:N_4 | nbN_cluster | 4 | 30 | 22 | 42 | f64 | 53 | 29.57 | 0.2 | 14 | 4 | 5 | -1.115 | 13.04 | 1.77 |
+| nbN_cluster:N_4 | nbN_cluster | 4 | 30 | 22 | 42 | mpfr-80 | 80 | 30 | 1 | nan | 0 | 5 | -1.115 | 13.04 | 5.473 |
+| nbN_cluster:N_4 | nbN_cluster | 4 | 30 | 22 | 42 | dd | 106 | 30 | 1 | nan | 0 | 5 | -1.115 | 13.04 | 16.3 |
+| nbN_cluster:N_4 | nbN_cluster | 4 | 30 | 22 | 42 | mpfr-113 | 113 | 30 | 1 | nan | 0 | 5 | -1.115 | 13.04 | 5.717 |
+| nbN_cluster:N_6 | nbN_cluster | 6 | 30 | 39 | 105 | f32 | 24 | 0.8867 | 0 | 8 | 3 | 5 | -1.118 | 13.12 | 0.2402 |
+| nbN_cluster:N_6 | nbN_cluster | 6 | 30 | 39 | 105 | f64 | 53 | 11.21 | 0 | 16 | 5 | 5 | -1.118 | 13.12 | 10.46 |
+| nbN_cluster:N_6 | nbN_cluster | 6 | 30 | 39 | 105 | mpfr-80 | 80 | 30 | 0.6 | nan | 0 | 5 | -1.118 | 13.12 | 86.68 |
+| nbN_cluster:N_6 | nbN_cluster | 6 | 30 | 39 | 105 | dd | 106 | 30 | 0.8 | 24 | 1 | 5 | -1.118 | 13.12 | 349.2 |
+| nbN_cluster:N_6 | nbN_cluster | 6 | 30 | 39 | 105 | mpfr-113 | 113 | 30 | 1 | nan | 0 | 5 | -1.118 | 13.12 | 60.13 |

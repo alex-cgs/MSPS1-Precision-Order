@@ -6,9 +6,10 @@ from model_tools import local_fit
 from msps.models import empirical_crossover
 from msps.systems import load_case
 
-tr = traj_rows("E11")
+# E11hi: N = 8, 10 at T = 8, and the T = 30 bridge on one IC each. Their T_pred is censored at their own T, so the T column matters.
+tr = pd.concat([traj_rows("E11"), traj_rows("E11hi")])
 rows = []
-loc = local_table("E11")
+loc = pd.concat([local_table("E11"), local_table("E11hi")])
 for case, d in tr[tr.tol == 1e-6].groupby("case"):
     c = load_case(case)
     N = c.system.meta.get("N", c.system.dim)
@@ -22,8 +23,8 @@ for case, d in tr[tr.tol == 1e-6].groupby("case"):
             plateau = len(tp) >= 3 and not di.censored.values[-1] and abs(tp[-1] - tp[-3]) <= 0.05 * tp[-1]
             by_ic.append(empirical_crossover(di.n.values, tp) if plateau else np.nan)
         top = da[da.n == da.n.max()]
-        rows.append({"case": case, "family": family, "N": N, "dim": c.system.dim, "tape_mul": c.tape.n_mul, "arith": arith, "bits": da.bits.iloc[0], "tpred_at_max_n": float(top.tpred.median()), "censored_frac_at_max_n": float(top.censored.mean()),
+        rows.append({"case": case, "family": family, "N": N, "T": float(c.card["T"]), "dim": c.system.dim, "tape_mul": c.tape.n_mul, "arith": arith, "bits": da.bits.iloc[0], "tpred_at_max_n": float(top.tpred.median()), "censored_frac_at_max_n": float(top.censored.mean()),
                      "n_star_empirical": float(np.nanmedian(by_ic)) if np.isfinite(by_ic).any() else np.nan, "ics_with_plateau": int(np.isfinite(by_ic).sum()), "ics": len(by_ic), "slope": slope, "rho_over_h": 10 ** (-slope) if slope == slope else np.nan, "wall_median_at_max_n": float(top.wall.median())})
-df = pd.DataFrame(rows).sort_values(["family", "N", "bits"])
+df = pd.DataFrame(rows).sort_values(["family", "N", "T", "bits"])
 save_table(df, "e11_dimension")
 print(df.to_string())

@@ -25,12 +25,11 @@ Code built. E0 done. All dev grids finished except E11. Paper grids running in o
 - [x] Code snapshot in Drive: `MSPS1/code` (folder id 1w6p--Df2pI5MirUF7CcJ4XovKlRZJMvM), commit ee91ef0, asked for by the author on 2026-11-05. Later code changes are not in it; `results/` is not in it
 - [x] E1 paper finished 23:00 on 2026-11-05: 78 done, 6 failed, all `nbN_circle:N_10` (3 references, 3 local); see flags. `analysis/e01_local.py` run
 - [ ] E2 paper finished 19:46: 57,544 of 58,429 done, 885 failed from 8 reference checks; see flags. Tables not yet in `results/derived` (interim analysis ran to the scratchpad)
-- [ ] E4 dev done (44 of 44; grid equal in paper mode)
 - [ ] E3 interim analysis on E2 paper done to the scratchpad; final run pending the 8 ICs
-- [ ] E5 paper: restarted 2026-11-06 with `henon_n2` capped at 60 s, plus `rossler_fix`, `nb3_fix` (15,035 jobs in all)
-- [ ] E9 dev done (444 done, 30 failed by design, see below), paper pending
-- [ ] E8 dev done (364 of 364), E6 dev done (810 of 810), E7 dev done (100 of 100); paper running in the chain
-- [ ] E11 dev running since 23:00 on 4 workers (references 27 of 60); paper (4,220 jobs) only after looking at dev; E10 local pending. E8 and E4 paper grids equal dev
+- [x] E5 paper done: 14,860 done, 175 failed, the 8 known ICs before their fix groups. `analysis/e05_stats.py` run
+- [x] E9 paper: 3,054 done, 300 failed by design (`sine_map` qr-p)
+- [x] E8 364, E6 5,940 (2 memory failures retried), E7 1,600, E4 44: paper done, tables in `results/derived`
+- [ ] E11 N <= 6 paper done (2,954 done; 42 failed: 41 on `N_6` #3, covered by `N_6_hp`, and its reference). N = 8, 10 running at T = 8; E10 local pending
 - [x] Interim findings emailed to the author on 2026-11-05 at their request, subject "MSPS1: interim findings (not the final digest)"
 - [ ] Figures, DIGEST, Drive upload, email, tag results-v1
 
@@ -40,7 +39,7 @@ See `pgrep -af "msps run"`. Logs: `logs/E<k>.log`. Started 2026-11-06 at 12:26, 
 - E2 fix groups (`refs_fix` etc, `rossler:r2`, `nb3_ensemble:r5`; log `logs/E2fix.log`), then E11 dev, now N <= 6 and Lorenz-96 only; 2 workers.
 - `experiments/e11_high_n.yaml` (study E11hi): route 1, order 80/600 at T = 30, N_8_hp then N_10_hp, IC 0; 1 worker. No checkpoints: a kill loses the reference.
 - 16:25: `experiments/e11_high_n_t8.yaml` (route 2, T = 8, 3 families, N = 8, 10, ICs 0-2), 2 workers; E11 paper for N <= 6 once the profiler ends, 1 worker. E2 fix done: all 8 ICs pass (worst 1.6e-39), 885 of 885; E11 dev done, 434 of 434.
-- E11 paper N <= 6 restarted 22:19 on 5 workers. `e11_high_n_t8.yaml --mode paper`: references ICs 3, 4 (2 workers), bridge (1), `refs_fix` then E1 `refs_t8 local_t8` (1). Then amp, local, sweep, fixes for high N. Chain finished 22:17: E4-E9 paper done.
+- 2026-11-07 00:45: `e11_high_n_t8.yaml --mode dev --groups amp local sweep` (N = 8, 10, T = 8, ICs 0-2), 6 workers, log `logs/E11t8sweep.log`; `--mode paper --groups t8_n8 t8_n10` (references ICs 3, 4), 2 workers. After those: `--mode paper` for the rest and the fix groups. E4-E9 and E11 N <= 6 paper done.
 
 ## Decisions and deviations from the spec
 - **Python `sum` avoided.** Since Python 3.12 `sum()` uses compensated summation on floats. The pilot uses `sum`, so its float64 runs are not plain IEEE rounding on Python ≥ 3.12. The new code uses `reduce(add, ...)`, so f64 is plain IEEE. T_pred at every order is unchanged; c_r moves from the pilot rerun's 4.197 to 4.089 (spec 4.21).
@@ -78,13 +77,13 @@ Pilot rerun on this machine: c_r = 4.197 (spec 4.21), 6235 fit points (spec 6207
 | E2 | 12 | dev about 9 core-h; paper 12:30 to 19:46 (7.3 h); about 62 core-h of job wall for all finished jobs, dev included |
 | E3 | analysis | |
 | E4 | 1 | dev 2,092 s of job wall before the hang, then 170 s |
-| E5 | 20 | dev 1,278 s elapsed, 7 workers; paper at 16.9 h when restarted on 2026-11-06 with 8,647 jobs left: will pass the budget |
+| E5 | 20 | paper about 34 h elapsed on 7 workers, 2026-11-05 to 2026-11-06 21:37: over budget, 16.9 h of it before the `henon_n2` cap |
 | E6 | 3 | dev 288 s, 7 workers |
 | E7 | 3 | dev 16 s, 7 workers |
 | E8 | 6 | dev 1,075 s plus 26 s retry, 7 workers |
 | E9 | 3 | dev 61 s after the fix |
 | E10 | 2 h per night | |
-| E11 | 10 | |
+| E11 | 10 | N <= 6 paper 8,508 s plus 17,431 s at 1 worker; dev about 50 core-h, mostly failed N >= 8 references; high N extra, see E11hi logs |
 
 ## Second incident, E4 dev, 2026-11-05
 E4 sat idle from 04:21 to 09:25: `GNU MP: Cannot allocate memory` aborted a worker, and `mp.Pool.imap` waits forever for a job lost with its worker. Fixed: `run_pool` in `runner/queue.py` fails that job, replaces the worker and enforces an optional `job_wall_limit_s` (study YAML). `run_exact` now stops before a step predicted to pass `max_wall` or `max_bits` (bits and walls of completed steps unaffected). Nine E4 runs finished before the change are valid and kept; some of them ran past `max_wall` (up to 689 s against 200 s) and have more steps than the new rule would allow.
