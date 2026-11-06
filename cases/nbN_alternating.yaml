@@ -9,6 +9,9 @@ variants:
   rings_N_6: {N: 6}
   rings_N_8: {N: 8}
   rings_N_10: {N: 10}
+  # same ICs, see nbN_circle
+  rings_N_8_T8: {N: 8, T: 8}
+  rings_N_10_T8: {N: 10, T: 8}
   hier_N_4: {N: 4, mass_pattern: ["1", "1", "1/10"], ic: {generator: hierarchical, a: "1/2", R: "3", v0: "4/5"}}
   hier_N_6: {N: 6, mass_pattern: ["1", "1", "1/10"], ic: {generator: hierarchical, a: "1/2", R: "3", v0: "4/5"}}
 ic: {generator: two_rings, seed: 4101, R1: "3/2", R2: "5/2", v0: "1/2", jitter: "1/8", count: {dev: 3, paper: 10}}

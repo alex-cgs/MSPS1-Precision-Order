@@ -1,0 +1,7 @@
+study: E11hi
+description: route 2 for N = 8, 10, unchanged 56/400 and tol_check at T = 8
+budget_hours: 24
+job_wall_limit_s: 21600
+groups:
+  - {name: t8_n8, kind: reference, grid: {case: ["nbN_circle:N_8_T8", "nbN_alternating:rings_N_8_T8", "nbN_cluster:N_8_T8"], ic: [0, 1, 2]}}
+  - {name: t8_n10, kind: reference, grid: {case: ["nbN_circle:N_10_T8", "nbN_alternating:rings_N_10_T8", "nbN_cluster:N_10_T8"], ic: [0, 1, 2]}}

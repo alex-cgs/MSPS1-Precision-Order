@@ -4,7 +4,7 @@ equations: Plummer-like random cluster, virial-scaled, float-generated then exac
 regime: chaotic
 default_variant: N_4
 params: {dim: 2, mass_pattern: ["1"]}
-variants: {N_4: {N: 4}, N_6: {N: 6}, N_8: {N: 8}, N_10: {N: 10}}
+variants: {N_4: {N: 4}, N_6: {N: 6}, N_8: {N: 8}, N_10: {N: 10}, N_8_T8: {N: 8, T: 8}, N_10_T8: {N: 10, T: 8}}
 ic: {generator: plummer, seed: 4201, scale: "2", virial: "1/2", count: {dev: 3, paper: 10}}
 reference: {order: 56, bits: 400, check_order: 64, check_bits: 500, safety: 8, cap: "1/2", tol_check: 1.0e-30}
 T: 30
