@@ -10,3 +10,7 @@ tolerances: [1.0e-6, 1.0e-3]
 observables: [state, attractor_histogram]
 oracle: {lambda: "0.0714", lambda_source: "Sprott 2003; checked by E0 high-precision run"}
 role: weak chaos
+variants:
+  # 7 of 100 paper ICs (26, 35, 47, 58, 63, 91, 99) missed tol_check at 64/500, 1.5e-30 to 4.4e-29
+  r2:
+    reference: {order: 80, bits: 600, check_order: 90, check_bits: 700}

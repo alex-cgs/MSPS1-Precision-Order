@@ -21,3 +21,21 @@ groups:
     fixed: {method: taylor, schedule: adaptive, safety: 8, cap: "1/2", stop_err: 1.0}
     grid: {case: [nb3_pilot, "nb3_ensemble:r4", "lorenz63:rho_28"], ic: auto, arith: [f64, dd, mpfr-113], n: [8, 12, 16, 20, 24, 28, 32]}
     dev: {grid: {n: [8, 16, 24]}}
+  # ICs whose reference check failed in the paper run, recomputed at higher precision (experiments/reference_variants.yaml)
+  - {name: refs_fix, kind: reference, modes: [paper], grid: {case: &fixed_cases ["rossler:r2", "nb3_ensemble:r5"], ic: &fixed_ics {"rossler:r2": [26, 35, 47, 58, 63, 91, 99], "nb3_ensemble:r5": [65]}}}
+  - {name: amp_fix, kind: amplification, modes: [paper], grid: {case: *fixed_cases, ic: *fixed_ics}}
+  - name: local_fix
+    kind: local
+    modes: [paper]
+    fixed: {orders: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40], states: 60}
+    grid: {case: *fixed_cases, ic: *fixed_ics}
+  - name: sweep_fix
+    kind: traj
+    modes: [paper]
+    fixed: {method: taylor, schedule: shared, stop_err: 1.0}
+    grid: {case: *fixed_cases, ic: *fixed_ics, arith: [f32, f64, dd, mpfr-80, mpfr-113, mpfr-160, mpfr-256], n: [4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32]}
+  - name: sweep_adaptive_fix
+    kind: traj
+    modes: [paper]
+    fixed: {method: taylor, schedule: adaptive, safety: 8, cap: "1/2", stop_err: 1.0}
+    grid: {case: ["nb3_ensemble:r5"], ic: *fixed_ics, arith: [f64, dd, mpfr-113], n: [8, 12, 16, 20, 24, 28, 32]}

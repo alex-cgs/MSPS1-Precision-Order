@@ -48,7 +48,8 @@ def expand(exp: dict, mode: str) -> list:
             ics = grid.get("ic", [0])
             for sub in group.get("explode", [None]):
                 base = {**fixed, **cfg, **(sub or {})}
-                for ic in (_ic_ids(base["case"], mode) if ics == "auto" else ics):
+                ids = _ic_ids(base["case"], mode) if ics == "auto" else ics[base["case"]] if isinstance(ics, dict) else ics
+                for ic in ids:
                     out.append((group["name"], {"kind": group["kind"], **base, "ic": ic}))
     # keep one IC's jobs together: workers cache a few references (stable sort, group order preserved)
     rank = {g["name"]: i for i, g in enumerate(exp["groups"])}
@@ -76,7 +77,10 @@ class Queue:
         for seq, (grp, cfg) in enumerate(jobs):
             rid = run_id(self.study, cfg)
             status = "done" if rio.run_done(self.study, rid) else "pending"
-            self.db.execute("insert or ignore into jobs(run_id, grp, seq, config, status) values(?,?,?,?,?)",
+            # max_wall is outside run_id, so an unfinished row must take the current YAML's value
+            self.db.execute("""insert into jobs(run_id, grp, seq, config, status) values(?,?,?,?,?)
+                               on conflict(run_id) do update set grp=excluded.grp, seq=excluded.seq, config=excluded.config
+                               where jobs.status != 'done'""",
                             (rid, grp, seq, json.dumps(cfg, default=str), status))
             if status == "done":
                 self.db.execute("update jobs set status='done' where run_id=?", (rid,))

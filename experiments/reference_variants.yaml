@@ -1,0 +1,4 @@
+# Same system and ICs, higher-precision reference for ICs whose check failed under the parent case. Analysis reads these runs as the parent case.
+cases:
+  "rossler:r2": rossler
+  "nb3_ensemble:r5": "nb3_ensemble:r4"

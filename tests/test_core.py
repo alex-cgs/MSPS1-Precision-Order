@@ -448,3 +448,21 @@ def test_gauss_legendre_tableau_order_conditions(s):
     for i in range(s):
         for k in range(s):
             assert abs(sum(aij * cj**k for aij, cj in zip(A[i], c)) - c[i] ** (k + 1) / (k + 1)) < Fraction(1, 10**300)
+
+
+def test_queue_pending_rows_follow_the_yaml_but_finished_rows_do_not(tmp_path, monkeypatch):
+    from msps import io as rio
+    from msps.runner.queue import Queue, expand
+
+    monkeypatch.setattr(rio, "RESULTS", tmp_path)
+    q = Queue("T")
+    q.add([("a", {"kind": "x", "ic": 0, "max_wall": 3600}), ("a", {"kind": "x", "ic": 1, "max_wall": 3600})])
+    done = q.pending("a")[1][0]
+    q.mark(done, "done")
+    q.add([("b", {"kind": "x", "ic": 0, "max_wall": 60}), ("b", {"kind": "x", "ic": 1, "max_wall": 60})])
+    assert [c["max_wall"] for _, c in q.pending("b")] == [60]
+    assert q.db.execute("select grp from jobs where run_id=?", (done,)).fetchone()[0] == "a"
+
+    exp = {"groups": [{"name": "g", "kind": "x", "grid": {"case": ["p", "q"], "ic": {"p": [1, 2], "q": [3]}}}]}
+    assert [(c["case"], c["ic"]) for _, c in expand(exp, "paper")] == [("p", 1), ("p", 2), ("q", 3)]
+

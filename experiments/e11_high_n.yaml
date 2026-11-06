@@ -1,0 +1,7 @@
+study: E11hi
+description: can N = 8, 10 references pass tol_check? Route 1, more order and precision at T = 30. Route 2, shorter T (variants added once the diff profiles show a usable T)
+budget_hours: 24
+job_wall_limit_s: 86400
+groups:
+  - {name: hp8, kind: reference, grid: {case: ["nbN_circle:N_8_hp"], ic: [0]}}
+  - {name: hp10, kind: reference, grid: {case: ["nbN_circle:N_10_hp"], ic: [0]}}

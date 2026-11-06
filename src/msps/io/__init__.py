@@ -69,15 +69,25 @@ def superseded_cases() -> set:
     return set(yaml.safe_load(path.read_text())["cases"]) if path.exists() else set()
 
 
+def reference_variants() -> dict:
+    """Cases that only recompute some ICs' references at higher precision, mapped to the case they complete."""
+    path = RESULTS.parent / "experiments" / "reference_variants.yaml"
+    return yaml.safe_load(path.read_text())["cases"] if path.exists() else {}
+
+
 def iter_runs(study: str, include_superseded: bool = False):
     base = RESULTS / "raw" / study
     skip = set() if include_superseded else superseded_cases()
+    parent = reference_variants()
     if base.exists():
         for d in sorted(base.iterdir()):
             m = d / "meta.json"
             if m.exists():
                 meta = json.loads(m.read_text())
-                if meta.get("config", {}).get("case") not in skip:
+                c = meta.get("config", {})
+                if c.get("case") not in skip:
+                    if c.get("case") in parent:
+                        c["reference_variant"], c["case"] = c["case"], parent[c["case"]]
                     yield d, meta
 
 
