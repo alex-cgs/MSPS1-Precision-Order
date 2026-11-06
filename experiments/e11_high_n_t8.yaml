@@ -1,7 +1,20 @@
 study: E11hi
-description: route 2 for N = 8, 10, unchanged 56/400 and tol_check at T = 8
+description: N = 8, 10 in E11 at T = 8, unchanged 56/400 and tol_check. nbN_circle:N_8_hp is the T = 30 bridge, one IC, 80/600
 budget_hours: 24
 job_wall_limit_s: 21600
 groups:
-  - {name: t8_n8, kind: reference, grid: {case: ["nbN_circle:N_8_T8", "nbN_alternating:rings_N_8_T8", "nbN_cluster:N_8_T8"], ic: [0, 1, 2]}}
-  - {name: t8_n10, kind: reference, grid: {case: ["nbN_circle:N_10_T8", "nbN_alternating:rings_N_10_T8", "nbN_cluster:N_10_T8"], ic: [0, 1, 2]}}
+  - {name: t8_n8, kind: reference, grid: {case: ["nbN_circle:N_8_T8", "nbN_alternating:rings_N_8_T8", "nbN_cluster:N_8_T8"], ic: [0, 1, 2]}, paper: {grid: {ic: [0, 1, 2, 3, 4]}}}
+  - {name: t8_n10, kind: reference, grid: {case: ["nbN_circle:N_10_T8", "nbN_alternating:rings_N_10_T8", "nbN_cluster:N_10_T8"], ic: [0, 1, 2]}, paper: {grid: {ic: [0, 1, 2, 3, 4]}}}
+  - {name: amp, kind: amplification, grid: {case: ["nbN_circle:N_8_T8", "nbN_alternating:rings_N_8_T8", "nbN_cluster:N_8_T8", "nbN_circle:N_10_T8", "nbN_alternating:rings_N_10_T8", "nbN_cluster:N_10_T8"], ic: [0, 1, 2, 3, 4]}}
+  - name: local
+    kind: local
+    fixed: {orders: [4, 8, 12, 16, 20, 24, 28, 32, 36, 40], states: 60}
+    grid: {case: ["nbN_circle:N_8_T8", "nbN_alternating:rings_N_8_T8", "nbN_cluster:N_8_T8", "nbN_circle:N_10_T8", "nbN_alternating:rings_N_10_T8", "nbN_cluster:N_10_T8"], ic: [0]}
+  - name: sweep
+    kind: traj
+    fixed: {method: taylor, schedule: shared, stop_err: 1.0}
+    grid: {case: ["nbN_circle:N_8_T8", "nbN_alternating:rings_N_8_T8", "nbN_cluster:N_8_T8", "nbN_circle:N_10_T8", "nbN_alternating:rings_N_10_T8", "nbN_cluster:N_10_T8"], ic: [0, 1, 2, 3, 4], arith: [f32, f64, dd, mpfr-80, mpfr-113], n: [4, 8, 12, 16, 20, 24, 28, 32]}
+  - name: bridge
+    kind: traj
+    fixed: {method: taylor, schedule: shared, stop_err: 1.0}
+    grid: {case: ["nbN_circle:N_8_hp"], ic: [0], arith: [f32, f64, dd, mpfr-80, mpfr-113], n: [4, 8, 12, 16, 20, 24, 28, 32]}

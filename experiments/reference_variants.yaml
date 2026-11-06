@@ -2,3 +2,5 @@
 cases:
   "rossler:r2": rossler
   "nb3_ensemble:r5": "nb3_ensemble:r4"
+  "nbN_circle:N_6_hp": "nbN_circle:N_6"
+  "nbN_circle:N_10_T8_hp": "nbN_circle:N_10_T8"
