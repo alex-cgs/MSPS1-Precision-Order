@@ -1,0 +1,5 @@
+n=4 ICs=30 underflow=29 of_which_u*r_off_by_more_than_1=29 with_rmin<1e-6=0
+n=6 ICs=30 underflow=20 of_which_u*r_off_by_more_than_1=20 with_rmin<1e-6=0
+n=8 ICs=30 underflow=16 of_which_u*r_off_by_more_than_1=16 with_rmin<1e-6=0
+n=12 ICs=30 underflow=7 of_which_u*r_off_by_more_than_1=7 with_rmin<1e-6=0
+n=16 ICs=30 underflow=1 of_which_u*r_off_by_more_than_1=1 with_rmin<1e-6=1
