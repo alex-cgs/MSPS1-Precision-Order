@@ -77,7 +77,7 @@ Pilot rerun on this machine: c_r = 4.197 (spec 4.21), 6235 fit points (spec 6207
 | E2 | 12 | dev about 9 core-h; paper 12:30 to 19:46 (7.3 h); about 62 core-h of job wall for all finished jobs, dev included |
 | E3 | analysis | |
 | E4 | 1 | dev 2,092 s of job wall before the hang, then 170 s |
-| E5 | 20 | paper about 34 h elapsed on 7 workers, 2026-11-05 to 2026-11-06 21:37: over budget, 16.9 h of it before the `henon_n2` cap |
+| E5 | 20 | paper 25.9 h elapsed on 7 workers, 2026-11-05 19:46 to 2026-11-06 21:37: over budget, 16.7 h of it before the `henon_n2` cap |
 | E6 | 3 | dev 288 s, 7 workers |
 | E7 | 3 | dev 16 s, 7 workers |
 | E8 | 6 | dev 1,075 s plus 26 s retry, 7 workers |
