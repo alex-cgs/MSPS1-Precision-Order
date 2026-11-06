@@ -16,3 +16,11 @@ groups:
     grid: {case: ["nb2_kepler:e_1_2", "nb3_ensemble:r4", "nbN_circle:N_4", "nbN_circle:N_5", "nbN_circle:N_6", "nbN_alternating:rings_N_4", "nbN_alternating:rings_N_6", "nbN_alternating:hier_N_4", "nbN_alternating:hier_N_6", "nbN_cluster:N_4", "nbN_cluster:N_6", "lorenz96:N_8", "lorenz96:N_16", "lorenz96:N_40"], ic: [0, 1, 2], arith: [f32, f64, dd, mpfr-80, mpfr-113], n: [4, 8, 12, 16, 20, 24, 28, 32]}
     dev: {grid: {arith: [f64, mpfr-113], n: [8, 16, 24, 32]}}
     paper: {grid: {ic: [0, 1, 2, 3, 4]}}
+  # nbN_circle:N_6 #3 failed its check at 56/400 (2.05e-29); reference_variants.yaml reads these as N_6
+  - {name: refs_fix, modes: [paper], kind: reference, grid: {case: ["nbN_circle:N_6_hp"], ic: [3]}}
+  - {name: amp_fix, modes: [paper], kind: amplification, grid: {case: ["nbN_circle:N_6_hp"], ic: [3]}}
+  - name: sweep_fix
+    modes: [paper]
+    kind: traj
+    fixed: {method: taylor, schedule: shared, stop_err: 1.0}
+    grid: {case: ["nbN_circle:N_6_hp"], ic: [3], arith: [f32, f64, dd, mpfr-80, mpfr-113], n: [4, 8, 12, 16, 20, 24, 28, 32]}

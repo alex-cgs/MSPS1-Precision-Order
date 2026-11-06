@@ -1,5 +1,5 @@
 study: E11hi
-description: N = 8, 10 in E11 at T = 8, unchanged 56/400 and tol_check. nbN_circle:N_8_hp is the T = 30 bridge, one IC, 80/600
+description: N = 8, 10 in E11 at T = 8, unchanged 56/400 and tol_check. N_8_hp and N_10_hp are the T = 30 bridge, one IC each, 80/600
 budget_hours: 24
 job_wall_limit_s: 21600
 groups:
@@ -17,4 +17,12 @@ groups:
   - name: bridge
     kind: traj
     fixed: {method: taylor, schedule: shared, stop_err: 1.0}
-    grid: {case: ["nbN_circle:N_8_hp"], ic: [0], arith: [f32, f64, dd, mpfr-80, mpfr-113], n: [4, 8, 12, 16, 20, 24, 28, 32]}
+    grid: {case: ["nbN_circle:N_8_hp", "nbN_circle:N_10_hp"], ic: [0], arith: [f32, f64, dd, mpfr-80, mpfr-113], n: [4, 8, 12, 16, 20, 24, 28, 32]}
+  # nbN_circle:N_10_T8 #2 failed its check at 56/400 (5.9e-27)
+  - {name: refs_fix, modes: [paper], kind: reference, grid: {case: ["nbN_circle:N_10_T8_hp"], ic: [2]}}
+  - {name: amp_fix, modes: [paper], kind: amplification, grid: {case: ["nbN_circle:N_10_T8_hp"], ic: [2]}}
+  - name: sweep_fix
+    modes: [paper]
+    kind: traj
+    fixed: {method: taylor, schedule: shared, stop_err: 1.0}
+    grid: {case: ["nbN_circle:N_10_T8_hp"], ic: [2], arith: [f32, f64, dd, mpfr-80, mpfr-113], n: [4, 8, 12, 16, 20, 24, 28, 32]}

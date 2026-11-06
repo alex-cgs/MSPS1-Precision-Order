@@ -11,3 +11,10 @@ groups:
     fixed: {orders: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40], states: 60}
     grid: {case: ["lorenz63:rho_28", rossler, "henon_heiles:E_1_8", "henon_heiles:E_1_6_r2", "double_pendulum:r2", "duffing:gamma_0_50", "lorenz96:N_8", "lorenz96:N_16", "lorenz96:N_40", "fput_beta:N_16", "fput_beta:N_32"], ic: [0, 1, 2]}
     paper: {grid: {case: ["nb2_kepler:e_0", "nb2_kepler:e_1_2", "nb2_kepler:e_9_10", nb3_pilot, nb3_pythagorean, nb3_figure_eight, nb3_lagrange, "nb3_ensemble:r4", "nbN_circle:N_4", "nbN_circle:N_6", "nbN_circle:N_10", "nbN_alternating:rings_N_6", "nbN_alternating:hier_N_4", "nbN_cluster:N_6"]}}
+  # nbN_circle:N_10 has no reference at T = 30, 56/400; #2 of the T = 8 variant needs 80/600 too (reference_variants.yaml)
+  - {name: refs_t8, modes: [paper], kind: reference, grid: {case: ["nbN_circle:N_10_T8", "nbN_circle:N_10_T8_hp"], ic: {"nbN_circle:N_10_T8": [0, 1], "nbN_circle:N_10_T8_hp": [2]}}}
+  - name: local_t8
+    modes: [paper]
+    kind: local
+    fixed: {orders: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40], states: 60}
+    grid: {case: ["nbN_circle:N_10_T8", "nbN_circle:N_10_T8_hp"], ic: {"nbN_circle:N_10_T8": [0, 1], "nbN_circle:N_10_T8_hp": [2]}}
