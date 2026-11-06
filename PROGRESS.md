@@ -27,7 +27,7 @@ Code built. E0 done. All dev grids finished except E11. Paper grids running in o
 - [ ] E2 paper finished 19:46: 57,544 of 58,429 done, 885 failed from 8 reference checks; see flags. Tables not yet in `results/derived` (interim analysis ran to the scratchpad)
 - [ ] E4 dev done (44 of 44; grid equal in paper mode)
 - [ ] E3 interim analysis on E2 paper done to the scratchpad; final run pending the 8 ICs
-- [ ] E5 paper running since 19:46 (3,251 of 14,860 at 23:21, Lorenz group nearly done)
+- [ ] E5 paper: restarted 2026-11-06 with `henon_n2` capped at 60 s, plus `rossler_fix`, `nb3_fix` (15,035 jobs in all)
 - [ ] E9 dev done (444 done, 30 failed by design, see below), paper pending
 - [ ] E8 dev done (364 of 364), E6 dev done (810 of 810), E7 dev done (100 of 100); paper running in the chain
 - [ ] E11 dev running since 23:00 on 4 workers (references 27 of 60); paper (4,220 jobs) only after looking at dev; E10 local pending. E8 and E4 paper grids equal dev
@@ -35,7 +35,11 @@ Code built. E0 done. All dev grids finished except E11. Paper grids running in o
 - [ ] Figures, DIGEST, Drive upload, email, tag results-v1
 
 ## Running background jobs
-See `pgrep -af "msps run"`. Logs: `logs/E<k>.log`.
+See `pgrep -af "msps run"`. Logs: `logs/E<k>.log`. Started 2026-11-06 about 12:45, 11 threads:
+- `scripts/paper_chain2.sh` (replaces `paper_chain.sh`, stopped by PID): E5, E9, E8, E6, E7, E4; 7 workers.
+- E2 fix groups (`refs_fix` etc, `rossler:r2`, `nb3_ensemble:r5`; log `logs/E2fix.log`), then E11 dev, now N <= 6 and Lorenz-96 only; 2 workers.
+- `experiments/e11_high_n.yaml` (study E11hi): route 1, order 80/600 at T = 30, N_8_hp then N_10_hp, IC 0; 1 worker. No checkpoints: a kill loses the reference.
+- `scripts/ref_diff_profile.py` over the failed references, to `results/derived/e11_ref_diff_profile.csv`; 1 process. Next: choose T from it, add T variants (route 2) to the case cards and to `e11_high_n.yaml`. Decide whether N = 8, 10 enter E11 only after these two routes.
 
 ## Decisions and deviations from the spec
 - **Python `sum` avoided.** Since Python 3.12 `sum()` uses compensated summation on floats. The pilot uses `sum`, so its float64 runs are not plain IEEE rounding on Python ≥ 3.12. The new code uses `reduce(add, ...)`, so f64 is plain IEEE. T_pred at every order is unchanged; c_r moves from the pilot rerun's 4.197 to 4.089 (spec 4.21).
@@ -70,10 +74,10 @@ Pilot rerun on this machine: c_r = 4.197 (spec 4.21), 6235 fit points (spec 6207
 |---|---|---|
 | E0 | 0.5 | 0.08 (dev) |
 | E1 | 2 | paper 44,661 s (12.4 h): over budget, mostly N = 10 references |
-| E2 | 12 | dev about 9 core-h; paper 12:30 to 19:46 (7.3 h), 65 core-h of job wall |
+| E2 | 12 | dev about 9 core-h; paper 12:30 to 19:46 (7.3 h); about 62 core-h of job wall for all finished jobs, dev included |
 | E3 | analysis | |
 | E4 | 1 | dev 2,092 s of job wall before the hang, then 170 s |
-| E5 | 20 | dev 1,278 s elapsed, 7 workers |
+| E5 | 20 | dev 1,278 s elapsed, 7 workers; paper at 16.9 h when restarted on 2026-11-06 with 5,463 + 3,010 jobs left: will pass the budget |
 | E6 | 3 | dev 288 s, 7 workers |
 | E7 | 3 | dev 16 s, 7 workers |
 | E8 | 6 | dev 1,075 s plus 26 s retry, 7 workers |
@@ -92,6 +96,8 @@ E4 sat idle from 04:21 to 09:25: `GNU MP: Cannot allocate memory` aborted a work
 - **Duplicate fixed ICs in E1.** Cases with a fixed IC (for instance `nb3_pythagorean`) run ic 0, 1, 2 with identical results, so their `ics` count in `e1_local_law` overstates independent samples. Medians are unaffected.
 
 ## Flags against hypotheses and the plan (not adjusted)
+- **E11, N = 8 too (2026-11-06, base protocol 56/400, T = 30):** `rings_N_8` #0, 1, 2 fail (3e-18, inf, 7.9e-26), `nbN_circle:N_8` #0 fails (1.15e-22), #2 passes (5e-43), #1 hit the 6 h limit, `rings_N_10` all three hit the 6 h limit. Close encounters reach dmin 1e-7 to 1e-6. N <= 6 all pass. The author said to try both more precision and a shorter T for N = 10, falling back to reporting up to N = 8 with an explanation; N = 8 needs the same remedy before it can be reported.
+- **E5, Henon-Heiles n = 2:** energy drifts over the escape energy (H 0.1667 to 0.21 by t about 106 on IC 0), the orbit runs away and rho -> 0, so t stalls near a limit: 60 s reaches 106.708, 3600 s reaches 106.727. All 77 stored E_1_6_r2 n = 2 runs ended in `wall_budget` at 3600 s with median t_end 89 of 5000. New group `henon_n2` caps these at 60 s (`max_wall` is outside run_id). Stored 3600 s runs stay. This saves about 700 core-h. Five f32 runs crashed writing a checkpoint with a NaN twin; under 300 s they never reach a checkpoint.
 - **Correction, E2 crossover law:** the earlier "bits per order 3.54-3.76 against predicted 3.54-3.75" compared `n_star_model` with a prediction from the same local fit, so it was close to circular. The table now also has `empirical_bits_per_order` from the empirical n*, on cells where at least half the ICs reach a plateau. On paper data: Lorenz 3.5 (predicted 3.59), Rossler 3.1 (3.59), Henon-Heiles E = 1/6 4.0 (3.71), 3 points each on an even-order grid. Empirical and model n* agree within about 2 orders at 24, 53, 80 bits.
 - **E2 paper, failed references:** rossler #26, 35, 47, 58, 63, 91, 99 (max diff 1.5e-30 to 4.4e-29 against tol 1e-30) and nb3_ensemble:r4 #65 (3.45e-21). 885 dependent jobs failed with them. The check was not relaxed. Plan told to the author: recompute these ICs with higher-precision references in a new variant, same check, once cores are free; until then they are excluded, which may bias the sample.
 - **E1 paper, N = 10:** `nbN_circle:N_10` has no data. Reference #0 fails its check (max diff 4.99e-10 against 1e-30); others hit MemoryError or a worker abort after hours. Asked the author whether to try more precision, a shorter T, or stop at N = 8. E11 includes N = 8, 10 references and may fail the same way.
