@@ -35,7 +35,7 @@ Code built. E0 done. All dev grids finished except E11. Paper grids running in o
 - [ ] Figures, DIGEST, Drive upload, email, tag results-v1
 
 ## Running background jobs
-See `pgrep -af "msps run"`. Logs: `logs/E<k>.log`. Started 2026-11-06 about 12:45, 11 threads:
+See `pgrep -af "msps run"`. Logs: `logs/E<k>.log`. Started 2026-11-06 at 12:26, 11 threads:
 - `scripts/paper_chain2.sh` (replaces `paper_chain.sh`, stopped by PID): E5, E9, E8, E6, E7, E4; 7 workers.
 - E2 fix groups (`refs_fix` etc, `rossler:r2`, `nb3_ensemble:r5`; log `logs/E2fix.log`), then E11 dev, now N <= 6 and Lorenz-96 only; 2 workers.
 - `experiments/e11_high_n.yaml` (study E11hi): route 1, order 80/600 at T = 30, N_8_hp then N_10_hp, IC 0; 1 worker. No checkpoints: a kill loses the reference.
@@ -77,7 +77,7 @@ Pilot rerun on this machine: c_r = 4.197 (spec 4.21), 6235 fit points (spec 6207
 | E2 | 12 | dev about 9 core-h; paper 12:30 to 19:46 (7.3 h); about 62 core-h of job wall for all finished jobs, dev included |
 | E3 | analysis | |
 | E4 | 1 | dev 2,092 s of job wall before the hang, then 170 s |
-| E5 | 20 | dev 1,278 s elapsed, 7 workers; paper at 16.9 h when restarted on 2026-11-06 with 5,463 + 3,010 jobs left: will pass the budget |
+| E5 | 20 | dev 1,278 s elapsed, 7 workers; paper at 16.9 h when restarted on 2026-11-06 with 8,647 jobs left: will pass the budget |
 | E6 | 3 | dev 288 s, 7 workers |
 | E7 | 3 | dev 16 s, 7 workers |
 | E8 | 6 | dev 1,075 s plus 26 s retry, 7 workers |
