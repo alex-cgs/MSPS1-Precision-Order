@@ -8,3 +8,4 @@ results/queue/
 logs/
 .pytest_cache/
 .hypothesis/
+results/drive_upload/

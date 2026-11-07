@@ -1,7 +1,7 @@
 # MSPS1 progress (agent memory; "continue from PROGRESS.md" is enough to resume)
 
 ## Current phase
-All studies E0-E11 finished on 2026-11-07 at 18:04; nothing is running. Tests pass (fast, GPU, slow). `results/DIGEST.md` written. Figures and tables final. See the checklist for the Drive upload, email and tag.
+All studies E0-E11 finished on 2026-11-07 at 18:04; nothing is running. Tests pass (fast, GPU, slow). `results/DIGEST.md` written, figures and tables final, email sent, tagged `results-v1`. Open: the author's decisions below, and copying the figures and CSVs into Drive (checklist).
 
 ## How to resume
 1. Read this file, `CLAUDE.md`, the spec sections touched by the next item.
@@ -33,7 +33,9 @@ All studies E0-E11 finished on 2026-11-07 at 18:04; nothing is running. Tests pa
 - [x] E10 local (CPU one numpy core, GTX 1080 Ti); H100 dismissed
 - [x] Interim findings emailed to the author on 2026-11-05 at their request, subject "MSPS1: interim findings (not the final digest)"
 - [x] Figures (32 PNG, 32 PDF, light and dark), `results/DIGEST.md`
-- [ ] Drive upload, email, tag results-v1
+- [x] Digest email sent 2026-11-07, subject "MSPS1: experiment digest"; repository tagged `results-v1`
+- [ ] **Drive upload incomplete, needs the author.** Drive `MSPS1/results` (folder id 1ykFPbhMYGr1DrQFv1pw3kTZXPVSIUxLE) holds `DIGEST.md` and `PROGRESS.md` only. The connector takes file content inline, so the 32 PNG (8.3 MB) and 35 CSV (20 MB) cannot go through it, and this machine has no Drive mount or CLI. Retyping the small CSVs by hand was rejected as a transcription risk on research data. All 67 files are ready in `results/drive_upload/` (git-ignored) to drag into that Drive folder. The digest with its figures is also on a private page: https://claude.ai/artifact/9FpUhsNF3CPN478UEwFiYp
+- [ ] Drive `MSPS1/code` is still the ee91ef0 snapshot. Since then: small changes to `runner/queue.py`, `integrators/gauss_legendre.py`, `io/__init__.py`, plus analysis, figures, tests, experiments, cases; `bench/`, `scripts/` not included. The tag `results-v1` holds the current code; the repository has no remote
 
 ## Running background jobs
 None. History, in order (logs: `logs/E<k>.log`). Started 2026-11-06 at 12:26, 11 threads:
@@ -154,7 +156,7 @@ The author said on 2026-11-05 that the `ops` tests can be dismissed and that the
 `ssh ops` reaches a VMware VM with **no GPU visible**: no `/dev/nvidia*`, no `nvidia-smi`, no driver, `lspci` shows only VMware SVGA (checked 02:34, 2026-11-05). The first night's benchmark did not run; the pip failure in `logs/ops_night_2026-11-05.log` (jax CUDA wheels, network) is secondary. `ops_night.sh` now checks for the GPU first and exits without copying or installing anything if absent. Left on ops: `~/msps1` (306 MB, including a references copy) with a venv without JAX; nothing running. Open question 3.
 
 ## Open questions for Alexandre
-5. Re-synchronise u = 1/r each step, to test whether H3 recovers on nb3 at low n? Method change, not done.
-6. Scale Taylor coefficients by h^k, to remove the f32 and dd range failures? Changes the tape, not done.
 1. The pilot's `sum()` is compensated on Python ≥ 3.12 (see above). Should the paper quote the plain-IEEE numbers from the new engine? The T_pred table is unaffected.
 2. Escape criterion: Stone & Leigh give none that is operational. Is the definition above acceptable, and is r > 10 a the factor you want?
+3. Re-synchronise u = 1/r each step, to test whether H3 recovers on nb3 at low n? Method change, not done.
+4. Scale Taylor coefficients by h^k, to remove the f32 and dd range failures? Changes the tape, not done.

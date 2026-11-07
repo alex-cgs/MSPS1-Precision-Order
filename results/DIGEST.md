@@ -6,11 +6,9 @@ T_pred is the time a run stays within tolerance of a validated reference; tolera
 
 ## What was run
 - **Systems:** E0–E11 as planned, covering Lorenz-63, Rössler, Hénon–Heiles, Lorenz-96, FPUT, Duffing, double pendulum, Kepler, 3-body (pilot and ensemble), N-body up to N = 10 and iterated maps.
-- **E2 grid:** n = 4 to 32 (even) at 24, 53, 80, 106, 113, 160 and 256 bits, tolerances 1e-6 and 1e-3, 100 ICs per system. The spec asked for 1,000; I followed AGENT_PROMPT.
-- **Other IC counts:** E11 used 5 ICs per system and E8 used one.
+- **E2 grid:** n = 4 to 32 (even) at 24, 53, 80, 106, 113, 160 and 256 bits, tolerances 1e-6 and 1e-3, 100 ICs per system, one for the pilot (the spec asked for 1,000; I followed AGENT_PROMPT). E11 used 5 ICs per system and E8 one.
 - **Hardware:** Ryzen 5 7600X (11 of 12 threads, nice 5) and GTX 1080 Ti.
-- **Compute:** 427 core-hours of queued jobs, dev and paper grids (352 on the 88,952 finished, 75 on failed ones), plus E10 at 3.7 h GPU and 3 h on one CPU core. This excludes runs I killed by hand and superseded attempts. Elapsed time was 4 Nov 23:57 to 7 Nov 18:04.
-- **Validation:** E0 passes 68 of 69 checks; the miss is under Contradictions.
+- **Compute:** 427 core-hours of queued jobs, dev and paper grids (352 on the 88,952 finished, 75 on failed ones), plus E10 at 3.7 h GPU and 3 h on one CPU core. This excludes runs I killed by hand and superseded attempts. Elapsed: 4 Nov 23:57 to 7 Nov 18:04.
 
 ## Main findings
 **Crossover law (RQ1, H1): supported up to 80 bits, untested above.** T_pred rises with n, then plateaus, and after that only more bits help.
@@ -40,8 +38,7 @@ The FTLE variant brings all four non-3-body systems under one decade, with no ex
 
 **Statistics vs trajectories (RQ3, H3): holds on smooth flows, fails on the 3-body ensemble at low n.**
 - **Lorenz:** with f32, T_pred is 0.25 (one output-grid step), yet the Lyapunov exponent λ stays within 0.0031 of 0.9049 at every (n, p). W1 is at most 0.0435 against a split-half floor of 0.0326.
-- **Rössler:** λ is within 0.0012 of 0.0713. W1 is at most 0.0078 at n ≥ 4 against a floor of 0.0066, and up to 0.0175 at n = 2.
-- **Lorenz-96, N = 8:** λ is within 0.030 of 1.6065, and W1 is below the floor (20 runs).
+- **Rössler:** λ is within 0.0012 of 0.0713. W1 is at most 0.0078 at n ≥ 4 against a floor of 0.0066, and up to 0.0175 at n = 2. Lorenz-96 at N = 8 behaves the same way (20 runs).
 - **Hénon–Heiles:** n = 2 is wrong in every arithmetic (λ off by 0.10–0.12, the orbit runs away). At E = 1/8, n = 4 is off by 0.016, which is 68% of λ. At n ≥ 6 the error is at most 0.0085, still up to 37% of λ there, with no trend in n and no floor computed for λ.
 - **3-body ensemble:** the escape fraction misses the reference 0.84 at low n, whatever the precision.
 
@@ -85,21 +82,21 @@ Two mechanisms explain most of this:
 - **H3:** fails on the 3-body ensemble at low n, largely because of a polynomialization artefact.
 - **RQ9:** the factor (d−1)n+1 is an upper bound, not a law. N-body reaches 0.86–1.00 of it and Lorenz 0.81–0.93, but Hénon–Heiles only 0.56–0.73. Its Taylor map has degree n/2+1, and growth follows that (7.24 at n = 12, where the law gives 13). The pilot's case holds (32.30 vs 33). *Figure: `e4_exact_growth`.*
 - **dd is not a clean 106-bit stand-in at high n:** on one N = 8 run at T = 30, n = 32, dd gives T_pred 4.76 against 24.13 for 113 bits.
-- **Pilot:** T_pred is reproduced at every order. The fitted c_r is 4.089 against 4.21 in the spec, E0's one missed check. Rerunning the pilot itself gives 4.197, and its `sum()` is compensated on Python ≥ 3.12.
+- **Pilot:** T_pred is reproduced at every order, and E0 passes 68 of 69 checks. The miss is the fitted c_r, 4.089 against 4.21 in the spec. Rerunning the pilot itself gives 4.197, and its `sum()` is compensated on Python ≥ 3.12.
 - **Stone & Leigh:** the paper gives no operational escape test, so the criterion here is my own (positive energy, moving outward, r > 10 a).
-- **Reference checks:** the base protocol failed on 8 E2 ICs and on N ≥ 8. I raised precision and kept the check at 1e-30.
 
 ## Limitations
 - **Censoring:** high-precision medians are lower bounds (113-bit censoring at n = 32: Hénon–Heiles E = 1/8 99%, 3-body ensemble 90%).
 - **N = 8, 10:** T = 8 rather than 30, so 113-bit values are capped, and 5 ICs per family. Three ICs needed the order 80/600-bit reference. The only T = 30 data is one IC each, circle family. The amplification run for cluster N = 8 #4 was skipped (about 15 h, over the 6 h limit); no reported number uses it.
 - **E5 vs E2:** E5 T_pred uses a coarse grid and its own step rule, so it is not comparable with E2. Hénon–Heiles n = 2 runs have mixed 60 s and 3,600 s caps.
 - **Not done:** H100; a 3-body grid in E7; PDE work and confidence regions; Carleman and surrogate models; f80 and Arb in the study grids.
+- **References:** the base protocol failed its check on 8 E2 ICs and on N ≥ 8. I raised precision for those and kept the check at 1e-30.
 - **Over budget:** E1 (12.4 h vs 2) and E5 (25.9 h vs 20). E11 with E11hi used about 150 core-hours including failures, against a budget of 10 h.
 
 ## Suggested next steps
-1. **Decide whether to re-synchronize u = 1/r each step,** then rerun nb3 E5 at low n. This is the direct test of whether H3 recovers. It changes the method, so it is your call.
+1. **Decide whether to re-synchronize u = 1/r each step,** then rerun E5 on the 3-body ensemble at low n. This is the direct test of whether H3 recovers. It changes the method, so it is your call.
 2. **Decide whether to scale coefficients by h^k,** which removes the range failures in f32 and dd but changes the tape.
 3. **Test H1 above 80 bits** with n up to about 64 and longer T.
 4. **Run E8 on an ensemble,** so the Yoshida and Gauss–Legendre comparison rests on more than one IC.
-5. **Run E10 on an H100** if one with a visible GPU becomes available (`ops` showed none). Also canonicalize NaN in the fingerprint, since NaN sign alone caused the hash mismatches.
+5. **Run E10 on an H100** if one with a visible GPU becomes available (`ops` showed none). Also canonicalize NaN in the fingerprint: NaN sign alone caused the 3-body hash mismatches.
 6. **Answer two open questions in `PROGRESS.md`:** which c_r to quote, and the escape criterion.
