@@ -54,7 +54,7 @@ def crossover(theme, t):
     cs = read("e2_crossover_summary")
     if cs is None:
         return
-    cs = cs[cs.tol == 1e-6].dropna(subset=["n_star_model_median"])
+    cs = cs[(cs.tol == 1e-6) & (cs.bits <= 113)].dropna(subset=["n_star_model_median"])  # above 113 bits the model n* lies past the swept n <= 32
     fig, ax = plt.subplots(figsize=(6.6, 4.3))
     cases = [c for c in CASES if c in set(cs.case)]
     fam = {c: i for i, c in enumerate(cases)}
@@ -64,12 +64,12 @@ def crossover(theme, t):
         g = cs[cs.case == c].sort_values("bits")
         col = t["CAT"][i % 4]
         style = "-" if i < 4 else "--"
-        ax.errorbar(g.bits + offs[i], g.n_star_model_median, yerr=[g.n_star_model_median - g.model_q25, g.model_q75 - g.n_star_model_median], color=col, ls=style, marker=MARKERS[i], ms=5, capsize=2, lw=1.4, label=short_case(c))
-    ax.axhspan(4, 32, color=t["BAND"], alpha=0.5, lw=0, zorder=0)
-    ax.text(ax.get_xlim()[1], 32.6, "swept orders n ≤ 32", ha="right", fontsize=8, color=t["INK2"])
+        ax.plot(g.bits + offs[i], g.n_star_model_median, color=col, ls=style, lw=1, alpha=0.45, zorder=1)
+        e = g[(g.emp_ics_with_plateau >= 0.5 * g.ics) & g.n_star_emp_median.notna()]
+        ax.errorbar(e.bits + offs[i], e.n_star_emp_median, yerr=[e.n_star_emp_median - e.emp_q25, e.emp_q75 - e.n_star_emp_median], color=col, ls="none", marker=MARKERS[i], ms=5, capsize=2, label=short_case(c), zorder=2)
     ax.set_xlabel("precision p (bits)")
-    ax.set_ylabel("crossover order n*(p), model-based")
-    ax.set_title("Crossover order grows linearly with precision across systems")
+    ax.set_ylabel("crossover order n*(p)")
+    ax.set_title("Crossover order: empirical median and IQR (markers), per-IC model (lines)\nmarkers only where at least half the ICs reach a plateau", fontsize=10)
     ax.legend(loc="upper left", fontsize=8)
     fig.tight_layout()
     save(fig, "e2_crossover", theme)

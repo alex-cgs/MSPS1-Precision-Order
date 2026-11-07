@@ -107,7 +107,10 @@ def bench_config(case, n, prec, batch, backend, repeats, steps, label, window, t
 def accuracy(case, n, prec, backend, n_ic, device_tag):
     """T_pred (tol 1e-6, 1e-3) per member on the grid, comparing against cached E2 references; adaptive per-member."""
     from msps.runner.references import Reference, ref_dir
-    ics = [i for i in range(n_ic) if (ref_dir(case, i) / "meta.json").exists()]
+    def usable(i):  # a stored reference that failed its check raises on load (nb3_ensemble:r4 #65)
+        p = ref_dir(case, i) / "meta.json"
+        return p.exists() and json.loads(p.read_text()).get("check_passed")
+    ics = [i for i in range(n_ic) if usable(i)]
     if not ics:
         return None
     refs = [Reference(case, i) for i in ics]
@@ -152,7 +155,7 @@ def main():
     ap.add_argument("--label", required=True)
     ap.add_argument("--size", default="small", choices=list(GRIDS))
     ap.add_argument("--backend", default="jax", choices=["jax", "numpy"])
-    ap.add_argument("--systems", nargs="*", default=["lorenz63", "nb3_ensemble"])
+    ap.add_argument("--systems", nargs="*", default=["lorenz63:rho_28", "nb3_ensemble:r4"])
     ap.add_argument("--steps", type=int, default=32)
     ap.add_argument("--deadline-guard", action="store_true")
     ap.add_argument("--no-accuracy", action="store_true")

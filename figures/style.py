@@ -70,6 +70,9 @@ def both(fn):
 
 
 def short_case(c: str) -> str:
+    for old, new in (("nb2_kepler:e_9_10", "Kepler e=9/10"), ("nb2_kepler:e_1_2", "Kepler e=1/2"), ("nb2_kepler:e_0", "Kepler e=0"), ("nb3_figure_eight", "figure-eight"), ("nb3_lagrange", "Lagrange"), ("nb3_pythagorean", "Pythagorean"),
+                     ("nbN_alternating:hier_N_", "hierarchical N="), ("nbN_alternating:rings_N_", "rings N="), ("nbN_circle:N_", "circle N="), ("nbN_cluster:N_", "cluster N="), ("_T8", ", T=8"), ("_hp", ", T=30")):
+        c = c.replace(old, new)
     return c.replace(":r2", "").replace(":r4", "").replace("_r2", "").replace("henon_heiles:E_1_8", "Hénon–Heiles E=1/8").replace("henon_heiles:E_1_6", "Hénon–Heiles E=1/6").replace("lorenz63:rho_28", "Lorenz-63").replace("rossler", "Rössler") \
         .replace("nb3_pilot", "3-body pilot").replace("nb3_ensemble", "3-body ensemble").replace("double_pendulum", "double pendulum").replace("duffing:gamma_0_50", "Duffing γ=0.5") \
         .replace("lorenz96:N_", "Lorenz-96 N=").replace("fput_beta:N_", "FPUT-β N=")

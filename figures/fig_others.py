@@ -21,8 +21,8 @@ def stats_vs_traj(theme, t):
         floor = d[d.case == c]["W1_floor_" + ob[3:]].iloc[0]
         if floor == floor:
             row[1].axhline(max(floor, 1e-6), color=t["MUTED"], ls="--", lw=1)
-            row[1].text(0.99, 0.97, "reference split-half floor", transform=row[1].transAxes, ha="right", va="top", fontsize=7.5)
-        row[0].set_title(f"{short_case(c)}: time on orbit", fontsize=9.5)
+        top = d[d.case == c].sort_values(["bits", "n"]).iloc[-1]
+        row[0].set_title(f"{short_case(c)}: time on orbit (censored at top (n, p): {top['censored_frac_1e-6']:.0%})", fontsize=9)
         row[0].set_ylabel("T_pred (tol 1e-6)")
         row[1].set_yscale("log"); row[2].set_yscale("log")
         row[1].set_title(f"histogram W1, {ob[3:]}", fontsize=9.5)
@@ -30,9 +30,11 @@ def stats_vs_traj(theme, t):
         for ax in row:
             ax.set_xlabel("order n")
     h, l = axs[0][0].get_legend_handles_labels()
+    h.append(plt.Line2D([], [], color=t["MUTED"], ls="--", lw=1))
+    l.append("reference split-half floor")
     fig.legend(h, l, loc="lower center", ncol=8, bbox_to_anchor=(0.5, -0.01))
-    fig.suptitle("Statistics against time on the orbit, same runs: per-run adaptive step, reference = highest (n, p) in each grid", color=t["INK"], fontsize=11)
-    fig.tight_layout(rect=(0, 0.03, 1, 0.99))
+    fig.suptitle("Statistics against time on the orbit, same runs: per-run adaptive step, reference = highest (n, p) in each grid\nT_pred here is tested on the reference output grid, so it is not comparable with E2", color=t["INK"], fontsize=10.5)
+    fig.tight_layout(rect=(0, 0.03, 1, 0.985))
     save(fig, "e5_stats_vs_trajectories", theme)
 
 
@@ -89,6 +91,9 @@ def representation(theme, t):
         for j, (a, lab) in enumerate((("f64", "IEEE float"), ("mpfr-53", "MPFR"), ("qr-53", "rational"))):
             v = [d[(d.case == c) & (d.arith == a)].k_cross_median.max() for c in cases]
             ax.bar(x + (j - 1) * 0.26, np.nan_to_num(v), width=0.24, color=t["CAT"][j], label=lab)
+            for xi, vi, c in zip(x, v, cases):
+                if not np.isfinite(vi) and (j == 2 or c == "tent_map:mu_2") and not (c == "tent_map:mu_2" and j != 1):
+                    ax.text(xi + (j - 1) * 0.26, 0.6, "no qr-p: sin" if c == "sine_map" else "never crosses", ha="center", va="bottom", rotation=90, fontsize=7.5, color=t["INK2"])
         ax.set_xticks(x, [c.replace("_map", "").replace(":mu_", " μ=").replace("199_100", "1.99") for c in cases], fontsize=8)
         ax.set_ylabel("iterations on orbit (tol 1e-6), p = 53")
         ax.set_title("Maps", fontsize=9.5)
@@ -119,11 +124,16 @@ def methods(theme, t):
         axs[0, j].set_xscale("log"); axs[1, j].set_xscale("log"); axs[1, j].set_yscale("log")
         axs[0, j].set_title(short_case(c), fontsize=9.5)
         axs[1, j].set_xlabel("wall time (s)")
+        if not g["max_denergy"].notna().any():
+            axs[1, j].set_yscale("linear")
+            axs[1, j].set_yticks([])
+            axs[1, j].text(0.5, 0.5, "no conserved energy", transform=axs[1, j].transAxes, ha="center", va="center", fontsize=8.5, color=t["INK2"])
     axs[0, 0].set_ylabel("T_pred (tol 1e-6)")
     axs[1, 0].set_ylabel("max |ΔH|")
-    axs[0, 0].legend(fontsize=7.5)
-    fig.suptitle("Method families, f64: accuracy and energy against cost", color=t["INK"], fontsize=11)
-    fig.tight_layout()
+    h, l = axs[0, 0].get_legend_handles_labels()
+    fig.legend(h, l, loc="lower center", ncol=5, fontsize=8.5, frameon=False)
+    fig.suptitle("Method families, f64, one initial condition: accuracy and energy against cost", color=t["INK"], fontsize=11)
+    fig.tight_layout(rect=(0, 0.045, 1, 1))
     save(fig, "e8_cost_vs_accuracy", theme)
 
 

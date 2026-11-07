@@ -26,8 +26,8 @@ def local_law(theme, t):
         ax.set_xlabel("Taylor order n")
     for row in axs:
         row[0].set_ylabel("log10 one-step error")
-    fig.suptitle("Local truncation error per step falls by a fixed factor per order", color=t["INK"], fontsize=11)
-    fig.tight_layout()
+    fig.suptitle("Local truncation error per step against order (the schedule sets h between ρ/16 and ρ/8)", color=t["INK"], fontsize=11)
+    fig.tight_layout(rect=(0, 0, 1, 0.98))
     save(fig, "e1_local_law", theme)
 
 
