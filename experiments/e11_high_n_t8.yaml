@@ -27,3 +27,17 @@ groups:
     kind: traj
     fixed: {method: taylor, schedule: shared, stop_err: 1.0}
     grid: {case: ["nbN_circle:N_10_T8_hp"], ic: [2], arith: [f32, f64, dd, mpfr-80, mpfr-113], n: [4, 8, 12, 16, 20, 24, 28, 32]}
+  # nbN_cluster:N_8_T8 #4 failed its check at 56/400; its reference is the t8_cluster_fix group of e11_high_n.yaml
+  - {name: amp_fix2, modes: [paper], kind: amplification, grid: {case: ["nbN_cluster:N_8_T8_hp"], ic: [4]}}
+  - name: sweep_fix2
+    modes: [paper]
+    kind: traj
+    fixed: {method: taylor, schedule: shared, stop_err: 1.0}
+    grid: {case: ["nbN_cluster:N_8_T8_hp"], ic: [4], arith: [f32, f64, dd, mpfr-80, mpfr-113], n: [4, 8, 12, 16, 20, 24, 28, 32]}
+  # nbN_cluster:N_10_T8 #4 failed its check at 56/400; its reference is the t8_cluster_fix10 group of e11_high_n.yaml
+  - {name: amp_fix3, modes: [paper], kind: amplification, grid: {case: ["nbN_cluster:N_10_T8_hp"], ic: [4]}}
+  - name: sweep_fix3
+    modes: [paper]
+    kind: traj
+    fixed: {method: taylor, schedule: shared, stop_err: 1.0}
+    grid: {case: ["nbN_cluster:N_10_T8_hp"], ic: [4], arith: [f32, f64, dd, mpfr-80, mpfr-113], n: [4, 8, 12, 16, 20, 24, 28, 32]}

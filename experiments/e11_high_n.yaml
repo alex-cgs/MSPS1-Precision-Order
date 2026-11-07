@@ -5,3 +5,7 @@ job_wall_limit_s: 86400
 groups:
   - {name: hp8, kind: reference, grid: {case: ["nbN_circle:N_8_hp"], ic: [0]}}
   - {name: hp10, kind: reference, grid: {case: ["nbN_circle:N_10_hp"], ic: [0]}}
+  # nbN_cluster:N_8_T8 #4 failed its check at 56/400 (1.08e-30, 135,246 steps); expect about 8 h, over the 6 h limit of e11_high_n_t8.yaml
+  - {name: t8_cluster_fix, modes: [paper], kind: reference, grid: {case: ["nbN_cluster:N_8_T8_hp"], ic: [4]}}
+  # nbN_cluster:N_10_T8 #4 failed its check at 56/400 (1.25e-23, 16,687 steps)
+  - {name: t8_cluster_fix10, modes: [paper], kind: reference, grid: {case: ["nbN_cluster:N_10_T8_hp"], ic: [4]}}
