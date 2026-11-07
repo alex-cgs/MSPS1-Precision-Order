@@ -251,13 +251,29 @@ def dimension(theme, t):
     fig, axs = plt.subplots(1, 2, figsize=(10, 3.8))
     fam = {"nbN_circle": (0, "o", "circle"), "nbN_alternating_rings": (1, "s", "two rings"), "nbN_alternating_hier": (1, "v", "binary + perturbers"), "nbN_cluster": (2, "^", "cluster"),
            "nb3_ensemble:r4": (3, "D", "3-body ensemble"), "nb2_kepler": (3, "P", "Kepler (2 bodies)")}
+    # N >= 8 ran to T = 8 (open markers, dashed join); the *_hp rows are the one-IC T = 30 bridge, not part of the median lines.
+    bridge = d.case.str.endswith("_hp")
     for name, (i, mk, lab) in fam.items():
-        g = d[(d.family == name) & (d.bits == 53)].sort_values("N")
-        if len(g):
-            axs[0].plot(g.N, g.tpred_at_max_n, color=t["CAT"][i], marker=mk, label=lab)
-            axs[1].plot(g.N, g.n_star_empirical, color=t["CAT"][i], marker=mk)
-    axs[0].set_xlabel("number of bodies N"); axs[0].set_ylabel("T_pred at top n, f64")
-    axs[1].set_xlabel("number of bodies N"); axs[1].set_ylabel("empirical n*, f64")
+        g = d[(d.family == name) & (d.bits == 53) & ~bridge].sort_values("N")
+        if not len(g):
+            continue
+        col = t["CAT"][i]
+        ok = g.ics_with_plateau >= 0.5 * g.ics
+        for ax, y, keep in ((axs[0], "tpred_at_max_n", g.N > 0), (axs[1], "n_star_empirical", ok)):
+            h = g[keep]
+            ax.plot(h.N, h[y], color=col, lw=1.2, ls="--", zorder=1)
+            s = h[h["T"] > 8]
+            ax.plot(s.N, s[y], color=col, marker=mk, label=lab if ax is axs[0] else None, zorder=2)
+            o = h[h["T"] == 8]
+            ax.plot(o.N, o[y], ls="", color=col, marker=mk, mfc=t["SURF"], zorder=3)
+    b = d[bridge & (d.bits == 53)]
+    if len(b):
+        axs[0].plot(b.N, b.tpred_at_max_n, ls="", marker="x", color=t["INK"], ms=6, label="circle at T = 30, one IC")
+    axs[0].set_xlabel("number of bodies N"); axs[0].set_ylabel("T_pred at n = 32, f64 (median over ICs)")
+    axs[1].set_xlabel("number of bodies N"); axs[1].set_ylabel("empirical n*, f64 (median over ICs)")
+    axs[1].set_title("only where at least half the ICs plateau", fontsize=9.5)
+    axs[1].set_ylim(10, 22); axs[1].set_yticks(range(10, 23, 2))
+    axs[0].set_title("capped at T: 30 for N = 4 to 6 (Kepler 20), 8 for N = 8, 10 (open)", fontsize=9.5)
     axs[0].legend(fontsize=8)
     fig.suptitle("Dimension scaling, N-body", color=t["INK"], fontsize=11)
     fig.tight_layout()
@@ -268,7 +284,7 @@ def dimension(theme, t):
         for b in sorted(g.bits.unique()):
             h = g[g.bits == b].sort_values("N")
             ax.plot(h.N, h.tpred_at_max_n, color=bits_color(t, b), marker=bits_marker(b), label=BITS_LABEL[b])
-        ax.set_xlabel("N"); ax.set_ylabel("T_pred at top n"); ax.legend(fontsize=8); ax.set_title("Lorenz-96", fontsize=9.5)
+        ax.set_xlabel("N"); ax.set_ylabel("T_pred at n = 32 (median over ICs)"); ax.legend(fontsize=8, loc="center", bbox_to_anchor=(0.5, 0.22), ncol=3); ax.set_title("Lorenz-96, capped at T = 25", fontsize=9.5)
         fig.tight_layout()
         save(fig, "e11_lorenz96", theme)
 
