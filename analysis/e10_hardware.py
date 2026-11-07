@@ -6,6 +6,8 @@ from msps.io import iter_runs
 
 rows, acc = [], []
 for d, m in iter_runs("E10"):
+    if m["label"].startswith("dry_"):
+        continue
     for r in m.get("rows", []):
         rows.append({"label": m["label"], "size": m["config"]["size"], **{k: r.get(k) for k in ("case", "n", "prec", "batch", "steps", "repeats", "wall_median", "compile_s", "throughput_median", "peak_bytes", "device", "fingerprint", "error")},
                      "thr_q25": (r.get("throughput_iqr") or [np.nan])[0], "thr_q75": (r.get("throughput_iqr") or [np.nan, np.nan])[-1]})

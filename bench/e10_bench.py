@@ -31,6 +31,7 @@ GRIDS = {
     "tiny": {"batch": [10, 100], "n": [8], "prec": ["f32", "f64", "dd"], "repeats": 3},
     "small": {"batch": [100, 1000, 10000], "n": [8, 16], "prec": ["f32", "f64", "dd"], "repeats": 5},
     "full": {"batch": [1, 10, 100, 1000, 10000, 100000], "n": [8, 16, 24], "prec": ["f32", "f64", "dd"], "repeats": 5},
+    "cpu": {"batch": [1, 10, 100, 1000, 10000], "n": [8, 16, 24], "prec": ["f32", "f64", "dd"], "repeats": 5},  # batch 1e5 is about 15 h on one numpy core
 }
 STEP_H = {"lorenz63": 1 / 64, "nb3_ensemble": 1 / 64}
 
@@ -159,6 +160,7 @@ def main():
     ap.add_argument("--steps", type=int, default=32)
     ap.add_argument("--deadline-guard", action="store_true")
     ap.add_argument("--no-accuracy", action="store_true")
+    ap.add_argument("--accuracy-orders", nargs="*", type=int, help="orders that get the accuracy run; default every order in the grid")
     ap.add_argument("--precs", nargs="*")
     a = ap.parse_args()
     window = Window() if a.deadline_guard else None
@@ -202,7 +204,7 @@ def main():
                     out_rows.append(row)
                     flush("running")
                     print(json.dumps({k: row.get(k) for k in ("case", "n", "prec", "batch", "throughput_median", "compile_s", "error")}), flush=True)
-            if not a.no_accuracy:
+            if not a.no_accuracy and (a.accuracy_orders is None or n in a.accuracy_orders):
                 for prec in g["prec"]:
                     if window is not None and not window.may_start(300):
                         status = "stopped_by_window"

@@ -137,6 +137,9 @@ def methods(theme, t):
     save(fig, "e8_cost_vs_accuracy", theme)
 
 
+HW_LABEL = {"local_cpu_numpy": "CPU, one core, numpy", "local_gtx1080ti": "GTX 1080 Ti"}
+
+
 @both
 def hardware(theme, t):
     d, a = read("e10_throughput"), read("e10_accuracy")
@@ -153,7 +156,7 @@ def hardware(theme, t):
             for j, p in enumerate(("f32", "f64", "dd")):
                 g = d[(d.case == c) & (d.label == l) & (d.prec == p) & (d.n == nsel)].sort_values("batch")
                 if len(g):
-                    ax.plot(g.batch, g.throughput_median, color=t["CAT"][i % 4], ls=DASHES[j], marker=MARKERS[j], ms=4, label=f"{l}, {p}")
+                    ax.plot(g.batch, g.throughput_median, color=t["CAT"][i % 4], ls=DASHES[j], marker=MARKERS[j], ms=4, label=f"{HW_LABEL.get(l, l)}, {p}")
         ax.set_xscale("log"); ax.set_yscale("log")
         ax.set_xlabel("ensemble size"); ax.set_ylabel("trajectory-steps per second")
         ax.set_title(f"{short_case(c)}, n = {nsel}", fontsize=9.5)
@@ -163,15 +166,19 @@ def hardware(theme, t):
     save(fig, "e10_throughput", theme)
     if a is not None and "cost_per_accurate_time_s" in a:
         a = a.dropna(subset=["cost_per_accurate_time_s"])
-        fig, ax = plt.subplots(figsize=(7, 3.6))
+        cases = sorted(a.case.unique())
+        fig, axs = plt.subplots(1, len(cases), figsize=(5.2 * len(cases), 3.7), squeeze=False)
         labs = sorted(a.label.unique())
         mk = {"f32": "o", "f64": "s", "dd": "^"}
-        for i, l in enumerate(labs):
-            for p in mk:
-                g = a[(a.label == l) & (a.prec == p)]
-                ax.scatter(g["tpred_median_1e-06"], g.cost_per_accurate_time_s, color=t["CAT"][i % 4], marker=mk[p], s=30, label=f"{l}, {p}", edgecolor=t["SURF"], lw=0.4)
-        ax.set_yscale("log"); ax.set_xlabel("median T_pred (tol 1e-6)"); ax.set_ylabel("wall s per member per accurate time unit")
-        ax.legend(fontsize=7); ax.set_title("Cost per accurate time unit, one member at a time on small ensembles", fontsize=9.5)
+        for ax, c in zip(axs[0], cases):
+            for i, l in enumerate(labs):
+                for p in mk:
+                    g = a[(a.case == c) & (a.label == l) & (a.prec == p)]
+                    ax.scatter(g["tpred_median_1e-06"], g.cost_per_accurate_time_s, color=t["CAT"][i % 4], marker=mk[p], s=34, label=f"{HW_LABEL.get(l, l)}, {p}", edgecolor=t["SURF"], lw=0.4)
+            ax.set_yscale("log"); ax.set_xlabel("median T_pred (tol 1e-6)"); ax.set_ylabel("wall s per member per accurate time unit")
+            ax.set_title(short_case(c), fontsize=9.5)
+        axs[0][0].legend(fontsize=7)
+        fig.suptitle("Cost per accurate time unit, about 100 members advancing together, n = 8 (GPU only), 16, 24", color=t["INK"], fontsize=11)
         fig.tight_layout()
         save(fig, "e10_cost_accuracy", theme)
 

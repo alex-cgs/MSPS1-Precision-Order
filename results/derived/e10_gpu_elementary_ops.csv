@@ -1,0 +1,9 @@
+prec,op,operands,differing,max_ulp
+f32,add,2000000,0,0
+f32,mul,2000000,0,0
+f32,div,2000000,595188,2
+f32,div_by_int,2000000,483545,1
+f64,add,2000000,0,0
+f64,mul,2000000,0,0
+f64,div,2000000,0,0
+f64,div_by_int,2000000,0,0
