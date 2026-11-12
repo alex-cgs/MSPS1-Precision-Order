@@ -21,7 +21,7 @@ from .references import compute_reference, get_reference, grid_dt
 
 np.seterr(all="ignore")
 BLOWUP = 1e8
-N_OUTPUT_TIMES = 20  # state snapshots per run, kept for the confidence-region work (AGENT_PROMPT section 4 item 10)
+N_OUTPUT_TIMES = 20  # state snapshots per run, kept for the confidence-region work (spec §14)
 
 
 def _output_indices(n_grid: int, count: int = N_OUTPUT_TIMES) -> set:
@@ -125,7 +125,7 @@ def run_traj(cfg):
     grid_ref = ref.grid()
     if mode == "shared":
         m = int(cfg.get("substeps", 1))
-        sample_all = bool(cfg.get("sample_all", False))  # full per-step E(t), only when asked (AGENT_PROMPT section 4 item 10)
+        sample_all = bool(cfg.get("sample_all", False))  # full per-step E(t), only when asked
         pos = ref.pos()
         hs = [arith.convert(h / m) for h in ref.steps]
         times = ref.step_times()

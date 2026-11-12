@@ -1,4 +1,4 @@
-"""Rebuild every figure from results/ (AGENT_PROMPT section 9). Each draws only when its table exists."""
+"""Rebuild every figure from results/. Each figure is drawn only when its table exists."""
 import fig_e01_e04 as a
 import fig_e02_e03 as b
 import fig_others as c

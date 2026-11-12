@@ -1,14 +1,14 @@
 #!/bin/bash
 # H100 night job, started by cron at 02:30 (spec §11). Never touches ops outside 02:30-04:30.
-# Night plan comes from scripts/ops_plan.txt: first line "env_small" on night one, then "full".
+# usage: ops_night.sh [env_small|full|tiny]   (default env_small; use "full" once a small night has worked)
 set -u
-ROOT=/home/alexandre.tinouert/Desktop/Code/msps1
-LOG=$ROOT/logs/ops_night_$(date +%F).log
+ROOT=$(cd "$(dirname "$0")/.." && pwd)
+mkdir -p "$ROOT/logs"; LOG=$ROOT/logs/ops_night_$(date +%F).log
 exec >> "$LOG" 2>&1
 echo "== start $(date)"
 hhmm=$(date +%H%M)
 if [ "$hhmm" -lt 0230 ] || [ "$hhmm" -ge 0425 ]; then echo "outside window, abort"; exit 3; fi
-PLAN=$(head -n1 $ROOT/scripts/ops_plan.txt)
+PLAN=${1:-env_small}
 SSH="ssh -o BatchMode=yes -o ConnectTimeout=30 ops"
 secs_to_deadline() { echo $(( $(date -d "today 04:25" +%s) - $(date +%s) )); }
 

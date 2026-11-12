@@ -24,7 +24,7 @@ def bits_of(arith: str) -> int:
 
 
 def save_table(df: pd.DataFrame, name: str, md_rows: int | None = None) -> None:
-    """CSV plus a Markdown copy (AGENT_PROMPT section 9)."""
+    """CSV plus a Markdown copy."""
     df.to_csv(DERIVED / f"{name}.csv", index=False)
     show = df if md_rows is None else df.head(md_rows)
     cols = list(show.columns)

@@ -22,7 +22,7 @@ All studies E0-E11 finished on 2026-11-07 at 18:04; nothing is running. Tests pa
 - [x] E0 validation: 68/69 checks pass (`results/derived/e0_validation.csv`); the one miss is below
 - [x] H100 scripts written. **The author dismissed the `ops`/H100 tests on 2026-11-05: E10 runs locally.** Cron lines removed; `~/msps1` (306 MB) left on ops, nothing running
 - [x] Bibliography saved (`MSPS1 bibliography.csv`, 43 entries)
-- [x] Code snapshot in Drive: `MSPS1/code` (folder id 1w6p--Df2pI5MirUF7CcJ4XovKlRZJMvM), commit ee91ef0, asked for by the author on 2026-11-05. Later code changes are not in it; `results/` is not in it
+- [x] Code snapshot in Drive: `MSPS1/code`, commit ee91ef0, asked for by the author on 2026-11-05. Later code changes are not in it; `results/` is not in it
 - [x] E1 paper finished 23:00 on 2026-11-05: 78 done, 6 failed, all `nbN_circle:N_10` (3 references, 3 local); see flags. `analysis/e01_local.py` run
 - [x] E2 paper done: 885 failed jobs from 8 reference checks are covered by the fix groups (`rossler:r2`, `nb3_ensemble:r5`), so all 100 ICs are in the tables. The 2,518 pending rows are the superseded base `nb3_ensemble` grid
 - [x] E3 final, on all 100 ICs (50 train, 50 test)
@@ -34,12 +34,12 @@ All studies E0-E11 finished on 2026-11-07 at 18:04; nothing is running. Tests pa
 - [x] Interim findings emailed to the author on 2026-11-05 at their request, subject "MSPS1: interim findings (not the final digest)"
 - [x] Figures (32 PNG, 32 PDF, light and dark), `results/DIGEST.md`
 - [x] Digest email sent 2026-11-07, subject "MSPS1: experiment digest"; repository tagged `results-v1`
-- [ ] **Drive upload incomplete, needs the author.** Drive `MSPS1/results` (folder id 1ykFPbhMYGr1DrQFv1pw3kTZXPVSIUxLE) holds `DIGEST.md` and `PROGRESS.md` only. The connector takes file content inline, so the 32 PNG (8.3 MB) and 35 CSV (20 MB) cannot go through it, and this machine has no Drive mount or CLI. Retyping the small CSVs by hand was rejected as a transcription risk on research data. All 67 files are ready in `results/drive_upload/` (git-ignored) to drag into that Drive folder. The digest with its figures is also on a private page: https://claude.ai/artifact/9FpUhsNF3CPN478UEwFiYp
+- [ ] **Drive upload incomplete, needs the author.** Drive `MSPS1/results` holds `DIGEST.md` and `PROGRESS.md` only. The connector takes file content inline, so the 32 PNG (8.3 MB) and 35 CSV (20 MB) cannot go through it, and this machine has no Drive mount or CLI. Retyping the small CSVs by hand was rejected as a transcription risk on research data. All 67 files are ready in `results/drive_upload/` (git-ignored) to drag into that Drive folder.
 - [ ] Drive `MSPS1/code` is still the ee91ef0 snapshot. Since then: small changes to `runner/queue.py`, `integrators/gauss_legendre.py`, `io/__init__.py`, plus analysis, figures, tests, experiments, cases; `bench/`, `scripts/` not included. The tag `results-v1` holds the current code; the repository has no remote
 
 ## Running background jobs
 None. History, in order (logs: `logs/E<k>.log`). Started 2026-11-06 at 12:26, 11 threads:
-- `scripts/paper_chain2.sh` (replaces `paper_chain.sh`, stopped by PID): E5, E9, E8, E6, E7, E4; 7 workers.
+- The paper chain (now `scripts/reproduce.sh runs`): E5, E9, E8, E6, E7, E4; 7 workers.
 - E2 fix groups (`refs_fix` etc, `rossler:r2`, `nb3_ensemble:r5`; log `logs/E2fix.log`), then E11 dev, now N <= 6 and Lorenz-96 only; 2 workers.
 - `experiments/e11_high_n.yaml` (study E11hi): route 1, order 80/600 at T = 30, N_8_hp then N_10_hp, IC 0; 1 worker. No checkpoints: a kill loses the reference.
 - 16:25: `experiments/e11_high_n_t8.yaml` (route 2, T = 8, 3 families, N = 8, 10, ICs 0-2), 2 workers; E11 paper for N <= 6 once the profiler ends, 1 worker. E2 fix done: all 8 ICs pass (worst 1.6e-39), 885 of 885; E11 dev done, 434 of 434.
@@ -63,7 +63,7 @@ None. History, in order (logs: `logs/E<k>.log`). Started 2026-11-06 at 12:26, 11
 - **DOP853 tableau** is SciPy's float64 coefficients converted exactly, so its order conditions hold to about 1e-17; above 53 bits it is order-limited. Noted in E8. **Yoshida 6, 8:** published 15-digit coefficients, same remark.
 - **Gauss–Legendre on the lifted system:** symplectic only in the original variables; it preserves the lifted energy exactly as a quadratic invariant up to solver tolerance. Noted in E8.
 - **Not implemented, out of this prompt's list:** Carleman (CARL-N) and the model-truncated ODE surrogate (SUR-n); T_w exists for the sine map only. f80 and Arb exist but are not in the study grids.
-- **`ops` first night:** environment check + small benchmark, per AGENT_PROMPT. `scripts/ops_plan.txt` holds `env_small`; change to `full` after a successful night.
+- **`ops` first night:** environment check + small benchmark, per AGENT_PROMPT. `scripts/ops_night.sh` takes the plan as its argument (`env_small`, then `full` after a successful night).
 - **Disk budget:** `results/raw/` ≤ 20 GB (enforced by the runner); `results/references/` ≤ 20 GB (watched by hand).
 
 ## Checks of values marked *verify* in the spec (`results/derived/e0_validation.csv`)

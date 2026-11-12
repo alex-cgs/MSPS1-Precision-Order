@@ -1,11 +1,42 @@
+# Python and tooling
 .venv*/
 __pycache__/
 *.pyc
 *.egg-info/
+build/
+dist/
+.pytest_cache/
+.hypothesis/
+.ipynb_checkpoints/
+
+# Run data: large and rebuilt by scripts/reproduce.sh (README.md). Only results/derived/ and results/DIGEST.md are committed.
 results/raw/
 results/references/
 results/queue/
-logs/
-.pytest_cache/
-.hypothesis/
 results/drive_upload/
+logs/
+
+# Pilot outputs, written when pilot/ is rerun
+pilot/results.json
+pilot/summary.json
+pilot/ref.pkl
+pilot/fig/
+
+# Secrets and local machine settings: never commit
+.env
+.env.*
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+credentials*.json
+token*.json
+client_secret*.json
+.claude/settings.local.json
+
+# Editors and OS
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
